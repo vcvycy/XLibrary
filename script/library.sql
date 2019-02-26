@@ -1,0 +1,65 @@
+-- SQL数据库初始化 --
+-- (1)要将数据库设为非严格模式,进入mysql，执行set global sql_mode='';重启后就失效了。
+-- (2)mysql默认编码是latin，要改成utf-8
+-- (3) 约定: 所有都是小写字母;不用外键;
+-- 1、建库
+DROP DATABASE IF EXISTS XLibrary;
+CREATE DATABASE XLibrary;
+USE XLibrary;
+-- 2、建表
+-- (*) 图书表
+create table book(
+  id    int auto_increment not null primary key,
+  isbn       varchar(32),
+  book_name  varchar(128),          -- 书名
+  author     varchar(128),          -- json数组，多个作者
+  publisher  varchar(64),           -- 出版社
+  douban_json longtext
+); 
+-- (*) 图书库存
+create table stocks(
+  book_id int,
+  stock   int default 0,
+  borrowed int default 0           -- 被借出
+);
+-- (*) 学生表
+create table stu(
+  sid   varchar(32),  -- 学号
+  name  varchar(64),  -- 姓名
+  pwd   varchar(64),   -- 密码. 通过两次sha1加密,防止网上查表爆出简单密码。
+  degree varchar(16),   -- 本科生,研究生,博士生
+  grade  varchar(8),    -- 一年级,二年级,...
+  school varchar(64)    -- 学院
+);
+-- (*) 管理员
+create table su(
+  id   int auto_increment not null primary key,
+  usr  varchar(64),  --  姓名
+  pwd   varchar(64)   -- 密码
+);
+-- (*) 捐赠的图书(谁在某个时间捐赠了什么书)
+create table book_donate(
+  id   int auto_increment not null primary key,
+  time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
+  sid  varchar(32),                                 -- 学生ID
+  book_id int,                                      -- 图书ID
+  book_fetch varchar(32)                            -- 如何取书
+);
+
+-- (*) 图书借还
+create table book_borrow(
+  id        int auto_increment not null primary key,
+  book_id   int,
+  --  借书时间/还书时间(null 表示还未归还)
+  borrow_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  return_time timestamp default 0
+);   
+
+-- (*) 评论
+create table message(
+  id        int auto_increment not null primary key,
+  time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
+  type      varchar(8),             -- type=book 表示在某本书下的评论 type=sys表示系统消息，
+  book_id   int,
+  from_id   int
+);

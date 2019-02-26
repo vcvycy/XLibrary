@@ -1,0 +1,98 @@
+<div class="pages">
+  <div data-page="blogsingle" class="page no-toolbar no-navbar">
+    <div class="page-content">
+    
+	<div class="navbarpages navbarpagesbg">
+                            <div class="navbar_left">
+                                <div class="logo_text"><a href="index.html">法学分馆与艺术分馆</a></div>
+                            </div>
+			    <div class="navbar_right navbar_right_menu">
+				<a href="#" data-panel="left" class="open-panel"><img src="images/icons/white/menu.png" alt="" title="" /></a>
+			    </div>			
+			    <div class="navbar_right">
+				<a href="#" data-panel="right" class="open-panel"><img src="images/icons/white/user.png" alt="" title="" /></a>
+			    </div>
+	</div>
+	
+     <div id="pages_maincontent">
+      
+      <a href="tables.html" class="backto"><img src="images/icons/black/back.png" alt="" title="" /></a>
+      <h2 class="blog_title">{{name}}</h2>
+	  
+                  <!--&lt;!&ndash; Slider &ndash;&gt;-->
+                 <!--<div class="swiper-container-pages swiper-init" data-effect="slide" data-pagination=".swiper-pagination">-->
+                    <!--<div class="swiper-wrapper">-->
+                    <!---->
+                      <!--<div class="swiper-slide">-->
+			<!--<img src="images/page_photo.jpg" alt="" title="" />-->
+                       <!--</div>-->
+                      <!--<div class="swiper-slide">-->
+			<!--<img src="images/page_photo2.jpg" alt="" title="" />-->
+                       <!--</div>-->
+                      <!--<div class="swiper-slide">-->
+			<!--<img src="images/page_photo3.jpg" alt="" title="" />-->
+                       <!--</div>		   -->
+					   <!---->
+                    <!--</div>-->
+                    <!--<div class="swiper-pagination"></div>-->
+                  <!--</div>	-->
+<div class="page_single layout_fullwidth_padding">	
+          <div class="post_single">
+          <p>{{contantIntro}}
+            </p>
+            <span class="post_PublishingHouse">{{publishingHouse}}</span>
+            <span class="post_author"> <a href="#">{{author}}</a></span>
+             <span class="post_like"> <span class="like">&#10084;</span><a href="#">收藏</a></span>
+          </div>
+	<!--<a href="#" data-popup=".popup-social" class="button_full btmint open-popup">SHARE THIS POST</a>-->
+
+    <ul class="responsive_table">
+        <li class="table_row">
+            <div class="table_section_2">馆藏地</div>
+            <div class="table_section">书刊状态</div>
+            <div class="table_section_2">在借同学联系方式</div>
+        </li>
+        <li class="table_row">
+            <div class="table_section_2">{{site}}</div>
+            <div class="table_section">{{state}}</div>
+            <div class="table_section_2">{{contactInfo}}</div>
+        </li>
+
+    </ul>
+    <div class="full">
+          <div class="buttons-row">
+                <a href="#tab1" class="tab-link active button">添加评论</a>
+                <a href="#tab2" class="tab-link button">查看评论</a>
+          </div>
+   </div>
+          <div class="tabs-animated-wrap">
+                <div class="tabs">
+                      <div id="tab1" class="tab active">
+                            <div class="contactform">
+                            <form id="CommentForm" method="post" action="">
+
+                            <textarea name="Comment" id="Comment" class="form_textarea" rows="" cols=""></textarea>
+                            <input type="submit" name="submit" class="form_submit" id="submit" value="添加" />
+                            </form>
+                            </div>
+                      </div>
+
+                      <div id="tab2" class="tab">
+                            <ul class="comments">
+                                <li class="comment_row">
+                                    <div class="comm_content"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p></div>
+                                </li>
+                                <li class="comment_row">
+                                    <div class="comm_content"><p>Consectetur adipiscing elit.</p></div>
+                                </li>
+                                <div class="clear"></div>
+                            </ul>
+                      </div> 
+                </div>
+          </div>
+		  
+ </div>     
+      
+    </div>
+  </div>
+</div>

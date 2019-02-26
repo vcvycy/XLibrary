@@ -1,0 +1,234 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+<link href="images/apple-touch-startup-image-320x460.png" media="(device-width: 320px)" rel="apple-touch-startup-image">
+<link href="images/apple-touch-startup-image-640x920.png" media="(device-width: 320px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+<title>厦门大学图书法学与艺术分馆捐书系统</title>
+<link rel="stylesheet" href="css/framework7.css">
+<link rel="stylesheet" href="style.css">
+<link type="text/css" rel="stylesheet" href="css/swipebox.css" />
+<link type="text/css" rel="stylesheet" href="css/animations.css" />
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,900" rel="stylesheet"> 
+</head>
+<body id="mobile_wrap">
+
+
+
+<!-- Status bar overlay for full screen mode (PhoneGap) -->
+    <div class="statusbar-overlay"></div>
+
+    <div class="panel-overlay"></div>
+
+    <div class="panel panel-left panel-reveal">
+	<div class="view view-subnav">
+	<div class="pages">
+		<div data-page="panel-leftmenu" class="page pagepanel">	
+                     <div class="page-content">
+			<nav class="main_nav_icons_inline_2">
+			<ul>
+			<li><a href="index.html" class="close-panel" data-view=".view-main"><img src="images/icons/white/home.png" alt="" title="" /><span>首页</span></a></li>
+			<li><a href="about.html" class="close-panel" data-view=".view-main"><img src="images/icons/white/扫一扫.png" alt="" title="" /><span>扫一扫借书</span></a></li>
+			<li><a href="tables.html" class="close-panel" data-view=".view-main"><img src="images/icons/white/list.png" alt="" title="" /><span>图书列表</span></a></li>
+			
+			<li><a href="contact.html" class="close-panel" data-view=".view-main"><img src="images/icons/white/书.png" alt="" title="" /><span>我要捐书</span></a></li>
+			<li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/交流.png" alt="" title="" /><span>交流区</span></a></li>
+			<li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/置换.png" alt="" title="" /><span>图书置换</span></a></li>
+
+			<li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/我的.png" alt="" title="" /><span>待定</span></a></li>
+			<li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/我的.png" alt="" title="" /><span>待定</span></a></li>
+			</ul>
+			</nav>
+                     </div>
+		</div>
+	  </div>
+	</div>  
+    </div>
+
+    <div class="panel panel-right panel-reveal">
+      <div class="user_login_info">
+
+          <div class="user_thumb">
+              <img src="images/我的背景.jpg" alt="" title="" />
+              <div class="user_details" id ="userInfo">
+                  <p><span>{{username}}</span>学号：{{studentnumber}}</p>
+              </div>
+              <div class="user_avatar"><img src="images/avatar.jpg" alt="" title="" /></div>
+          </div>
+
+          <nav class="user-nav">
+              <ul>
+                  <!--<li><a href="index.html" class="close-panel"><img src="images/icons/white/myinfo.png" alt="" title="" /><span>个人信息</span></a></li>-->
+                  <!--<li><a href="features.html" class="close-panel"><img src="images/icons/white/settings.png" alt="" title="" /><span>设置</span></a></li>-->
+                  <li><a href="BorrowingRecord.html" class="close-panel"><img src="images/icons/white/mybook.png" alt="" title="" /><span>借阅记录</span></a></li>
+                  <li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/积分.png" alt="" title="" /><span>我的积分</span></a></li>
+                  <li><a href="myBookshelf.html" class="close-panel"><img src="images/icons/white/love.png" alt="" title="" /><span>我的书架</span></a></li>
+                  <li><a href="index.html" class="close-panel"><img src="images/icons/white/history.png" alt="" title="" /><span>捐书记录</span></a></li>
+              </ul>
+          </nav>
+      </div>
+    </div>
+
+    <div class="views">
+        <!-- Your main view, should have "view-main" class -->
+      <div class="view view-main">
+
+
+
+        <div class="pages">
+
+          <div data-page="index" class="page homepage">
+                        <div class="navbarpages">
+                            <div class="navbar_left">
+                                <div class="logo_text"><a href="index.html">法学与艺术分馆</a></div>
+                            </div>
+			    <div class="navbar_right navbar_right_menu">
+				<a href="#" data-panel="left" class="open-panel"><img src="images/icons/white/menu.png" alt="" title="" /></a>
+			    </div>			
+			    <div class="navbar_right">
+				<a href="#" data-panel="right" class="open-panel"><img src="images/icons/white/user.png" alt="" title="" /></a>
+			    </div>
+                        </div>
+
+                  <!-- Slider -->
+                 <div class="swiper-container slidertoolbar swiper-init" data-effect="slide" data-parallax="true" data-pagination=".swiper-pagination"  data-next-button=".swiper-button-next" data-prev-button=".swiper-button-prev">
+                    <div class="swiper-wrapper">
+                    
+                      <div class="swiper-slide" style="background-image:url(images/slide2.jpg);">
+		     <div class="slider_trans">
+			 <div class="slider-caption">
+			          <span class="subtitle" data-swiper-parallax="-60%">法学分馆与艺术分馆</span>
+				  <h2 data-swiper-parallax="-100%">欢迎来到法学与艺术捐书系统</h2>
+				  
+				  <p data-swiper-parallax="-30%">在这里，你可以更快捷的借到捐赠的图书，可以与同学之间进行友好地书籍置换，可以......</p>
+			 </div>
+		      </div> 
+                       </div>
+                      <div class="swiper-slide" style="background-image:url(images/slide1.jpg);">
+			<div class="slider_trans">		  
+				<div class="slider-caption">
+				<span class="subtitle" data-swiper-parallax="-60%">借书须知</span>
+				<h2 data-swiper-parallax="-100%">扫一扫借书</h2>
+				
+				<p data-swiper-parallax="-30%">1、直接从图书馆扫一扫借书，快捷方便，无需消磁。<br/>2、从上一位同学手中直接借走，无需返还到图书馆再次借书，省时方便。<br/>3、转借同学一定要监督借走图书的同学扫一扫借书，否则在借人仍是自己。</p>
+
+				</div>	
+			</div>	
+                      </div>
+                      <div class="swiper-slide" style="background-image:url(images/slide3.jpg);">
+			<div class="slider_trans">		  
+				<div class="slider-caption">
+				<span class="subtitle" data-swiper-parallax="-60%">自由交换</span>
+				<h2 data-swiper-parallax="-100%">图书置换</h2>
+				
+				<p data-swiper-parallax="-30%">有任何想要交换的图书巴拉巴拉巴拉</p>
+				</div>
+                       </div>
+		   </div> 		   
+                    </div>
+                    <div class="swiper-pagination"></div>
+			<div class="swiper-button-prev"></div>
+			<div class="swiper-button-next"></div>	
+                  </div>
+			  
+		 <div class="swiper-container-toolbar swiper-toolbar swiper-init" data-effect="slide" data-slides-per-view="1" data-slides-per-group="1" data-space-between="0" data-pagination=".swiper-pagination-toolbar">
+			<div class="swiper-pagination-toolbar"></div>
+			<div class="swiper-wrapper">
+                <div class="swiper-slide toolbar-icon">
+                    <a href="#" data-popup=".popup-login" class="open-popup"><img src="images/icons/green/扫一扫.png" alt="" title="" /><span>扫一扫借书</span></a>
+                    <a href="tables.html" data-view=".view-main"><img src="images/icons/green/list.png" alt="" title="" /><span>图书列表</span></a>
+                    <a href="contact.html" data-view=".view-main"><img src="images/icons/green/书.png" alt="" title="" /><span>我要捐书</span></a>
+                    <a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/green/交换.png" alt="" title="" /><span>置换图书</span></a>
+                    <a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/green/讨论.png" alt="" title="" /><span>交流区</span></a>
+                    <a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/green/我的.png" alt="" title="" /><span>待定</span></a>
+                </div>
+
+			</div>
+		  </div>	
+
+			  
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+
+	
+    <!-- Login Popup -->
+    <div class="popup popup-login">
+        <div class="content-block">
+            <h4>待开发</h4>
+            <div class="loginform">
+                <label id="loader" style=""><img src="images/loader01.gif" alt="Loading..." id="LoadingGraphic"></label>
+                <div class="signup_bottom">
+                    <p>该功能正在开发中，敬请期待</p>
+                </div>
+            </div>
+            <div class="close_popup_button">
+                <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Popup -->
+    <div class="popup popup-signup">
+        <div class="content-block">
+            <h4>REGISTER</h4>
+            <div class="loginform">
+                <form id="RegisterForm" method="post">
+                    <input type="text" name="Username" value="" class="form_input required" placeholder="Username" />
+                    <input type="text" name="Email" value="" class="form_input required" placeholder="Email" />
+                    <input type="password" name="Password" value="" class="form_input required" placeholder="Password" />
+                    <input type="submit" name="submit" class="form_submit" id="submit" value="SIGN UP" />
+                </form>
+		<h5>- OR REGISTER WITH A SOCIAL ACCOUNT -</h5>
+		<div class="signup_social">
+			<a href="http://www.facebook.com/" class="signup_facebook external">FACEBOOK</a>
+			<a href="http://www.twitter.com/" class="signup_twitter external">TWITTER</a>            
+		</div>		
+            </div>
+            <div class="close_popup_button">
+                <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
+            </div>
+        </div>
+    </div>
+	
+    <!-- Forgot Password Popup -->
+    <div class="popup popup-forgot">
+        <div class="content-block">
+            <h4>FORGOT PASSWORD</h4>
+            <div class="loginform">
+                <form id="ForgotForm" method="post">
+                    <input type="text" name="Email" value="" class="form_input required" placeholder="email" />
+                    <input type="submit" name="submit" class="form_submit" id="submit" value="RESEND PASSWORD" />
+                </form>
+                <div class="signup_bottom">
+                    <p>Check your email and follow the instructions to reset your password.</p>
+                </div>
+            </div>
+            <div class="close_popup_button">
+                <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
+            </div>
+        </div>
+    </div>
+
+
+
+<script src="js/vue.min.js"></script>
+<script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
+<script type="text/javascript" src="js/jquery.validate.min.js" ></script>
+<script type="text/javascript" src="js/framework7.js"></script>
+<script type="text/javascript" src="js/jquery.swipebox.js"></script>
+<script type="text/javascript" src="js/jquery.fitvids.js"></script>
+<script type="text/javascript" src="js/email.js"></script>
+<script type="text/javascript" src="js/audio.min.js"></script>
+<script type="text/javascript" src="js/my-app.js"></script>
+  </body>
+</html>

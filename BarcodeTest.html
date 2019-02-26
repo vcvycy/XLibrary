@@ -1,0 +1,35 @@
+<script src="js/jquery-1.10.1.min.js" type="text/javascript"></script>
+<script src="js/quagga.min.js" type="text/javascript"></script> 
+<script src="js/utils.js" type="text/javascript"></script> 
+<input type=file class=barcode></input>
+<script>  
+function cbBookInfo(rst){
+    console.log(rst);
+    if (rst.error_code !=0) { 
+       //alert(rst.data);
+       console.log(rst.data);
+       alert("isbn码无对应图书");
+    }
+    else{
+        a=$("<div></div>");
+        a.text(JSON.stringify(rst.data));
+        a.appendTo($("body"));
+    } 
+}
+function cbBarcode(result){
+    //console.log(result);
+    if(result.codeResult) { 
+        GetBookInfoByISBN(result.codeResult.code,cbBookInfo);
+    } else { 
+        alert("检测不到ISBN码");
+    }
+}
+$(function(){
+   $("input").change(function(){
+        //console.log(this);
+        var url=URL.createObjectURL(this.files[0]); 
+        RecognizeBarCode(url,cbBarcode);
+     }
+   );
+});  
+</script>
