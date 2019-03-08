@@ -90,6 +90,16 @@ class Utils
         fwrite($fp,$data);
         fclose($fp);
     }
+    # 
+    static public function getDoubanJson($isbn){  
+        $pyAddr=Utils::$g_config["pyAddr"]; 
+        $url = "$pyAddr/isbn/$isbn"; 
+        $douban_json = file_get_contents($url);
+        $douban_json = json_decode($douban_json,true); 
+        if ($douban_json["error_code"]!=0)
+            throw new Exception("在豆瓣API查询不到ISBN= $isbn 的图书");
+        return $douban_json["data"];
+    }
 }
 
 // 执行初始化函数

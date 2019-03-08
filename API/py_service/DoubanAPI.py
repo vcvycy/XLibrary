@@ -11,7 +11,7 @@ import json
 # (2) [JSON] https://api.douban.com/v2/book/isbn/:9787111128069
 def getBookInfoByISBN(isbn):
     url = "https://api.douban.com/v2/book/isbn/%s" %(isbn)
-    resp=requests.get(url)
+    resp = requests.get(url)
     parsed = json.loads(resp.text)
     if "msg" in parsed:
         return None

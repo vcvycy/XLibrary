@@ -9,29 +9,23 @@
 
 #### 安装教程
 
-1. xxxx
-2. xxxx
-3. xxxx
+1.  启动python服务(用于模拟 i.xmu.edu.cn 用户登陆)
+    python3 ./API/py_service/StartService.py
+2.  数据库脚本
+        ./script/library.sql
+    数据库配置:
+        见:./API/utils.php 中$g_config["db"] 
+#### 文档
+1. 用户登陆:
+   URL: /API/account/login.php
+   参数:
+        (1) sid : 学号
+        (2) pwd : 密码
+        
+2. 通过isbn 获取图书信息
+    URL: /API/isbn.php
+    参数: isbn
+    如: /API/isbn.php?isbn=9787308083256
 
-#### 使用说明
-
-1. xxxx
-2. xxxx
-3. xxxx
-
-#### 参与贡献
-
-1. Fork 本项目
-2. 新建 Feat_xxx 分支
-3. 提交代码
-4. 新建 Pull Request
-
-
-#### 码云特技
-
-1. 使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2. 码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3. 你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4. [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5. 码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6. 码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+3. 添加一本书
+   /API/book/addBook.php?isbn=9787308083256

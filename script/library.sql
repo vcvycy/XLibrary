@@ -11,9 +11,9 @@ USE XLibrary;
 create table book(
   id    int auto_increment not null primary key,
   isbn       varchar(32),
-  book_name  varchar(128),          -- 书名
-  author     varchar(128),          -- json数组，多个作者
-  publisher  varchar(64),           -- 出版社
+  title  varchar(256),          -- 书名
+  author     varchar(256),          -- json数组，多个作者
+  publisher  varchar(128),           -- 出版社
   douban_json longtext
 ); 
 -- (*) 图书库存

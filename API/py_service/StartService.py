@@ -15,9 +15,8 @@ def index():
     # print(os.curdir)
     return static_file("index.html","www")
 
-@get("/isbn")
-def getBookInfoByISBN():
-    isbn = request.query.isbn
+@get("/isbn/<isbn>")
+def getBookInfoByISBN(isbn): 
     rst = DoubanAPI.getBookInfoByISBN(isbn)
     if rst == None:
         return returnJSON(-1,"ISBN码不存在")
@@ -41,4 +40,5 @@ def login():
         return returnJSON(-1,stu.loginFailedReason)
 
 if __name__ == "__main__":
-    run(host="0.0.0.0", port=81)
+    print("[*] 此服务用于登陆、ISBN信息提取等...")
+    run(host="localhost", port=81) 
