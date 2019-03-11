@@ -186,5 +186,40 @@ Class Books extends Base{
         $this->setLended($isbn,$lended+1);
         return ;
     }
+
+    // (*) 获取用户借书列表
+    public function getBorrowListBySID($sid){
+        $data = $this->createSQLAndRunAssoc(
+            "SELECT book_borrow.*,book.title,book.isbn,book.author,book.publisher FROM book_borrow,book 
+                WHERE SID = '%s' and book.id = book_borrow.book_id",
+            $sid);
+        $not_return = array();
+        $returned   = array();
+        foreach ($data as $item){
+            if ($item["return_time"]=="0000-00-00 00:00:00")
+                $not_return[] = $item;
+            else
+                $returned[] =$item;
+        }
+        return array(
+            "已还书列表" => $returned,
+            "未还书列表" => $not_return
+        );
+    }
+
+    // (*) 还一本书
+    public function returnBook($sid, $isbn){
+        $book_id = $this->getBookID($isbn);
+        $ret = $this-> createSQLAndRun(
+            "update book_borrow set return_time = NOW() 
+                where sid='%s' and return_time=0 and book_id =%d limit 1",
+                $sid,
+                $book_id
+        );
+        if ($this->lastAffectedRows() ==0){
+            throw new Exception("未借书，无法还书");
+        }
+        return ;
+    }
 };  
 ?>

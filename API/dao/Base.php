@@ -21,6 +21,9 @@
       }
       return self::$s_conn;
     }    
+    public function lastAffectedRows(){ 
+        return self::$s_conn->affected_rows;
+    }
     //sql特殊符号转义(可用于防止攻击). bool/digit/string
     protected function escape($val){
       if (is_bool($val)) return intval($val); //由于false变成字符串会是""空，这里转换下
