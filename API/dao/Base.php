@@ -32,7 +32,11 @@
     public function runSQLAssoc($sql){
       $rst = self::$s_conn->query($sql);
       if (gettype($rst)=="boolean") return $rst;
-      return $rst->fetch_assoc();
+      $data = array();
+      while ($row = $rst->fetch_assoc()){
+        $data[] = $row;
+      }
+      return $data;
     }
     // 执行sql 语句. 直接执行应先通过createSQL 做escape过滤
     public function runSQL($sql){
@@ -50,11 +54,12 @@
     // 如：createSQLAndRun("select * from stu where id=%s and name='%s'",1,"cjf")
     // 创建并执行sql. 自动会对所有参数执行escape操作。
     public function createSQLAndRun(){ 
-        $sql=self::createSQL(...func_get_args());
+        $sql=self::createSQL(...func_get_args()); 
         return self::runSQL($sql);
     }
     public function createSQLAndRunAssoc(){ 
       $sql=self::createSQL(...func_get_args());
+      //die($sql);
       return self::runSQLAssoc($sql);
     }
  } 

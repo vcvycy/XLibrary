@@ -1,6 +1,6 @@
 <?php 
 /** session 设置函数 */
-// 学生登陆
+// 学生登陆 
 namespace StuSess{
     function setKey($key,$val){$_SESSION["stu/".$key]=$val;}
     function getKey($key){  // 读取session key的值。不存在则返回Null。
@@ -12,16 +12,25 @@ namespace StuSess{
         if (isset($_SESSION[$key]))
           unset($_SESSION[$key]);
     }
-    function login($sid){ //登陆
+    function login($sid,$name,$all){ //登陆
         setKey("login",true);
         setKey("sid",$sid);
+        setKey("name",$name);
+        setKey("dbinfo",$all);
     }
     function logout(){    // 登出
-        unsetKey("login");
+        foreach($_SESSION as $key => $value){ 
+            unset($_SESSION[$key]);
+        } 
     }
     function isLogin(){   // 是否登陆
         return getKey("login")==true;
-    }  
+    }
+    function isLoginOrThrowException(){
+        if (!isLogin()){ 
+            throw new \Exception("用户未登陆");
+        }
+    }
 }
 // 管理员登陆
 namespace AdminSess{

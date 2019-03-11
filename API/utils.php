@@ -39,8 +39,7 @@ class Utils
     {
         $arr = array("error_code" => $error_code,
             "data" => $data);
-        echo json_encode($arr, true);
-        die("");
+        die(json_encode($arr, true));
     }
 
     //读取POST/GET参数
@@ -90,7 +89,7 @@ class Utils
         fwrite($fp,$data);
         fclose($fp);
     }
-    # 
+    # 查询豆瓣上isbn对应图书信息，查找不到则扔出异常
     static public function getDoubanJson($isbn){  
         $pyAddr=Utils::$g_config["pyAddr"]; 
         $url = "$pyAddr/isbn/$isbn"; 

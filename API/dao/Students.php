@@ -19,7 +19,22 @@ Class Students extends Base{
         $ret = json_decode($ret,true);
         return $ret;
     }
-    //(*) 从数据库中登陆.(成功返回true,失败返回false)
+    //(*) 从数据库中登陆
+    private function loginFromDB($sid,$pwd){
+        $pwd=sha1(sha1($pwd));
+        $ret=$this->createSQLAndRunAssoc("select * from stu where sid='%s' and pwd = '%s'",$sid,$pwd);
+        //die($ret); 
+        if ($ret!=""){//count($ret)>0){
+            return array("error_code"=>0,
+                         "data" => array("student" => $ret["name"])
+                        );
+        }else  
+            return array("error_code"=>-2,
+                         "data" => "用户不存在或者密码错误"
+                        );
+    }
+
+    //(*) 用户是否在数据库中存在.(成功返回true,失败返回false)
     private function stuExistInDB($sid){ 
         $ret=$this->createSQLAndRun("select count(*) from stu where sid='%s'",$sid);
         return $ret[0][0]>0;
@@ -27,6 +42,7 @@ Class Students extends Base{
     //(*) 登陆,成功返回null，失败返回失败信息
     public function login($sid,$pwd){
         $ret = $this->loginFromXMU($sid,$pwd);
+        //$ret = $this->loginFromDB($sid,$pwd);
         if ($ret["error_code"]==0){ //成功
             // 如果用户已经存在，更新密码，否则添加用户
             if (!$this->stuExistInDB($sid))

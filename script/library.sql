@@ -16,12 +16,7 @@ create table book(
   publisher  varchar(128),           -- 出版社
   douban_json longtext
 ); 
--- (*) 图书库存
-create table stocks(
-  book_id int,
-  stock   int default 0,
-  borrowed int default 0           -- 被借出
-);
+
 -- (*) 学生表
 create table stu(
   sid   varchar(32),  -- 学号
@@ -39,11 +34,13 @@ create table su(
 );
 -- (*) 捐赠的图书(谁在某个时间捐赠了什么书)
 create table book_donate(
-  id   int auto_increment not null primary key,
-  time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
-  sid  varchar(32),                                 -- 学生ID
-  book_id int,                                      -- 图书ID
-  book_fetch varchar(32)                            -- 如何取书
+   id   int auto_increment not null primary key,
+   time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
+   sid  varchar(32),                                 -- 学生ID
+   book_id int,                                      -- 图书ID
+   donator_word varchar(128),
+   how_to_fetch varchar(256),                        -- 如何取书
+   status int  -- 0表示等待审核，1表示审核通过，-1表示审核不通过                               -- 是否已经捐入库中，由管理员来设置
 );
 
 -- (*) 图书借还

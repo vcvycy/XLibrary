@@ -34,5 +34,57 @@ Class Books extends Base{
         $ret= $this->createSQLAndRun("select count(*) from book where isbn = '%s'",$isbn); 
         return $ret[0][0]>0;
     } 
+
+    //(*) 获取一本书的信息
+    public function getDoubanJSON($isbn){
+        $ret = $this->createSQLAndRun("select douban_json from book where isbn = '%s'",$isbn);
+        if (count($ret)>0 && count($ret[0])>0 )
+            return json_decode($ret[0][0],true);
+        else
+            throw new Exception("找不到 ISBN $isbn 对应的图书!"); 
+    }
+
+    //(*) 读取
+    public function getBookID($isbn){
+        $ret = $this->createSQLAndRun("select id from book where isbn = '%s'",$isbn);
+        if (count($ret)>0 && count($ret[0])>0 )
+            return $ret[0][0];
+        else
+            throw new Exception("找不到 ISBN $isbn 对应的图书!"); 
+    }
+    
+    //(*) 捐书,提交成功返回true,失败返回false
+    public function donateBook($sid,
+                                $book_id,
+                                $how_to_fetch,
+                                $donator_word,
+                                $status=0){
+        $ret = $this->createSQLAndRun(" INSERT INTO book_donate(sid, book_id,donator_word, how_to_fetch,status) VALUES ('%s','%s','%s','%s','%s')",
+                                        $sid,
+                                        $book_id,
+                                        $donator_word,
+                                        $how_to_fetch,
+                                        $status
+                                        );
+        return true; 
+    }
+
+    // (*) 获取用户捐书列表
+    public function getDonationListBySID($sid){
+        $data = $this->createSQLAndRunAssoc(
+            "SELECT book_donate.*,book.title,book.isbn,book.author,book.publisher FROM book_donate,book WHERE SID = '%s' and book.id = book_donate.book_id",
+            $sid);
+        $list_accepted = array();
+        $list_failed   = array();
+        $list_waiting  = array();
+        foreach($data as $val){
+            if ($val["status"]==0)  $list_waiting[] = $val;
+            if ($val["status"]==-1) $list_failed[] = $val;
+            if ($val["status"]==1)  $list_accepted[] = $val;
+        }
+        return array("审核通过"=> $list_accepted,
+                     "审核失败" => $list_failed,
+                     "等待审核" => $list_waiting);
+    }
 };  
 ?>
