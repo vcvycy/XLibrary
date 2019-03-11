@@ -3,7 +3,7 @@
 class Filter{ 
     //正则表达式 模式串
     static private $re_patterns=array(
-        "digit" => "/^[\d]+$/u",
+        "digit" => "/^-?[\d]+$/u",
         "word" => "/^[\w]+$/u"              
     );
     // 匹配,失败则抛出异常

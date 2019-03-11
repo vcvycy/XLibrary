@@ -63,6 +63,7 @@ Class Students extends Base{
           Utils::log("密码更新失败!$sql");
         return $rst;
     }
+    
     //(*) 添加用户 (成功返回true，失败返回false)
     public function register($sid,$pwd,$student_info){
         $name=$student_info["name"]; 
@@ -75,7 +76,7 @@ Class Students extends Base{
     //(*) 获取用户信息
     public function getStuInfo($sid){
         $rst=$this->createSQLAndRunAssoc("select sid,name,degree,grade,school from stu where sid=%s",$sid);
-        return $rst;
+        return $rst[0];
     }
 }; 
 ?>

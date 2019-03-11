@@ -14,9 +14,10 @@ create table book(
   title  varchar(256),          -- 书名
   author     varchar(256),          -- json数组，多个作者
   publisher  varchar(128),           -- 出版社
-  douban_json longtext
-); 
-
+  douban_json longtext,
+  stock  int DEFAULT 0 ,             -- 库存 
+  lended int DEFAULT 0               -- 借出了多少本
+);  
 -- (*) 学生表
 create table stu(
   sid   varchar(32),  -- 学号
@@ -46,6 +47,7 @@ create table book_donate(
 -- (*) 图书借还
 create table book_borrow(
   id        int auto_increment not null primary key,
+  sid       VARCHAR(32),
   book_id   int,
   --  借书时间/还书时间(null 表示还未归还)
   borrow_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

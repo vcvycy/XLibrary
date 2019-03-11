@@ -14,7 +14,7 @@ function main(){
     $stu= new Students();
     if ($stu->login($sid,$pwd)){
         $stu = new Students();
-        $info = $stu->getStuInfo($sid); 
+        $info = $stu->getStuInfo($sid);  
         \StuSess\login($sid,$info["name"],$info);         //设置session值
         Utils::exit(0,"登陆成功!");
     }else{

@@ -44,6 +44,7 @@ Class Books extends Base{
             throw new Exception("找不到 ISBN $isbn 对应的图书!"); 
     }
 
+    
     //(*) 读取
     public function getBookID($isbn){
         $ret = $this->createSQLAndRun("select id from book where isbn = '%s'",$isbn);
@@ -52,7 +53,34 @@ Class Books extends Base{
         else
             throw new Exception("找不到 ISBN $isbn 对应的图书!"); 
     }
-    
+
+    // (*) 获取库存
+    public function getStock($isbn){
+        $ret = $this->createSQLAndRun("select stock from book where isbn = '%s'",$isbn);
+        if (count($ret)) 
+            return intval($ret[0][0]);
+        else 
+            return 0;
+    }
+
+
+    // (*) 添加一本书到库中
+    public function incStock($isbn){
+        $cur_stock = $this->getStock($isbn);
+        $cur_stock ++;
+        $this->setStock($isbn,$cur_stock);
+        return 0;
+    }
+
+    // 设置库存值
+    public function setStock($isbn,$stock){
+        $ret = $this->createSQLAndRun(
+            "update book set stock = %d where isbn = '%s'",
+            $stock,
+            $isbn);
+        if ($ret!=true) 
+            throw new Exception("update 未知错误");
+    }
     //(*) 捐书,提交成功返回true,失败返回false
     public function donateBook($sid,
                                 $book_id,
@@ -67,6 +95,30 @@ Class Books extends Base{
                                         $status
                                         );
         return true; 
+    }
+
+    // (*) 捐书审核
+    public function reviewDonation($book_donate_id, $status){
+        // 状态值判断
+        if ($status<-1 || $status>1){
+            throw new Exception ("status 取值范围{-1,0,1}，分别表示不通过、等待审核、审核通过");
+        }
+        // 更新status值
+        $ret = $this->createSQLAndRun(
+            "update book_donate set status = %d where id = %d",
+            $status,
+            $book_donate_id);
+            
+        if ($ret ==0) throw new Exception("未知失败!");
+
+        // 如果审核通过，则获取ISBN，加库存
+        if ($status == 1){
+            $isbn = $this->createSQLAndRun(
+                "select book.isbn from book,book_donate where book_donate.id =%d and book.id = book_donate.book_id",
+                $book_donate_id)[0][0];
+            $this->incStock($isbn);
+        } 
+        return ;
     }
 
     // (*) 获取用户捐书列表
@@ -85,6 +137,54 @@ Class Books extends Base{
         return array("审核通过"=> $list_accepted,
                      "审核失败" => $list_failed,
                      "等待审核" => $list_waiting);
+    }
+
+    // 查看被借了多少书
+    public function getLended($isbn){
+        $ret = $this->createSQLAndRun("select lended from book where isbn = '%s'",$isbn);
+        if (count($ret)) 
+            return intval($ret[0][0]);
+        else 
+            return 0;
+    }
+    // 设置被借了多少书
+    public function setLended($isbn,$lended){
+        $ret = $this->createSQLAndRun(
+            "update book set lended = %d where isbn = '%s'",
+            $lended,
+            $isbn);
+        if ($ret!=true)
+            throw new Exception("update 未知错误");
+    }
+
+    //通过ISBN获取图书ID
+    public function getBookValueByISBN($isbn,$column){
+        $ret = $this->createSQLAndRun("select $column from book where isbn='%s'",$isbn);
+        if (count($ret)==0)
+            throw new Exception("GetBookValueByISBN isbn=$isbn column= $column");
+        return $ret[0][0];
+    }
+
+    //(*) 借书
+    public function borrowBook($sid,$isbn){
+        // 获取库存
+        $cur_stock = $this->getStock($isbn);
+
+        // 获取被借了多少书
+        $lended = $this->getLended($isbn);
+        if ($cur_stock<=$lended) 
+            throw new Exception("库存不足!库存:$cur_stock,被借出: $lended");
+        $book_id = $this->getBookID($isbn); 
+
+        // 添加一条借书记录
+        $this->createSQLAndRun(
+            "INSERT INTO book_borrow(sid, book_id) VALUES ('%s',%d)",
+            $sid,
+            $book_id
+        );
+        // 借出一本书
+        $this->setLended($isbn,$lended+1);
+        return ;
     }
 };  
 ?>

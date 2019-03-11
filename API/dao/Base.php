@@ -62,5 +62,21 @@
       //die($sql);
       return self::runSQLAssoc($sql);
     }
+    public function getValueByID($table,$id,$col_name){
+      $ret = $this->createSQLAndRun("select %s from %s where id = %d",
+                                    $col_name,
+                                    $table,
+                                    $id);
+      if (count($ret)==0) return null;
+      return $ret[0][0];
+    }
+    public function getValueByISBN($table,$isbn,$col_name){
+      $ret = $this->createSQLAndRun("select %s from %s where isbn = %d",
+                                    $col_name,
+                                    $table,
+                                    $isbn);
+      if (count($ret)==0) return null;
+      return $ret[0][0];
+    }
  } 
 ?>
