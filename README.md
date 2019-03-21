@@ -14,18 +14,6 @@
 2.  数据库脚本
         ./script/library.sql
     数据库配置:
-        见:./API/utils.php 中$g_config["db"] 
-#### 文档
-1. 用户登陆:
-   URL: /API/account/login.php
-   参数:
-        (1) sid : 学号
-        (2) pwd : 密码
-        
-2. 通过isbn 获取图书信息
-    URL: /API/isbn.php
-    参数: isbn
-    如: /API/isbn.php?isbn=9787308083256
-
-3. 添加一本书
-   /API/book/addBook.php?isbn=9787308083256
+        见:./API/utils.php 中$g_config["db"]
+3.  api 文档：
+    https://documenter.getpostman.com/view/6886443/S11RLG5y
