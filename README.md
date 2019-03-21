@@ -9,7 +9,7 @@
 
 #### 安装教程
 
-1.  启动python服务(用于模拟 i.xmu.edu.cn 用户登陆)
+1.  启动python服务
     python3 ./API/py_service/StartService.py
 2.  数据库脚本
         ./script/library.sql
