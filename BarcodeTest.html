@@ -18,8 +18,8 @@ function cbBookInfo(rst){
 }
 function cbBarcode(result){
     //console.log(result);
-    if(result.codeResult) { 
-        GetBookInfoByISBN(result.codeResult.code,cbBookInfo);
+    if(result.codeResult) {  
+        alert(result.codeResult.code);
     } else { 
         alert("检测不到ISBN码");
     }
