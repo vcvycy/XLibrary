@@ -8,10 +8,10 @@ function main(){
         $isbn = Utils::getParamWithFilter("isbn","digit");
         $b = new Books(); 
         if (!$b->isISBNExists($isbn)){        
-            $douban_json = Utils::getDoubanJson($isbn); 
-            $b->addBook($douban_json);
+            $book_info = Utils::getBookInfoByISBN($isbn); 
+            $b->addBook($book_info);
         }
-        $data = $b->getDoubanJSON($isbn);
+        $data = $b->getBookInfo($isbn);
         Utils::exit(0,$data);
     } catch (Exception $e) {
         Utils::exit(-2,$e->getMessage());

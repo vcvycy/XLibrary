@@ -12,19 +12,23 @@ Class Books extends Base{
     }
 
     // (*) 添加一本书
-    public function addBook($douban_json){
-        $isbn = $douban_json["isbn13"];
-        $title = $douban_json["title"];
-        $author = json_encode($douban_json["author"]);
-        $publisher = $douban_json["publisher"];
+    public function addBook($book_info){
+        $isbn = $book_info["isbn"];
+        $title = $book_info["title"];
+        $author = $book_info["author"];
+        $publisher = $book_info["publisher"];
         if (!$this->isISBNExists($isbn)){
-            return $this->createSQLAndRun("INSERT INTO book (isbn, title, author,publisher,douban_json) 
-                                            VALUES ('%s','%s','%s' ,'%s' , '%s')",
-                                            $isbn,
-                                            $title,
-                                            $author,
-                                            $publisher,
-                                            json_encode($douban_json));
+            return $this->createSQLAndRun("INSERT INTO book (isbn, title,subtitle, author,publisher,summary,pubdate,other) 
+                                            VALUES ('%s','%s','%s','%s','%s','%s' ,'%s' , '%s')",
+                                            $book_info["isbn"],
+                                            $book_info["title"],
+                                            $book_info["subtitle"],
+                                            $book_info["author"],
+                                            $book_info["publisher"],
+                                            $book_info["summary"],
+                                            $book_info["pubdate"],
+                                            json_encode($book_info["other"])
+                                        );
         }else
             throw new Exception("ISBN $isbn 已经存在库中了");
     }
@@ -36,10 +40,10 @@ Class Books extends Base{
     } 
 
     //(*) 获取一本书的信息
-    public function getDoubanJSON($isbn){
-        $ret = $this->createSQLAndRun("select douban_json from book where isbn = '%s'",$isbn);
+    public function getBookInfo($isbn){
+        $ret = $this->createSQLAndRunAssoc("select * from book where isbn = '%s'",$isbn);
         if (count($ret)>0 && count($ret[0])>0 )
-            return json_decode($ret[0][0],true);
+            return $ret[0];
         else
             throw new Exception("找不到 ISBN $isbn 对应的图书!"); 
     }
@@ -128,12 +132,12 @@ Class Books extends Base{
             $sid);
         $list_accepted = array();
         $list_failed   = array();
-        $list_waiting  = array();
-        foreach($data as $val){
+        $list_waiting  = array(); 
+        foreach($data as $val){ 
             if ($val["status"]==0)  $list_waiting[] = $val;
             if ($val["status"]==-1) $list_failed[] = $val;
             if ($val["status"]==1)  $list_accepted[] = $val;
-        }
+        }  
         return array("审核通过"=> $list_accepted,
                      "审核失败" => $list_failed,
                      "等待审核" => $list_waiting);

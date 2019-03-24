@@ -3,18 +3,21 @@
 -- (2)mysql默认编码是latin，要改成utf-8
 -- (3) 约定: 所有都是小写字母;不用外键;
 -- 1、建库
-DROP DATABASE IF EXISTS XLibrary;
-CREATE DATABASE XLibrary;
-USE XLibrary;
+DROP DATABASE IF EXISTS xlibrary;
+CREATE DATABASE xlibrary;
+USE xlibrary;
 -- 2、建表
 -- (*) 图书表
 create table book(
   id    int auto_increment not null primary key,
   isbn       varchar(32),
-  title  varchar(256),          -- 书名
+  title  varchar(256),              -- 书名
+  subtitle  varchar(256),           -- 书名
   author     varchar(256),          -- json数组，多个作者
-  publisher  varchar(128),           -- 出版社
-  douban_json longtext,
+  publisher  varchar(128),          -- 出版社
+  summary    longtext,
+  pubdate    varchar(16), 
+  other longtext,
   stock  int DEFAULT 0 ,             -- 库存 
   lended int DEFAULT 0               -- 借出了多少本
 );  

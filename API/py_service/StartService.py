@@ -1,7 +1,7 @@
 from STULogin import STULogin
 from bottle import *
 import json
-import DoubanAPI
+import BooksAPI
 
 def returnJSON(code,data):
     return json.dumps({
@@ -17,7 +17,7 @@ def index():
 
 @get("/isbn/<isbn>")
 def getBookInfoByISBN(isbn): 
-    rst = DoubanAPI.getBookInfoByISBN(isbn)
+    rst = BooksAPI.getBookInfoByISBN(isbn)
     if rst == None:
         return returnJSON(-1,"ISBN码不存在")
     else:

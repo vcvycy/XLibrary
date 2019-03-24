@@ -57,12 +57,11 @@
     // 如：createSQLAndRun("select * from stu where id=%s and name='%s'",1,"cjf")
     // 创建并执行sql. 自动会对所有参数执行escape操作。
     public function createSQLAndRun(){ 
-        $sql=self::createSQL(...func_get_args()); 
+        $sql=self::createSQL(...func_get_args());  
         return self::runSQL($sql);
     }
     public function createSQLAndRunAssoc(){ 
-      $sql=self::createSQL(...func_get_args());
-      //die($sql);
+      $sql=self::createSQL(...func_get_args()); 
       return self::runSQLAssoc($sql);
     }
     public function getValueByID($table,$id,$col_name){

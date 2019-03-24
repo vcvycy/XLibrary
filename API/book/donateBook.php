@@ -14,8 +14,8 @@ function main(){
         $b = new Books(); 
         // 如果书不在数据库中，取豆瓣爬
         if (!$b->isISBNExists($isbn)){ 
-            $douban_json = Utils::getDoubanJson($isbn); 
-            $b->addBook($douban_json);
+            $book_info = Utils::getBookInfoByISBN($isbn); 
+            $b->addBook($book_info);
         }
         $sid = \StuSess\getKey("sid");
         $book_id = $b->getBookID($isbn); 

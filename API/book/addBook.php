@@ -6,9 +6,9 @@ function main(){
     // 参数读取
     try{
         $isbn = Utils::getParamWithFilter("isbn","digit");
-        $douban_json = Utils::getDoubanJson($isbn); 
+        $book_info = Utils::getBookInfoByISBN($isbn); 
         $b = new Books(); 
-        $b->addBook($douban_json);
+        $b->addBook($book_info);
         Utils::exit(0,"图书添加成功");
     } catch (Exception $e) {
         Utils::exit(-2,$e->getMessage());
