@@ -1,0 +1,21 @@
+<meta charset="utf-8"></meta>
+<script src="js/vue.min.js"></script>
+<script src="js/jquery-min.js"></script>
+<script src="js/my.js"></script>
+
+<div id="app"> 
+    <li v-for="item in sidebar_list">
+            <a v-bind:href=item.href>
+              <i v-bind:class="item.icon"></i>
+              {{item.name}}
+            </a>
+          </li>
+</div>
+<script>
+    var sidebar = new Vue({
+      el: '#app',
+      data: {
+        "sidebar_list" : sidebar_json
+      } 
+    });
+</script>

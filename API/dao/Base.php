@@ -61,7 +61,8 @@
         return self::runSQL($sql);
     }
     public function createSQLAndRunAssoc(){ 
-      $sql=self::createSQL(...func_get_args()); 
+      $sql=self::createSQL(...func_get_args());  
+      //echo $sql;
       return self::runSQLAssoc($sql);
     }
     public function getValueByID($table,$id,$col_name){

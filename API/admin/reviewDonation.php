@@ -6,7 +6,7 @@ require_once(DIR_DAO."Books.php");
 function main(){ 
     // 参数读取
     try{
-        \StuSess\isLoginOrThrowException(); // 改为管理员审核 
+        \AdminSess\isLoginOrThrowException(); // 改为管理员审核 
         $book_donate_id = Utils::getParamWithFilter("book_donate_id","digit");
         $status = Utils::getParamWithFilter("status","digit");
         $b = new Books(); 

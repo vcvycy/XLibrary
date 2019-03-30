@@ -41,7 +41,7 @@ create table book_donate(
    id   int auto_increment not null primary key,
    time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
    sid  varchar(32),                                 -- 学生ID
-   book_id int,                                      -- 图书ID
+   isbn varchar(32),                                      -- 图书ID
    donator_word varchar(128),
    how_to_fetch varchar(256),                        -- 如何取书
    status int  -- 0表示等待审核，1表示审核通过，-1表示审核不通过                               -- 是否已经捐入库中，由管理员来设置
@@ -51,7 +51,7 @@ create table book_donate(
 create table book_borrow(
   id        int auto_increment not null primary key,
   sid       VARCHAR(32),
-  book_id   int,
+  isbn  varchar(32),
   --  借书时间/还书时间(null 表示还未归还)
   borrow_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   return_time timestamp default 0

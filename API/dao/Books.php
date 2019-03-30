@@ -69,7 +69,7 @@ Class Books extends Base{
 
 
     // (*) 添加一本书到库中
-    public function incStock($isbn){
+    public function incStock($isbn){ 
         $cur_stock = $this->getStock($isbn);
         $cur_stock ++;
         $this->setStock($isbn,$cur_stock);
@@ -81,19 +81,20 @@ Class Books extends Base{
         $ret = $this->createSQLAndRun(
             "update book set stock = %d where isbn = '%s'",
             $stock,
-            $isbn);
+            $isbn); 
         if ($ret!=true) 
             throw new Exception("update 未知错误");
     }
+
     //(*) 捐书,提交成功返回true,失败返回false
     public function donateBook($sid,
-                                $book_id,
+                                $isbn,
                                 $how_to_fetch,
                                 $donator_word,
                                 $status=0){
-        $ret = $this->createSQLAndRun(" INSERT INTO book_donate(sid, book_id,donator_word, how_to_fetch,status) VALUES ('%s','%s','%s','%s','%s')",
+        $ret = $this->createSQLAndRun(" INSERT INTO book_donate(sid, isbn,donator_word, how_to_fetch,status) VALUES ('%s','%s','%s','%s','%s')",
                                         $sid,
-                                        $book_id,
+                                        $isbn,
                                         $donator_word,
                                         $how_to_fetch,
                                         $status
@@ -101,34 +102,10 @@ Class Books extends Base{
         return true; 
     }
 
-    // (*) 捐书审核
-    public function reviewDonation($book_donate_id, $status){
-        // 状态值判断
-        if ($status<-1 || $status>1){
-            throw new Exception ("status 取值范围{-1,0,1}，分别表示不通过、等待审核、审核通过");
-        }
-        // 更新status值
-        $ret = $this->createSQLAndRun(
-            "update book_donate set status = %d where id = %d",
-            $status,
-            $book_donate_id);
-            
-        if ($ret ==0) throw new Exception("未知失败!");
-
-        // 如果审核通过，则获取ISBN，加库存
-        if ($status == 1){
-            $isbn = $this->createSQLAndRun(
-                "select book.isbn from book,book_donate where book_donate.id =%d and book.id = book_donate.book_id",
-                $book_donate_id)[0][0];
-            $this->incStock($isbn);
-        } 
-        return ;
-    }
-
     // (*) 获取用户捐书列表
     public function getDonationListBySID($sid){
         $data = $this->createSQLAndRunAssoc(
-            "SELECT book_donate.*,book.title,book.isbn,book.author,book.publisher FROM book_donate,book WHERE SID = '%s' and book.id = book_donate.book_id",
+            "SELECT book_donate.*,book.title,book.isbn,book.author,book.publisher FROM book_donate,book WHERE SID = '%s' and book.isbn = book_donate.isbn",
             $sid);
         $list_accepted = array();
         $list_failed   = array();
@@ -142,14 +119,22 @@ Class Books extends Base{
                      "审核失败" => $list_failed,
                      "等待审核" => $list_waiting);
     }
-
+    // 获取未审核过的图书
+    public function getDonationListWaitingForReview(){
+        $data = $this->createSQLAndRunAssoc(
+            "SELECT book_donate.*,book.title,book.author,book.publisher, book.pubdate ,stu.name
+                FROM stu, book_donate,book 
+                WHERE book_donate.sid =stu.sid and book.isbn = book_donate.isbn and book_donate.status=0"
+        );
+        return $data;
+    }
     // 查看被借了多少书
     public function getLended($isbn){
         $ret = $this->createSQLAndRun("select lended from book where isbn = '%s'",$isbn);
         if (count($ret)) 
             return intval($ret[0][0]);
         else 
-            return 0;
+            throw new Exception("getLended : 找不到isbn$isbn");
     }
     // 设置被借了多少书
     public function setLended($isbn,$lended){
@@ -157,8 +142,8 @@ Class Books extends Base{
             "update book set lended = %d where isbn = '%s'",
             $lended,
             $isbn);
-        if ($ret!=true)
-            throw new Exception("update 未知错误");
+            if ($this->lastAffectedRows() !=1 )
+            throw new Exception("无法设置被借书数量lended isbn: $isbn, $lended");
     }
 
     //通过ISBN获取图书ID
@@ -177,16 +162,15 @@ Class Books extends Base{
         // 获取被借了多少书
         $lended = $this->getLended($isbn);
         if ($cur_stock<=$lended) 
-            throw new Exception("库存不足!库存:$cur_stock,被借出: $lended");
-        $book_id = $this->getBookID($isbn); 
+            throw new Exception("库存不足!库存:$cur_stock,被借出: $lended"); 
 
         // 添加一条借书记录
         $this->createSQLAndRun(
-            "INSERT INTO book_borrow(sid, book_id) VALUES ('%s',%d)",
+            "INSERT INTO book_borrow(sid, isbn) VALUES ('%s','%s')",
             $sid,
-            $book_id
+            $isbn
         );
-        // 借出一本书
+        // 借出的书数量更新
         $this->setLended($isbn,$lended+1);
         return ;
     }
@@ -194,8 +178,8 @@ Class Books extends Base{
     // (*) 获取用户借书列表
     public function getBorrowListBySID($sid){
         $data = $this->createSQLAndRunAssoc(
-            "SELECT book_borrow.*,book.title,book.isbn,book.author,book.publisher FROM book_borrow,book 
-                WHERE SID = '%s' and book.id = book_borrow.book_id",
+            "SELECT book_borrow.*,book.* FROM book_borrow,book 
+                WHERE book_borrow.sid = '%s' and book.isbn = book_borrow.isbn",
             $sid);
         $not_return = array();
         $returned   = array();
@@ -212,18 +196,84 @@ Class Books extends Base{
     }
 
     // (*) 还一本书
-    public function returnBook($sid, $isbn){
-        $book_id = $this->getBookID($isbn);
+    public function returnBook($sid, $isbn){ 
         $ret = $this-> createSQLAndRun(
             "update book_borrow set return_time = NOW() 
-                where sid='%s' and return_time=0 and book_id =%d limit 1",
+                where sid='%s' and return_time=0 and isbn ='%s' limit 1",
                 $sid,
-                $book_id
-        );
-        if ($this->lastAffectedRows() ==0){
+                $isbn
+        ); 
+        if ($this->lastAffectedRows() !=1){
             throw new Exception("未借书，无法还书");
+        }else{
+            // 被借出的书数量更新
+            $lended = $this->getLended($isbn);
+            $this->setLended($isbn,$lended-1);
         }
         return ;
+    } 
+
+    // 管理员接口
+    
+    // (*) 捐书审核
+    public function reviewDonation($book_donate_id, $status){
+        // 状态值判断
+        if ($status<-1 || $status>1){
+            throw new Exception ("status 取值范围{-1,0,1}，分别表示不通过、等待审核、审核通过");
+        }
+        // 原来的status
+        $status_old = $this->createSQLAndRun(
+            "select status from book_donate where id = %d",$book_donate_id
+        );
+        if (count($status_old)>0)
+            $status_old= $status_old[0][0];
+        else
+            throw new Exception("book donate id $book_donate_id 不存在");
+        if ($status_old!="0")
+            throw new Exception("之前审核过了(状态$status_old)，请勿重新提交!");
+        // 更新status值
+        $ret = $this->createSQLAndRun(
+            "update book_donate set status = %d where id = %d",
+            $status,
+            $book_donate_id);
+            
+        if ($ret ==0) throw new Exception("未知失败!");
+
+        // 如果审核通过，则获取ISBN，加库存
+        if ($status == 1){
+            $isbn = $this->createSQLAndRun(
+                "select book_donate.isbn from book_donate where book_donate.id =%d",
+                $book_donate_id)[0][0];
+            $this->incStock($isbn);
+        } 
+        return ;
+    }
+    // 读取馆中图书
+    public function getBooksListInLibrary(){
+        $ret = $this->createSQLAndRunAssoc("select * from book");
+        return $ret;
+    }
+    // 查看某本书被谁借走了(名字/学号/借书时间)
+    public function whoBorrowTheBook($isbn){
+        $ret = $this->createSQLAndRunAssoc(
+            "SELECT book_borrow.id as book_borrow_id,stu.name,stu.sid,book_borrow.borrow_time FROM stu,book_borrow 
+              WHERE stu.sid = book_borrow.sid 
+                   and book_borrow.isbn='%s'
+                   and book_borrow.return_time =0",$isbn
+        );
+        return $ret;
+    }
+    // 查看某本书谁捐的
+    public function whoDonateTheBook($isbn){
+        $ret = $this->createSQLAndRunAssoc(
+            "SELECT stu.name,
+                    stu.sid,
+                    book_donate.time as 'donate_time',
+                    book_donate.donator_word '捐书留言' from stu,book_donate 
+                    where book_donate.isbn='%s' and book_donate.status=1",
+            $isbn
+        );
+        return $ret;
     }
 };  
 ?>

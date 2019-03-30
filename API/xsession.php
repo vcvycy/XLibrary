@@ -54,5 +54,10 @@ namespace AdminSess{
     function isLogin(){   // 是否登陆
         return getKey("login")==true;
     }  
+    function isLoginOrThrowException(){
+        if (!isLogin()){ 
+            throw new \Exception("管理员未登陆");
+        }
+    }
 }
 ?>

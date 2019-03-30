@@ -78,5 +78,10 @@ Class Students extends Base{
         $rst=$this->createSQLAndRunAssoc("select sid,name,degree,grade,school from stu where sid=%s",$sid);
         return $rst[0];
     }
+    // 获取所有学生信息
+    public function getStudentsList(){
+        $rst=$this->createSQLAndRunAssoc("select sid,name,degree,grade,school from stu");
+        return $rst;
+    }
 }; 
 ?>

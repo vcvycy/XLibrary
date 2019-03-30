@@ -18,9 +18,9 @@ function main(){
             $b->addBook($book_info);
         }
         $sid = \StuSess\getKey("sid");
-        $book_id = $b->getBookID($isbn); 
+        //$book_id = $b->getBookID($isbn); 
         // 添加入数据库中
-        if ($b->donateBook($sid,$book_id,$how_to_fetch,$donator_word))
+        if ($b->donateBook($sid,$isbn,$how_to_fetch,$donator_word))
             Utils::exit(0,"信息提交成功，请等待管理员审核~");
         else
             Utils::exit(-1,"提交失败，请检查参数，或联系管理员~");
