@@ -136,14 +136,14 @@
           <!-- Page Header-->
           <header class="page-header">
             <div class="container-fluid">
-              <h2 class="no-margin-bottom">馆中图书</h2>
+              <h2 class="no-margin-bottom">捐书审核</h2>
             </div>
           </header>
           <!-- Breadcrumb-->
           <div class="breadcrumb-holder container-fluid">
             <ul class="breadcrumb">
               <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-              <li class="breadcrumb-item active">Books            </li>
+              <li class="breadcrumb-item active">Donation Review</li>
             </ul>
           </div>
           <section class="tables" id="book_review">   
@@ -186,8 +186,8 @@
                               <td>{{item.isbn}}</td>
                               <td>{{item.title}}</td>
                               <td>{{item.author}}</td>
-                              <td>{{item.pubdate}}</td>
                               <td>{{item.publisher}}</td>
+                              <td>{{item.pubdate}}</td>
                               <td>{{item.how_to_fetch}}</td>
                               <td>{{item.donator_word}}</td>
                               <td><a href=# v-on:click="setReviewStatus(item.id,1)"><font color=green>通过</font></a>&nbsp;

@@ -31,7 +31,7 @@ class Utils
             "host" => "localhost",
             "user" => "root",
             "pass" => "youpass",
-            "dbname" => "XLibrary"
+            "dbname" => "xlibrary"
         )
     ); 
     //返回数据给前端,如果error_code不为0，则$data返回具体出错信息，否则返回前端需要的信息
