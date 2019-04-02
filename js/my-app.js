@@ -55,6 +55,34 @@ $$(document).on('pageInit', function (e) {
 
 	
 })
+$("#LoginForm").validate({
+	submitHandler: function(form){
+		console.log("test");
+		var formData = myApp.formToJSON('#LoginForm');
+		console.log(JSON.stringify(formData));
+		$.ajax({
+			url: "./API/account/login.php?",
+			dataType: "json",
+			data: formData,
+			type: "post",
+			async: true,
+			success: function (data) {
+				alert(data.data);
+				if(data.error_code==0){
+					myApp.closeModal('.popup-login');
+					$("#login").attr("disabled",true);
+					console.log("success");
+				}
+			},
+			error: function (xhr, textStatus) {
+				console.log('错误');
+				console.log(xhr);
+				console.log(textStatus);
+			},
+		});
+
+	}
+});
 myApp.onPageInit('music', function (page) {
 		  audiojs.events.ready(function() {
 			var as = audiojs.createAll();
@@ -64,67 +92,143 @@ myApp.onPageInit('videos', function (page) {
 		  $(".videocontainer").fitVids();
 })
 myApp.onPageInit('contact', function (page) {
-		contact_app = new Vue({
-			el: '#id_page_contact',
-			delimiters:["@{","}"],
-			data: {
-				fetchType: 1,            // 1:送至分馆；2: 上门取书
-				fetchAddr:"学生公寓",            // 上门取书此字段才有意义
-				phone : "13988889999",
-				book: {
-                    name: "计算机导论",
-                    publisher: "机械工业出版社",
-                    author: "柳煜颖",
-                    class: ""
-                }
-			},
-			methods: {
-				setFetchType: (type) => {
-                    contact_app.fetchType=type;
-                }
+	var isbn;
+	function cbBarcode(result){
+		//console.log(result);
+		if (!result){
+			alert("检测不到ISBN码");
+		}else{
+			// alert(result.codeResult.code);
+			isbn = result.codeResult.code;
+			$.ajax({
+				url: "./API/isbn.php?",
+				dataType: "json",
+				data: {
+					"isbn": isbn,
+				},
+				async: true,
+				success: function (data) {
+					if(data.error_code==0){
+						contact_app.book={
+							name: data.data.title,
+							publisher: data.data.publisher,
+							author: data.data.author,
+							class: ""
+						}
+					}else {
+						alert(data.data);
+					}
+				},
+				error: function (xhr, textStatus) {
+					console.log('错误');
+					console.log(xhr);
+					console.log(textStatus);
+				},
+			});
+		}
+	}
+	contact_app = new Vue({
+		el: '#id_page_contact',
+		delimiters:["@{","}"],
+		data: {
+			seen: false,
+			fetchType: 1,            // 1:送至分馆；2: 上门取书
+			fetchAddr:"学生公寓",            // 上门取书此字段才有意义
+			phone : "13988889999",
+			book: {
+	            name: "计算机导论",
+	            publisher: "机械工业出版社",
+	            author: "柳煜颖",
+	            class: ""
+	        },
+	        word: "这本书超棒"
+		},
+		methods: {
+			setFetchType: (type) => {
+	            contact_app.fetchType=type;
+	        }
+		}
+	});
+
+//捐书
+	$("#ContactForm").validate({
+		submitHandler: function(form){
+			// ajaxContact(form);
+
+			console.log(JSON.stringify(contact_app.fetchType));
+			if (contact_app.fetchType==1) {
+				//1表示送至分馆
+				how_to_fetch = {"how":1,
+				"phone":contact_app.phone};
+			}else {
+				how_to_fetch = {"how":2,
+					"where":contact_app.fetchAddr,
+				"phone":contact_app.phone};
 			}
-		});
-		$("#ContactForm").validate({
-			submitHandler: function(form) {
-			ajaxContact(form);
+			$.ajax({
+				url: "API/book/donateBook.php?",
+				dataType: "json",
+				data: {
+					"isbn": isbn,
+					"donator_word":contact_app.word,
+					"how_to_fetch": how_to_fetch,
+				},
+				async: false,
+				success: function (data) {
+					alert(data.data);
+					if(data.error_code==0){
+
+						// $(location).attr('href', 'index.html');
+					}
+				},
+				error: function (xhr, textStatus) {
+					console.log('错误');
+					console.log(xhr);
+					console.log(textStatus);
+				},
+			});
 			return false;
-			}
-		});
+		}
+	});
+	let tmpl = '<li class="uploader__file" style="background-image:url(#url#)"></li>',
+		$gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
+		$uploaderInput_1 = $("#uploaderInput_1"),
+		$uploaderFiles_1 = $("#uploaderFiles_1")
+	$uploaderInput_1.on("change", function (e) {
+		let src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
+		let file = files[0];
+		if (url) {
+			src = url.createObjectURL(file);
+		} else {
+			src = e.target.result;
+		}
 
-    let tmpl = '<li class="uploader__file" style="background-image:url(#url#)"></li>',
-        $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
-        $uploaderInput_1 = $("#uploaderInput_1"),
-        $uploaderFiles_1 = $("#uploaderFiles_1")
-    $uploaderInput_1.on("change", function (e) {
-        let src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
-        let file = files[0];
-        if (url) {
-            src = url.createObjectURL(file);
-        } else {
-            src = e.target.result;
-        }
+		$uploaderFiles_1.empty();
+		$uploaderFiles_1.append($(tmpl.replace('#url#', src)));
 
-        $uploaderFiles_1.empty();
-        $uploaderFiles_1.append($(tmpl.replace('#url#', src)));
-
-        console.log($uploaderFiles_1);
-        var num = $uploaderFiles_1.length;
-        if (num >= 1) {
-            $('#input_box_1').addClass("reselect-uploader__input-box");
-        }
-        else {
-            $('#input_box_1').removeClass("reselect-uploader__input-box");
-        }
+		console.log($uploaderFiles_1);
+		var num = $uploaderFiles_1.length;
+		if (num >= 1) {
+			$('#input_box_1').addClass("reselect-uploader__input-box");
+		}
+		else {
+			$('#input_box_1').removeClass("reselect-uploader__input-box");
+		}
+		var url1=URL.createObjectURL(this.files[0]);
+		console.log(url1);
+		RecognizeBarCode(url1,cbBarcode);
 
 
-    });
-    $uploaderFiles_1.on("click", "li", function () {
-        $galleryImg.attr("style", this.getAttribute("style"));
-        $gallery.fadeIn(100);
-    });
-    $gallery.on("click", function () {
-        $gallery.fadeOut(100);
-    });
+	});
+	$uploaderFiles_1.on("click", "li", function () {
+		$galleryImg.attr("style", this.getAttribute("style"));
+		$gallery.fadeIn(100);
+	});
+	$gallery.on("click", function () {
+		$gallery.fadeOut(100);
+	});
+
+
 //radio事件
 	/*
     var $getBooks = $("#getBooks"),
@@ -138,7 +242,85 @@ myApp.onPageInit('contact', function (page) {
         //  $("#AddressHide").css("display", 'block');
         $AddressHide.css("display", "none");
     });*/
+
+
 })
+
+// 	contact_app = new Vue({
+	// 		el: '#id_page_contact',
+	// 		delimiters:["@{","}"],
+	// 		data: {
+	// 			fetchType: 1,            // 1:送至分馆；2: 上门取书
+	// 			fetchAddr:"学生公寓",            // 上门取书此字段才有意义
+	// 			phone : "13988889999",
+	// 			book: {
+    //                 name: "计算机导论",
+    //                 publisher: "机械工业出版社",
+    //                 author: "柳煜颖",
+    //                 class: ""
+    //             }
+	// 		},
+	// 		methods: {
+	// 			setFetchType: (type) => {
+    //                 contact_app.fetchType=type;
+    //             }
+	// 		}
+	// 	});
+	// 	$("#ContactForm").validate({
+	// 		submitHandler: function(form) {
+	// 		ajaxContact(form);
+	// 		return false;
+	// 		}
+	// 	});
+	//
+    // let tmpl = '<li class="uploader__file" style="background-image:url(#url#)"></li>',
+    //     $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
+    //     $uploaderInput_1 = $("#uploaderInput_1"),
+    //     $uploaderFiles_1 = $("#uploaderFiles_1")
+    // $uploaderInput_1.on("change", function (e) {
+    //     let src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
+    //     let file = files[0];
+    //     if (url) {
+    //         src = url.createObjectURL(file);
+    //     } else {
+    //         src = e.target.result;
+    //     }
+	//
+    //     $uploaderFiles_1.empty();
+    //     $uploaderFiles_1.append($(tmpl.replace('#url#', src)));
+	//
+    //     console.log($uploaderFiles_1);
+    //     var num = $uploaderFiles_1.length;
+    //     if (num >= 1) {
+    //         $('#input_box_1').addClass("reselect-uploader__input-box");
+    //     }
+    //     else {
+    //         $('#input_box_1').removeClass("reselect-uploader__input-box");
+    //     }
+	//
+	//
+    // });
+    // $uploaderFiles_1.on("click", "li", function () {
+    //     $galleryImg.attr("style", this.getAttribute("style"));
+    //     $gallery.fadeIn(100);
+    // });
+    // $gallery.on("click", function () {
+    //     $gallery.fadeOut(100);
+    // });
+//radio事件
+	/*
+    var $getBooks = $("#getBooks"),
+		$deliverBooks =$("#deliverBooks"),
+	$AddressHide = $("#AdressHide");
+    $getBooks.on("click",function (){
+          //  $("#AddressHide").css("display", 'block');
+        $AddressHide.css("display", "block");
+    });
+    $deliverBooks.on("click",function (){
+        //  $("#AddressHide").css("display", 'block');
+        $AddressHide.css("display", "none");
+    });*/
+// })
 
 myApp.onPageInit('form', function (page) {
     $("#CustomForm").validate({
