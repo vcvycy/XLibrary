@@ -23,6 +23,114 @@ var myApp = new Framework7({
 
 // Export selectors engine
 var $$ = Dom7;
+function cbBarcode(result){
+    //console.log(result);
+    if (!result){
+        alert("检测不到ISBN码");
+    }else{
+        // alert(result.codeResult.code);
+        isbn = result.codeResult.code;
+        $.ajax({
+            url: "./API/isbn.php?",
+            dataType: "json",
+            data: {
+                "isbn": isbn,
+            },
+            async: true,
+            success: function (data) {
+                if(data.error_code==0){
+                    // contact_app.book={
+                    //     name: data.data.title,
+                    //     publisher: data.data.publisher,
+                    //     author: data.data.author,
+                    //     class: ""
+                    $.ajax({
+                        url: "./API/book/borrowBook.php?",
+                        dataType: "json",
+                        data: {
+                            "isbn": isbn,
+                        },
+                        async: true,
+                        success: function (data) {
+                            alert(data.data);
+                        }
+                    });
+                }else {
+                    alert(data.data);
+                }
+            },
+            error: function (xhr, textStatus) {
+                console.log('错误');
+                console.log(xhr);
+                console.log(textStatus);
+            },
+        });
+    }
+}
+let tmpl = '<li class="uploader__file" style="background-image:url(#url#)"></li>',
+    $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
+    $uploaderInput_1 = $("#uploaderInput_1"),
+    $uploaderFiles_1 = $("#uploaderFiles_1")
+$uploaderInput_1.on("change", function (e) {
+    Quagga.stop();
+    $$('#interactive').hide();
+    let src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
+    let file = files[0];
+    if (url) {
+        src = url.createObjectURL(file);
+    } else {
+        src = e.target.result;
+    }
+
+    $uploaderFiles_1.empty();
+    $uploaderFiles_1.append($(tmpl.replace('#url#', src)));
+
+    console.log($uploaderFiles_1);
+    var num = $uploaderFiles_1.length;
+    if (num >= 1) {
+        $('#input_box_1').addClass("reselect-uploader__input-box");
+    }
+    else {
+        $('#input_box_1').removeClass("reselect-uploader__input-box");
+    }
+    var url1=URL.createObjectURL(this.files[0]);
+    console.log(url1);
+    RecognizeBarCode(url1,cbBarcode);
+});
+$uploaderFiles_1.on("click", "li", function () {
+    $galleryImg.attr("style", this.getAttribute("style"));
+    $gallery.fadeIn(100);
+});
+$gallery.on("click", function () {
+    $gallery.fadeOut(100);
+});
+$$('.popup-scan').on('opened', function (e, popup) {
+    Quagga.init({
+        inputStream : {
+            name : "Live",
+            type : "LiveStream",
+        },
+        decoder : {
+            readers : ["code_128_reader",
+                "ean_reader"]
+        }
+    }, function(err) {
+        if (err) {
+            console.log(err);
+            return
+        }
+        console.log("Initialization finished. Ready to start");
+        Quagga.start();
+    });
+    Quagga.onProcessed(function(result) {
+        if (result) {
+            if (result.codeResult && result.codeResult.code) {
+                alert(result.codeResult.code);
+                Quagga.stop();
+            }
+        }
+    });
+});
 
 // Add main View
 var mainView = myApp.addView('.view-main', {
@@ -55,6 +163,7 @@ $$(document).on('pageInit', function (e) {
 
 	
 })
+
 $("#LoginForm").validate({
 	submitHandler: function(form){
 		console.log("test");

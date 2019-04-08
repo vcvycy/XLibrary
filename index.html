@@ -139,7 +139,7 @@
 			<div class="swiper-pagination-toolbar"></div>
 			<div class="swiper-wrapper">
                 <div class="swiper-slide toolbar-icon">
-                    <a href="#" data-popup=".popup-login" class="open-popup"><img src="images/icons/green/扫一扫.png" alt="" title="" /><span>扫一扫借书</span></a>
+                    <a href="#" data-popup=".popup-scan" class="open-popup close-panel"><img src="images/icons/green/扫一扫.png" alt="" title="" /><span>扫一扫借书</span></a>
                     <a href="tables.html" data-view=".view-main"><img src="images/icons/green/list.png" alt="" title="" /><span>图书列表</span></a>
                     <a href="contact.html" data-view=".view-main"><img src="images/icons/green/书.png" alt="" title="" /><span>我要捐书</span></a>
                     <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/green/交换.png" alt="" title="" /><span>置换图书</span></a>
@@ -160,7 +160,33 @@
       </div>
     </div>
 
-	
+<!-- open Popup -->
+<div class="popup popup-scan">
+    <div class="content-block">
+        <div class="close_popup_button">
+            <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
+        </div>
+        <div id="result"></div>
+        <div id="interactive" class="viewport"><video autoplay="true" preload="auto" src="" muted="true" playsinline="true"></video><canvas class="drawingBuffer" width="640" height="480"></canvas><br clear="all"></div>
+        <label>手动上传:</label>
+        <article >
+            <section class="description">
+                <p >请拍摄书后条形码；</p>
+                <p >拍摄清晰，条形码必须拍全；</p>
+            </section>
+        </article>
+        <div class="single-photo">
+            <!--<input type="file"  accept="image/*" />-->
+            <ul class="uploader__files" id="uploaderFiles_1">
+            </ul>
+            <div class="uploader__input-box" id="input_box_1">
+                <input id="uploaderInput_1" class="uploader__input barcode" type="file"
+                       name="file_1" accept="image/*">
+            </div>
+        </div>
+    </div>
+</div>
+
     <!-- Login Popup -->
 <div class="popup popup-login">
     <div class="content-block">
@@ -254,5 +280,7 @@
 <script type="text/javascript" src="js/my-app.js"></script>
 <script src="js/quagga.min.js" type="text/javascript"></script>
 <script src="js/utils.js" type="text/javascript"></script>
+<script src="js/qrscan.js" type="text/javascript"></script>
+
   </body>
 </html>
