@@ -23,6 +23,47 @@ var myApp = new Framework7({
 
 // Export selectors engine
 var $$ = Dom7;
+myApp.onPageAfterBack('home', function(page){
+	if (sessionStorage.getItem("sid")){
+		$$('#login').addClass("disabled");
+	}
+}).trigger();
+myApp.onPageInit('home', function (page) {
+	if (sessionStorage.getItem("sid")){
+		$$('#login').addClass("disabled");
+		new Vue({
+			el:'#userInfo',
+			data:{
+				username: sessionStorage.getItem("name"),
+				studentnumber: sessionStorage.getItem("sid")
+			}
+		})
+	} else{
+		$.ajax({
+			url: "./API/account/getCurUserInfo.php?",
+			dataType: "json",
+			data: {
+			},
+			async: true,
+			success: function (data) {
+				if(data.error_code==0){
+					sessionStorage.setItem("sid", data.data.sess["stu/sid"]);
+					sessionStorage.setItem("name", data.data.sess["stu/name"]);
+					$$('#login').addClass("disabled");
+				}else {
+					console.log("tiao");
+					myApp.popup(".popup-login");
+				}
+			},
+			error: function (xhr, textStatus) {
+				console.log('错误');
+				console.log(xhr);
+				console.log(textStatus);
+			},
+		});
+	}
+
+}).trigger(); //And trigger it right away
 function cbBarcode(result){
     //console.log(result);
     if (!result){
@@ -104,6 +145,9 @@ $uploaderFiles_1.on("click", "li", function () {
 $gallery.on("click", function () {
     $gallery.fadeOut(100);
 });
+$$('.popup-scan').on('closed', function () {
+	Quagga.stop();
+});
 $$('.popup-scan').on('opened', function (e, popup) {
     Quagga.init({
         inputStream : {
@@ -181,6 +225,7 @@ $("#LoginForm").validate({
 					myApp.closeModal('.popup-login');
 					$("#login").attr("disabled",true);
 					console.log("success");
+					location.reload();
 				}
 			},
 			error: function (xhr, textStatus) {
