@@ -1,0 +1,43 @@
+<div class="pages">
+    <div data-page="BorrowSuccessfully" class="page no-toolbar no-navbar">
+        <div class="page-content">
+
+            <div class="navbarpages navbarpagesbg">
+                <div class="navbar_left">
+                    <div class="logo_text"><a href="index.html">法学与艺术分馆</a></div>
+                </div>
+                <div class="navbar_right navbar_right_menu">
+                    <a href="#" data-panel="left" class="open-panel"><img src="images/icons/white/menu.png" alt="" title="" /></a>
+                </div>
+                <div class="navbar_right">
+                    <a href="#" data-panel="right" class="open-panel"><img src="images/icons/white/user.png" alt="" title="" /></a>
+                </div>
+
+            </div>
+
+            <div id="pages_maincontent">
+                <h2 class="page_title">借书信息</h2>
+
+                <div class="page_single layout_fullwidth_padding">
+                    <div class="contactform"   id="id_page_contact">
+                        <form class="" id="ContactForm" method="post" action="">
+
+
+                            <label>书名:</label>
+                            <input type="text" v-bind:value="book.name" class="form_input required" />
+                            <label>出版社:</label>
+                            <input type="text" v-bind:value="book.publisher" class="form_input required" />
+                            <label>作者:</label>
+                            <input type="text" v-bind:value="book.author" class="form_input required" />
+
+                            <input type="submit" class="form_submit" value="确认借书"/>
+                            <a href="index.html" data-view=".view-main"> <input type="submit" class="form_cancel" value="取消借书"/></a>
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
