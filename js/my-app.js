@@ -80,24 +80,16 @@ function cbBarcode(result){
             async: true,
             success: function (data) {
                 if(data.error_code==0){
-                    // contact_app.book={
-                    //     name: data.data.title,
-                    //     publisher: data.data.publisher,
-                    //     author: data.data.author,
-                    //     class: ""
-                    $.ajax({
-                        url: "./API/book/borrowBook.php?",
-                        dataType: "json",
-                        data: {
-                            "isbn": isbn,
-                        },
-                        async: true,
-                        success: function (data) {
-                            alert(data.data);
-                        }
-                    });
+                    myApp.closeModal('.popup-scan');
+                    mainView.router.load({'url':'BorrowSuccessfully.html',
+                        'ignoreCache': true});
+                    sessionStorage.setItem("bookname", data.data.title);
+                    sessionStorage.setItem("publisher", data.data.publisher);
+                    sessionStorage.setItem("author", data.data.author);
+                    sessionStorage.setItem("isbn", data.data.isbn);
+                    // mainView.router.load('BorrowSuccessfully');
+                    // mainView.router.loadPage('BorrowSuccessfully.html');
                 }else {
-                    alert(data.data);
                 }
             },
             error: function (xhr, textStatus) {
@@ -169,7 +161,7 @@ $$('.popup-scan').on('opened', function (e, popup) {
     Quagga.onProcessed(function(result) {
         if (result) {
             if (result.codeResult && result.codeResult.code) {
-                alert(result.codeResult.code);
+                // alert(result.codeResult.code);
                 Quagga.stop();
             }
         }
@@ -244,6 +236,99 @@ myApp.onPageInit('music', function (page) {
 })
 myApp.onPageInit('videos', function (page) {
 		  $(".videocontainer").fitVids();
+})
+myApp.onPageBeforeInit('BorrowSuccessfully',function (page) {
+    if(sessionStorage.getItem("bookname")){
+        console.log('value');
+        bsapp = new Vue({
+            el: '#BorrowForm',
+            delimiters:["@{","}"],
+            data: {
+                book: {
+                    name: sessionStorage.getItem("bookname"),
+                    publisher: sessionStorage.getItem("publisher"),
+                    author: sessionStorage.getItem("author")
+                },
+            },
+        });
+    }else{
+        console.log('novalue')
+        bsapp = new Vue({
+            el: '#BorrowForm',
+            delimiters:["@{","}"],
+            data: {
+                book: {
+                    name: "计算机导论",
+                    publisher: "机械工业出版社",
+                    author: "XXX",
+                },
+            },
+        });
+    }
+    $("#BorrowForm").validate({
+        submitHandler: function(form){
+            // ajaxContact(form);
+            $.ajax({
+                url: "API/book/borrowBook.php?",
+                dataType: "json",
+                data: {
+                    "isbn": sessionStorage.getItem("isbn")
+                },
+                async: false,
+                success: function (data) {
+                    alert(data.data);
+                    if(data.error_code==0){
+                        $(location).attr('href', 'index.html');
+                    }
+                },
+                error: function (xhr, textStatus) {
+                    console.log('错误');
+                    console.log(xhr);
+                    console.log(textStatus);
+                },
+            });
+            return false;
+        }
+    });
+})
+// $$(document).on('pageInit', '.page[data-page="tables"]', function (e)
+myApp.onPageInit('tables', function (page) {
+    // Do something here when page with data-page="about" attribute loaded and initialized
+    $.ajax({
+        url: "./API/public_api/getBooksListInLibrary.php",
+        dataType: "json",
+        success(data){
+            console.log(data.data);
+            line = "";
+            for(var i=0;i<data.data.length;i++){
+                book = data.data[i];
+                console.log(book);
+                bookname = book.title;
+                publisher = book.publisher;
+                author = book.author;
+                line += "<li class=\"table_row\">\n" + "<div class=\"table_section_2\">"+bookname+"</div>\n"+
+                    "<div class=\"table_section\">"+publisher+"</div>\n"+
+                    "<div class=\"table_section_2\">"+author+"</div>\n"+"</li>";
+            }
+            $("#tablesapp").append(line);
+
+
+        }
+
+    })
+    // tablesapp = new Vue({
+    //     el: '#tablesapp',
+    //     data: {
+    //         title:"zhong "
+    //         // book:{
+    //         //     title:"1",author:"11",publisher:"123"
+    //         // },
+    //         // books:[
+    //         //     {title:"1",author:"11",publisher:"123"},
+    //         //     // {title:"1",author:"11",publisher:"123"}
+    //         // ]
+    //     }
+    // });
 })
 myApp.onPageInit('contact', function (page) {
 	var isbn;
@@ -325,14 +410,15 @@ myApp.onPageInit('contact', function (page) {
 				data: {
 					"isbn": isbn,
 					"donator_word":contact_app.word,
+					// "how_to_fetch": json.stringify(how_to_fetch),
 					"how_to_fetch": how_to_fetch,
+
 				},
 				async: false,
 				success: function (data) {
 					alert(data.data);
 					if(data.error_code==0){
-
-						// $(location).attr('href', 'index.html');
+						$(location).attr('href', 'index.html');
 					}
 				},
 				error: function (xhr, textStatus) {
