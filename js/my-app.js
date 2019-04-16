@@ -23,6 +23,150 @@ var myApp = new Framework7({
 
 // Export selectors engine
 var $$ = Dom7;
+myApp.onPageAfterBack('home', function(page){
+	if (sessionStorage.getItem("sid")){
+		$$('#login').addClass("disabled");
+	}
+}).trigger();
+myApp.onPageInit('home', function (page) {
+	if (sessionStorage.getItem("sid")){
+		$$('#login').addClass("disabled");
+		new Vue({
+			el:'#userInfo',
+			data:{
+				username: sessionStorage.getItem("name"),
+				studentnumber: sessionStorage.getItem("sid")
+			}
+		})
+	} else{
+		$.ajax({
+			url: "./API/account/getCurUserInfo.php?",
+			dataType: "json",
+			data: {
+			},
+			async: true,
+			success: function (data) {
+				if(data.error_code==0){
+					sessionStorage.setItem("sid", data.data.sess["stu/sid"]);
+					sessionStorage.setItem("name", data.data.sess["stu/name"]);
+					$$('#login').addClass("disabled");
+				}else {
+					console.log("tiao");
+					myApp.popup(".popup-login");
+				}
+			},
+			error: function (xhr, textStatus) {
+				console.log('错误');
+				console.log(xhr);
+				console.log(textStatus);
+			},
+		});
+	}
+
+}).trigger(); //And trigger it right away
+function cbBarcode(result){
+    //console.log(result);
+    if (!result){
+        alert("检测不到ISBN码");
+    }else{
+        // alert(result.codeResult.code);
+        isbn = result.codeResult.code;
+        $.ajax({
+            url: "./API/isbn.php?",
+            dataType: "json",
+            data: {
+                "isbn": isbn,
+            },
+            async: true,
+            success: function (data) {
+                if(data.error_code==0){
+                    myApp.closeModal('.popup-scan');
+                    mainView.router.load({'url':'BorrowSuccessfully.html',
+                        'ignoreCache': true});
+                    sessionStorage.setItem("bookname", data.data.title);
+                    sessionStorage.setItem("publisher", data.data.publisher);
+                    sessionStorage.setItem("author", data.data.author);
+                    sessionStorage.setItem("isbn", data.data.isbn);
+                    // mainView.router.load('BorrowSuccessfully');
+                    // mainView.router.loadPage('BorrowSuccessfully.html');
+                }else {
+                }
+            },
+            error: function (xhr, textStatus) {
+                console.log('错误');
+                console.log(xhr);
+                console.log(textStatus);
+            },
+        });
+    }
+}
+let tmpl = '<li class="uploader__file" style="background-image:url(#url#)"></li>',
+    $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
+    $uploaderInput_1 = $("#uploaderInput_1"),
+    $uploaderFiles_1 = $("#uploaderFiles_1")
+$uploaderInput_1.on("change", function (e) {
+    Quagga.stop();
+    $$('#interactive').hide();
+    let src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
+    let file = files[0];
+    if (url) {
+        src = url.createObjectURL(file);
+    } else {
+        src = e.target.result;
+    }
+
+    $uploaderFiles_1.empty();
+    $uploaderFiles_1.append($(tmpl.replace('#url#', src)));
+
+    console.log($uploaderFiles_1);
+    var num = $uploaderFiles_1.length;
+    if (num >= 1) {
+        $('#input_box_1').addClass("reselect-uploader__input-box");
+    }
+    else {
+        $('#input_box_1').removeClass("reselect-uploader__input-box");
+    }
+    var url1=URL.createObjectURL(this.files[0]);
+    console.log(url1);
+    RecognizeBarCode(url1,cbBarcode);
+});
+$uploaderFiles_1.on("click", "li", function () {
+    $galleryImg.attr("style", this.getAttribute("style"));
+    $gallery.fadeIn(100);
+});
+$gallery.on("click", function () {
+    $gallery.fadeOut(100);
+});
+$$('.popup-scan').on('closed', function () {
+	Quagga.stop();
+});
+$$('.popup-scan').on('opened', function (e, popup) {
+    Quagga.init({
+        inputStream : {
+            name : "Live",
+            type : "LiveStream",
+        },
+        decoder : {
+            readers : ["code_128_reader",
+                "ean_reader"]
+        }
+    }, function(err) {
+        if (err) {
+            console.log(err);
+            return
+        }
+        console.log("Initialization finished. Ready to start");
+        Quagga.start();
+    });
+    Quagga.onProcessed(function(result) {
+        if (result) {
+            if (result.codeResult && result.codeResult.code) {
+                // alert(result.codeResult.code);
+                Quagga.stop();
+            }
+        }
+    });
+});
 
 // Add main View
 var mainView = myApp.addView('.view-main', {
@@ -55,6 +199,36 @@ $$(document).on('pageInit', function (e) {
 
 	
 })
+
+$("#LoginForm").validate({
+	submitHandler: function(form){
+		console.log("test");
+		var formData = myApp.formToJSON('#LoginForm');
+		console.log(JSON.stringify(formData));
+		$.ajax({
+			url: "./API/account/login.php?",
+			dataType: "json",
+			data: formData,
+			type: "post",
+			async: true,
+			success: function (data) {
+				alert(data.data);
+				if(data.error_code==0){
+					myApp.closeModal('.popup-login');
+					$("#login").attr("disabled",true);
+					console.log("success");
+					location.reload();
+				}
+			},
+			error: function (xhr, textStatus) {
+				console.log('错误');
+				console.log(xhr);
+				console.log(textStatus);
+			},
+		});
+
+	}
+});
 myApp.onPageInit('music', function (page) {
 		  audiojs.events.ready(function() {
 			var as = audiojs.createAll();
@@ -63,68 +237,238 @@ myApp.onPageInit('music', function (page) {
 myApp.onPageInit('videos', function (page) {
 		  $(".videocontainer").fitVids();
 })
-myApp.onPageInit('contact', function (page) {
-		contact_app = new Vue({
-			el: '#id_page_contact',
-			delimiters:["@{","}"],
-			data: {
-				fetchType: 1,            // 1:送至分馆；2: 上门取书
-				fetchAddr:"学生公寓",            // 上门取书此字段才有意义
-				phone : "13988889999",
-				book: {
+myApp.onPageBeforeInit('BorrowSuccessfully',function (page) {
+    if(sessionStorage.getItem("bookname")){
+        console.log('value');
+        bsapp = new Vue({
+            el: '#BorrowForm',
+            delimiters:["@{","}"],
+            data: {
+                book: {
+                    name: sessionStorage.getItem("bookname"),
+                    publisher: sessionStorage.getItem("publisher"),
+                    author: sessionStorage.getItem("author")
+                },
+            },
+        });
+    }else{
+        console.log('novalue')
+        bsapp = new Vue({
+            el: '#BorrowForm',
+            delimiters:["@{","}"],
+            data: {
+                book: {
                     name: "计算机导论",
                     publisher: "机械工业出版社",
-                    author: "柳煜颖",
-                    class: ""
-                }
-			},
-			methods: {
-				setFetchType: (type) => {
-                    contact_app.fetchType=type;
-                }
+                    author: "XXX",
+                },
+            },
+        });
+    }
+    $("#BorrowForm").validate({
+        submitHandler: function(form){
+            // ajaxContact(form);
+            $.ajax({
+                url: "API/book/borrowBook.php?",
+                dataType: "json",
+                data: {
+                    "isbn": sessionStorage.getItem("isbn")
+                },
+                async: false,
+                success: function (data) {
+                    alert(data.data);
+                    if(data.error_code==0){
+                        $(location).attr('href', 'index.html');
+                    }
+                },
+                error: function (xhr, textStatus) {
+                    console.log('错误');
+                    console.log(xhr);
+                    console.log(textStatus);
+                },
+            });
+            return false;
+        }
+    });
+})
+// $$(document).on('pageInit', '.page[data-page="tables"]', function (e)
+myApp.onPageInit('tables', function (page) {
+    // Do something here when page with data-page="about" attribute loaded and initialized
+    $.ajax({
+        url: "./API/public_api/getBooksListInLibrary.php",
+        dataType: "json",
+        success(data){
+            console.log(data.data);
+            line = "";
+            for(var i=0;i<data.data.length;i++){
+                book = data.data[i];
+                console.log(book);
+                bookname = book.title;
+                publisher = book.publisher;
+                author = book.author;
+                line += "<li class=\"table_row\">\n" + "<div class=\"table_section_2\">"+bookname+"</div>\n"+
+                    "<div class=\"table_section\">"+publisher+"</div>\n"+
+                    "<div class=\"table_section_2\">"+author+"</div>\n"+"</li>";
+            }
+            $("#tablesapp").append(line);
+
+
+        }
+
+    })
+    // tablesapp = new Vue({
+    //     el: '#tablesapp',
+    //     data: {
+    //         title:"zhong "
+    //         // book:{
+    //         //     title:"1",author:"11",publisher:"123"
+    //         // },
+    //         // books:[
+    //         //     {title:"1",author:"11",publisher:"123"},
+    //         //     // {title:"1",author:"11",publisher:"123"}
+    //         // ]
+    //     }
+    // });
+})
+myApp.onPageInit('contact', function (page) {
+	var isbn;
+	function cbBarcode(result){
+		//console.log(result);
+		if (!result){
+			alert("检测不到ISBN码");
+		}else{
+			// alert(result.codeResult.code);
+			isbn = result.codeResult.code;
+			$.ajax({
+				url: "./API/isbn.php?",
+				dataType: "json",
+				data: {
+					"isbn": isbn,
+				},
+				async: true,
+				success: function (data) {
+					if(data.error_code==0){
+						contact_app.book={
+							name: data.data.title,
+							publisher: data.data.publisher,
+							author: data.data.author,
+							class: ""
+						}
+					}else {
+						alert(data.data);
+					}
+				},
+				error: function (xhr, textStatus) {
+					console.log('错误');
+					console.log(xhr);
+					console.log(textStatus);
+				},
+			});
+		}
+	}
+	contact_app = new Vue({
+		el: '#id_page_contact',
+		delimiters:["@{","}"],
+		data: {
+			seen: false,
+			fetchType: 1,            // 1:送至分馆；2: 上门取书
+			fetchAddr:"学生公寓",            // 上门取书此字段才有意义
+			phone : "13988889999",
+			book: {
+	            name: "计算机导论",
+	            publisher: "机械工业出版社",
+	            author: "柳煜颖",
+	            class: ""
+	        },
+	        word: "这本书超棒"
+		},
+		methods: {
+			setFetchType: (type) => {
+	            contact_app.fetchType=type;
+	        }
+		}
+	});
+
+//捐书
+	$("#ContactForm").validate({
+		submitHandler: function(form){
+			// ajaxContact(form);
+
+			console.log(JSON.stringify(contact_app.fetchType));
+			if (contact_app.fetchType==1) {
+				//1表示送至分馆
+				how_to_fetch = {"how":1,
+				"phone":contact_app.phone};
+			}else {
+				how_to_fetch = {"how":2,
+					"where":contact_app.fetchAddr,
+				"phone":contact_app.phone};
 			}
-		});
-		$("#ContactForm").validate({
-			submitHandler: function(form) {
-			ajaxContact(form);
+			$.ajax({
+				url: "API/book/donateBook.php?",
+				dataType: "json",
+				data: {
+					"isbn": isbn,
+					"donator_word":contact_app.word,
+					// "how_to_fetch": json.stringify(how_to_fetch),
+					"how_to_fetch": how_to_fetch,
+
+				},
+				async: false,
+				success: function (data) {
+					alert(data.data);
+					if(data.error_code==0){
+						$(location).attr('href', 'index.html');
+					}
+				},
+				error: function (xhr, textStatus) {
+					console.log('错误');
+					console.log(xhr);
+					console.log(textStatus);
+				},
+			});
 			return false;
-			}
-		});
+		}
+	});
+	let tmpl = '<li class="uploader__file" style="background-image:url(#url#)"></li>',
+		$gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
+		$uploaderInput_1 = $("#uploaderInput_1"),
+		$uploaderFiles_1 = $("#uploaderFiles_1")
+	$uploaderInput_1.on("change", function (e) {
+		let src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
+		let file = files[0];
+		if (url) {
+			src = url.createObjectURL(file);
+		} else {
+			src = e.target.result;
+		}
 
-    let tmpl = '<li class="uploader__file" style="background-image:url(#url#)"></li>',
-        $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
-        $uploaderInput_1 = $("#uploaderInput_1"),
-        $uploaderFiles_1 = $("#uploaderFiles_1")
-    $uploaderInput_1.on("change", function (e) {
-        let src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
-        let file = files[0];
-        if (url) {
-            src = url.createObjectURL(file);
-        } else {
-            src = e.target.result;
-        }
+		$uploaderFiles_1.empty();
+		$uploaderFiles_1.append($(tmpl.replace('#url#', src)));
 
-        $uploaderFiles_1.empty();
-        $uploaderFiles_1.append($(tmpl.replace('#url#', src)));
-
-        console.log($uploaderFiles_1);
-        var num = $uploaderFiles_1.length;
-        if (num >= 1) {
-            $('#input_box_1').addClass("reselect-uploader__input-box");
-        }
-        else {
-            $('#input_box_1').removeClass("reselect-uploader__input-box");
-        }
+		console.log($uploaderFiles_1);
+		var num = $uploaderFiles_1.length;
+		if (num >= 1) {
+			$('#input_box_1').addClass("reselect-uploader__input-box");
+		}
+		else {
+			$('#input_box_1').removeClass("reselect-uploader__input-box");
+		}
+		var url1=URL.createObjectURL(this.files[0]);
+		console.log(url1);
+		RecognizeBarCode(url1,cbBarcode);
 
 
-    });
-    $uploaderFiles_1.on("click", "li", function () {
-        $galleryImg.attr("style", this.getAttribute("style"));
-        $gallery.fadeIn(100);
-    });
-    $gallery.on("click", function () {
-        $gallery.fadeOut(100);
-    });
+	});
+	$uploaderFiles_1.on("click", "li", function () {
+		$galleryImg.attr("style", this.getAttribute("style"));
+		$gallery.fadeIn(100);
+	});
+	$gallery.on("click", function () {
+		$gallery.fadeOut(100);
+	});
+
+
 //radio事件
 	/*
     var $getBooks = $("#getBooks"),
@@ -138,7 +482,85 @@ myApp.onPageInit('contact', function (page) {
         //  $("#AddressHide").css("display", 'block');
         $AddressHide.css("display", "none");
     });*/
+
+
 })
+
+// 	contact_app = new Vue({
+	// 		el: '#id_page_contact',
+	// 		delimiters:["@{","}"],
+	// 		data: {
+	// 			fetchType: 1,            // 1:送至分馆；2: 上门取书
+	// 			fetchAddr:"学生公寓",            // 上门取书此字段才有意义
+	// 			phone : "13988889999",
+	// 			book: {
+    //                 name: "计算机导论",
+    //                 publisher: "机械工业出版社",
+    //                 author: "柳煜颖",
+    //                 class: ""
+    //             }
+	// 		},
+	// 		methods: {
+	// 			setFetchType: (type) => {
+    //                 contact_app.fetchType=type;
+    //             }
+	// 		}
+	// 	});
+	// 	$("#ContactForm").validate({
+	// 		submitHandler: function(form) {
+	// 		ajaxContact(form);
+	// 		return false;
+	// 		}
+	// 	});
+	//
+    // let tmpl = '<li class="uploader__file" style="background-image:url(#url#)"></li>',
+    //     $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
+    //     $uploaderInput_1 = $("#uploaderInput_1"),
+    //     $uploaderFiles_1 = $("#uploaderFiles_1")
+    // $uploaderInput_1.on("change", function (e) {
+    //     let src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
+    //     let file = files[0];
+    //     if (url) {
+    //         src = url.createObjectURL(file);
+    //     } else {
+    //         src = e.target.result;
+    //     }
+	//
+    //     $uploaderFiles_1.empty();
+    //     $uploaderFiles_1.append($(tmpl.replace('#url#', src)));
+	//
+    //     console.log($uploaderFiles_1);
+    //     var num = $uploaderFiles_1.length;
+    //     if (num >= 1) {
+    //         $('#input_box_1').addClass("reselect-uploader__input-box");
+    //     }
+    //     else {
+    //         $('#input_box_1').removeClass("reselect-uploader__input-box");
+    //     }
+	//
+	//
+    // });
+    // $uploaderFiles_1.on("click", "li", function () {
+    //     $galleryImg.attr("style", this.getAttribute("style"));
+    //     $gallery.fadeIn(100);
+    // });
+    // $gallery.on("click", function () {
+    //     $gallery.fadeOut(100);
+    // });
+//radio事件
+	/*
+    var $getBooks = $("#getBooks"),
+		$deliverBooks =$("#deliverBooks"),
+	$AddressHide = $("#AdressHide");
+    $getBooks.on("click",function (){
+          //  $("#AddressHide").css("display", 'block');
+        $AddressHide.css("display", "block");
+    });
+    $deliverBooks.on("click",function (){
+        //  $("#AddressHide").css("display", 'block');
+        $AddressHide.css("display", "none");
+    });*/
+// })
 
 myApp.onPageInit('form', function (page) {
     $("#CustomForm").validate({
