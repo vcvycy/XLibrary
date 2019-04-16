@@ -270,7 +270,7 @@ Class Books extends Base{
                     stu.sid,
                     book_donate.time as 'donate_time',
                     book_donate.donator_word '捐书留言' from stu,book_donate 
-                    where book_donate.isbn='%s' and book_donate.status=1",
+                    where book_donate.isbn='%s' and book_donate.status=1 and book_donate.sid=stu.sid",
             $isbn
         );
         return $ret;
