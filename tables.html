@@ -89,13 +89,24 @@
                         <div class="table_section">责任者</div>
                         <div class="table_section_2">出版社</div>
                      </li>
-                    <!--<template v-for="book in books">-->
-                    <!--<li class="table_row">-->
-                    <!--<div class="table_section_2">ssssssss</div>-->
-                    <!--<div class="table_section">南帆</div>-->
-                    <!--<div class="table_section_2">昆仑出版社</div>-->
-                <!--</li>-->
-                    <!--</template>-->
+                    <template v-for="book in books">
+                        <li class="table_row">
+                            <div class="table_section_2"><a v-on:click="detail(book)">${book.title}</a></div>
+                        <div class="table_section">${book.author}</div>
+                        <div class="table_section_2">${book.publisher}</div>
+                        </li>
+                    </template>
+                    <li align="center">
+                        <td>
+                            <a v-on:click="First" v-show="page_id!=1">[首  页]</a>
+                            <a v-on:click="Last" v-show="page_id!=1">[上一页]</a>
+                            <a>${page_id}</a>
+                            <a v-on:click="Next" v-show="page_id!=total_pages">[下一页]</a>
+                            <a v-on:click="End" v-show="page_id!=total_pages">[末  页]</a>
+                        </td>
+                    </li>
+                    <li align="center">共${total_pages}页</li>
+
                      <!--<li class="table_row">-->
                          <!--<div class="table_section_2"><a href="blog-single.html">黄卫生山水画集</a></div>-->
                         <!--<div class="table_section">黄卫生</div>-->

@@ -295,23 +295,83 @@ myApp.onPageBeforeInit('BorrowSuccessfully',function (page) {
 // $$(document).on('pageInit', '.page[data-page="tables"]', function (e)
 myApp.onPageInit('tables', function (page) {
     // Do something here when page with data-page="about" attribute loaded and initialized
+    books_each_page = 5;
+    function getbook(page_id){
+        $.ajax({
+            url: "./API/public_api/getBooksListInLibrary.php?",
+            dataType: "json",
+            data:{
+                page_id: page_id,
+                books_each_page: books_each_page,
+            },
+            success(data){
+                console.log(data.data);
+                tablesapp.books= data.data.books;
+            }
+        })
+    }
+    tablesapp = new Vue({
+        delimiters: ['${', '}'],
+        el: '#tablesapp',
+        data: {
+            books:[],
+            page_id:1,
+            total_pages:0,
+        },
+        // computed:{},
+        methods: {
+            detail:function(book){
+                // alert(book.title);
+                alert("书名:"+book.title+" ,被借："+book.lended+" ,馆藏："+book.stock);
+                // mainView.router.load({  //加载单独页面page
+                //     url:'blog-single.html',//页面的url
+                //     context:{//传入detail页面的数据，可以在页面中渲染
+                //         name:
+                //     }
+                // });
+            },
+            First: function (event) {
+                this.page_id = 1;
+                getbook(this.page_id);
+            },
+            End:function (event) {
+                this.page_id = this.total_pages;
+                getbook(this.page_id);
+            },
+            Last:function (event) {
+                this.page_id-=1;
+                getbook(this.page_id);
+            },
+            Next:function (event) {
+                this.page_id+=1;
+                getbook(this.page_id);
+            }
+        }
+    });
     $.ajax({
-        url: "./API/public_api/getBooksListInLibrary.php",
+        url: "./API/public_api/getBooksListInLibrary.php?",
         dataType: "json",
+        data:{
+            page_id: 1,
+            books_each_page: books_each_page,
+        },
         success(data){
             console.log(data.data);
-            line = "";
-            for(var i=0;i<data.data.length;i++){
-                book = data.data[i];
-                console.log(book);
-                bookname = book.title;
-                publisher = book.publisher;
-                author = book.author;
-                line += "<li class=\"table_row\">\n" + "<div class=\"table_section_2\">"+bookname+"</div>\n"+
-                    "<div class=\"table_section\">"+publisher+"</div>\n"+
-                    "<div class=\"table_section_2\">"+author+"</div>\n"+"</li>";
-            }
-            $("#tablesapp").append(line);
+            tablesapp.books= data.data.books;
+            tablesapp.page_id=1;
+            tablesapp.total_pages=data.data.total_pages;
+            // line = "";
+            // for(var i=0;i<data.data.length;i++){
+            //     book = data.data[i];
+            //     console.log(book);
+            //     bookname = book.title;
+            //     publisher = book.publisher;
+            //     author = book.author;
+            //     line += "<li class=\"table_row\">\n" + "<div class=\"table_section_2\">"+bookname+"</div>\n"+
+            //         "<div class=\"table_section\">"+publisher+"</div>\n"+
+            //         "<div class=\"table_section_2\">"+author+"</div>\n"+"</li>";
+            // }
+            // $("#tablesapp").append(line);
 
 
         }
