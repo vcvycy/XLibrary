@@ -52,11 +52,11 @@
                     </div>
                 </div>
                 <label>书名:</label>
-                <input type="text" v-bind:value="book.name" class="form_input required" />
+                <input type="text" v-bind:value="book.name"  readonly="readonly" class="form_input required" />
             <label>出版社:</label>
-            <input type="text" v-bind:value="book.publisher" class="form_input required" />
+            <input type="text" v-bind:value="book.publisher"  readonly="readonly" class="form_input required" />
             <label>作者:</label>
-             <input type="text" v-bind:value="book.author" class="form_input required" />
+             <input type="text" v-bind:value="book.author"  readonly="readonly" class="form_input required" />
                 <div class="form_row " v-if="seen">
                     <label>分类:</label>
                     <div class="selector_overlay">
@@ -112,9 +112,9 @@
                     </div>
                 </div>
                 <label>联系方式:</label>
-                <input type="text" v-bind:value="phone" class="form_input required error number" placeholder="电话号码"/>
+                <input type="text" v-bind:value="phone" class="form_input required error number" placeholder="电话号码或微信号"/>
                 <label>留言:</label>
-                <input type="text" v-bind:value="word" class="form_input required" placeholder="这本书很棒"/>
+                <input type="text" v-bind:value="word" class="form_input required" placeholder="对书的感悟或其他备注"/>
 
             <input type="submit" class="form_submit" value="提交"/>
             </form>
