@@ -5,7 +5,7 @@
 *.egg-info
 dist
 build
-
+.idea
 # My configurations:
 .idea/encodings.xml
 .idea/workspace.xml
