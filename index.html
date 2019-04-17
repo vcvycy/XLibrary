@@ -32,16 +32,16 @@
 			<nav class="main_nav_icons_inline_2">
 			<ul>
 			<li><a href="index.html" class="close-panel" data-view=".view-main"><img src="images/icons/white/home.png" alt="" title="" /><span>首页</span></a></li>
-			<li><a href="about.html" class="close-panel" data-view=".view-main"><img src="images/icons/white/扫一扫.png" alt="" title="" /><span>扫一扫借书</span></a></li>
+			<li><a href="#" data-popup=".popup-scan" class="open-popup close-panel"><img src="images/icons/white/扫一扫.png" alt="" title="" /><span>扫一扫借书</span></a></li>
 			<li><a href="tables.html" class="close-panel" data-view=".view-main"><img src="images/icons/white/list.png" alt="" title="" /><span>图书列表</span></a></li>
 			
 			<li><a href="contact.html" class="close-panel" data-view=".view-main"><img src="images/icons/white/书.png" alt="" title="" /><span>我要捐书</span></a></li>
-			<li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/交流.png" alt="" title="" /><span>交流区</span></a></li>
-			<li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/置换.png" alt="" title="" /><span>图书置换</span></a></li>
+			<!--<li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/交流.png" alt="" title="" /><span>交流区</span></a></li>-->
+			<!--<li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/置换.png" alt="" title="" /><span>图书置换</span></a></li>-->
 
-			<li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/我的.png" alt="" title="" /><span>待定</span></a></li>
-			<li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/我的.png" alt="" title="" /><span>待定</span></a></li>
-			</ul>
+			<!--<li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/我的.png" alt="" title="" /><span>待定</span></a></li>-->
+			<!--<li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/我的.png" alt="" title="" /><span>待定</span></a></li>-->
+                </ul>
 			</nav>
                      </div>
 		</div>
@@ -57,17 +57,17 @@
               <div class="user_details" id ="userInfo">
                   <p><span>{{username}}</span>学号：{{studentnumber}}</p>
               </div>
-              <div class="user_avatar"><img src="images/avatar.jpg" alt="" title="" /></div>
+              <!--<div class="user_avatar"><img src="images/avatar.jpg" alt="" title="" /></div>-->
           </div>
 
           <nav class="user-nav">
               <ul>
                   <!--<li><a href="index.html" class="close-panel"><img src="images/icons/white/myinfo.png" alt="" title="" /><span>个人信息</span></a></li>-->
                   <!--<li><a href="features.html" class="close-panel"><img src="images/icons/white/settings.png" alt="" title="" /><span>设置</span></a></li>-->
-                  <li><a href="BorrowingRecord.html" class="close-panel"><img src="images/icons/white/mybook.png" alt="" title="" /><span>借阅记录</span></a></li>
-                  <li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/积分.png" alt="" title="" /><span>我的积分</span></a></li>
-                  <li><a href="myBookshelf.html" class="close-panel"><img src="images/icons/white/love.png" alt="" title="" /><span>我的书架</span></a></li>
-                  <li><a href="index.html" class="close-panel"><img src="images/icons/white/history.png" alt="" title="" /><span>捐书记录</span></a></li>
+                  <li> <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/white/mybook.png" alt="" title="" /><span>借阅记录</span></a></li>
+                  <li> <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/white/积分.png" alt="" title="" /><span>我的积分</span></a></li>
+                  <li> <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/white/love.png" alt="" title="" /><span>我的书架</span></a></li>
+                  <li> <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/white/history.png" alt="" title="" /><span>捐书记录</span></a></li>
               </ul>
           </nav>
       </div>
@@ -104,7 +104,7 @@
 			          <span class="subtitle" data-swiper-parallax="-60%">法学分馆与艺术分馆</span>
 				  <h2 data-swiper-parallax="-100%">欢迎来到法学与艺术捐书系统</h2>
 				  
-				  <p data-swiper-parallax="-30%">在这里，你可以更快捷的借到捐赠的图书，可以与同学之间进行友好地书籍置换，可以......</p>
+				  <p data-swiper-parallax="-30%">新用户请先登录<br/>点击左上角的“法学与艺术分馆”即可返回首页<br/>在这里，你可以更快捷的借到捐赠的图书，也可以将你喜欢的图书捐给我们与大家分享，谢谢您的支持！</p>
 			 </div>
 		      </div> 
                        </div>
@@ -122,10 +122,10 @@
                       <div class="swiper-slide" style="background-image:url(images/index03.jpg);">
 			<div class="slider_trans">		  
 				<div class="slider-caption">
-				<span class="subtitle" data-swiper-parallax="-60%">自由交换</span>
-				<h2 data-swiper-parallax="-100%">图书置换</h2>
+				<span class="subtitle" data-swiper-parallax="-60%">捐书须知</span>
+				<h2 data-swiper-parallax="-100%">我要捐书</h2>
 				
-				<p data-swiper-parallax="-30%">有任何想要交换的图书巴拉巴拉巴拉</p>
+				<p data-swiper-parallax="-30%">有任何想要捐赠给图书馆的书籍，请按步骤完成捐赠。</p>
 				</div>
                        </div>
 		   </div> 		   
@@ -191,13 +191,18 @@
     <!-- Login Popup -->
 <div class="popup popup-login">
     <div class="content-block">
-        <h4>LOGIN</h4>
+        <h4>登录</h4>
         <div class="loginform">
             <form id="LoginForm" method="post">
-                <input type="text" name="sid" value="" class="form_input required" placeholder="username" />
-                <input type="password" name="pwd" value="" class="form_input required" placeholder="password" />
+                <input type="text" name="sid" value="" class="form_input required" placeholder="学号" />
+                <input type="password" name="pwd" value="" class="form_input required" placeholder="通用密码" />
                 <!--<div class="forgot_pass"><a href="#" data-popup=".popup-forgot" class="open-popup">Forgot Password?</a></div>-->
-                <input type="submit" name="submit" class="form_submit" id="submit" value="SIGN IN" />
+                <input type="submit" name="submit" class="form_submit" id="submit" value="登录" />
+                <article >
+                    <section class="description">
+                        <p >新生初始密码为身份证后6位，或在迎新系统修改的密码，密码不能尝试过多，以免被锁。</p>
+                    </section>
+                </article>
             </form>
             <!--<div class="signup_bottom">-->
                 <!--<p>Don't have an account?</p>-->

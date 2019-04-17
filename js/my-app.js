@@ -8,26 +8,27 @@ var myApp = new Framework7({
 	swipePanelOnlyClose: true,
 	pushState: true,
     template7Pages: true,
-	template7Data:{
-      "url:blog-single.html" :{
-	   name:'没有重量的生存',
-       contantIntro:'本书是作者近几年写的散文随笔作品的合集。作者抓住当代社会生活中所习以为常的事物，如网络，电视，旅游等，以冷静客观的笔触揭示我们日常生活中的荒诞性，在传统与现代的交汇中思考，与审视当代文化，具有浓郁的当代色彩和古典主义的诗意美。',
-       publishingHouse:"北京:昆仑出版社,2003",
-		author:'南帆',
-       site:'法学分馆',
-		state:'可借',
-		contactInfo:'13899999999'
-	  }
-    }
+    // template7Data:{
+    //   "url:blog-single.html" :{
+	 //   name:'没有重量的生存',
+    //    contantIntro:'本书是作者近几年写的散文随笔作品的合集。作者抓住当代社会生活中所习以为常的事物，如网络，电视，旅游等，以冷静客观的笔触揭示我们日常生活中的荒诞性，在传统与现代的交汇中思考，与审视当代文化，具有浓郁的当代色彩和古典主义的诗意美。',
+    //    publishingHouse:"北京:昆仑出版社,2003",
+		// author:'南帆',
+    //    site:'法学分馆',
+		// state:'可借',
+		// contactInfo:'13899999999'
+	 //  }
+    // }
 });
 
 // Export selectors engine
 var $$ = Dom7;
-myApp.onPageAfterBack('home', function(page){
+myApp.onPageBeforeInit('home', function(page){
+	console.log("after");
 	if (sessionStorage.getItem("sid")){
 		$$('#login').addClass("disabled");
 	}
-}).trigger();
+})
 myApp.onPageInit('home', function (page) {
 	if (sessionStorage.getItem("sid")){
 		$$('#login').addClass("disabled");
@@ -372,15 +373,15 @@ myApp.onPageInit('contact', function (page) {
 		data: {
 			seen: false,
 			fetchType: 1,            // 1:送至分馆；2: 上门取书
-			fetchAddr:"学生公寓",            // 上门取书此字段才有意义
-			phone : "13988889999",
+			fetchAddr:"如海韵6-XXX",            // 上门取书此字段才有意义
+			phone : "",
 			book: {
-	            name: "计算机导论",
-	            publisher: "机械工业出版社",
-	            author: "柳煜颖",
+	            name: "",
+	            publisher: "",
+	            author: "",
 	            class: ""
 	        },
-	        word: "这本书超棒"
+	        word: ""
 		},
 		methods: {
 			setFetchType: (type) => {
