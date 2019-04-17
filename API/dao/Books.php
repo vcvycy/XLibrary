@@ -252,6 +252,20 @@ Class Books extends Base{
     public function getBooksListInLibrary(){
         $ret = $this->createSQLAndRunAssoc("select * from book");
         return $ret;
+    } 
+    // 读取馆中图书
+    public function getBooksListInLibraryAtPage($page_id,$books_each_page){
+        $total = $this->createSQLAndRun("select count(*) from book")[0][0];  
+        $pages = ceil($total/$books_each_page);
+        $start_idx = ($page_id-1)*$books_each_page;
+        $ret = $this->createSQLAndRunAssoc("select * from book limit %s,%s",$start_idx,$books_each_page);
+        return array(
+            "cur_page" =>$page_id,
+            "books_each_page" => $books_each_page,
+            "total_pages" =>$pages,
+            "total_books" => $total,
+            "books" =>$ret
+        );
     }
     // 查看某本书被谁借走了(名字/学号/借书时间)
     public function whoBorrowTheBook($isbn){
