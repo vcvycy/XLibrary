@@ -23,11 +23,12 @@ var myApp = new Framework7({
 
 // Export selectors engine
 var $$ = Dom7;
-myApp.onPageAfterBack('home', function(page){
+myApp.onPageBeforeInit('home', function(page){
+	console.log("after");
 	if (sessionStorage.getItem("sid")){
 		$$('#login').addClass("disabled");
 	}
-}).trigger();
+})
 myApp.onPageInit('home', function (page) {
 	if (sessionStorage.getItem("sid")){
 		$$('#login').addClass("disabled");
