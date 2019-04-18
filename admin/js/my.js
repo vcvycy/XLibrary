@@ -166,7 +166,7 @@ pages_init ={
         $.get(url,function(data){
             obj= JSON.parse(data);
             if (obj.error_code==0){
-                vue_books.books = obj.data;
+                vue_books.books = obj.data.books;
             }else
             alert("unknown error"+url);
         });
