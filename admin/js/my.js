@@ -162,7 +162,7 @@ pages_init ={
                 }
             }
           });
-        url=`${getRootURL()}API/public_api/getBooksListInLibrary.php`;
+        url=`${getRootURL()}API/public_api/getBooksListInLibrary.php?page_id=1&books_each_page=10000`;
         $.get(url,function(data){
             obj= JSON.parse(data);
             if (obj.error_code==0){
