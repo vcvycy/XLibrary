@@ -6,6 +6,8 @@ function main(){
     // 登陆
     $stu= new Students();
     if (\StuSess\isLogin()){
+        $sid=\StuSess\getKey("sid");
+        \StuSess\setKey("dbinfo",$stu->getStuInfo($sid));
         $data=array("sess"=> $_SESSION);
         Utils::exit(0,$data);
     }else

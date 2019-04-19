@@ -71,6 +71,34 @@ class Utils
         }
         return $val;
     }  
+    // 获取参数中的图片并保存
+    static function saveUploadedFile($key,
+                                    $save_path_without_prefix,
+                                    $suffix_allowed,
+                                    $max_size_in_MB){ 
+        $suffix_allowed = explode("|",$suffix_allowed);
+        if (isset($_POST)){
+            $name = $_FILES[$key]['name']; 
+            $size = $_FILES[$key]['size']; 
+            $name_tmp = $_FILES[$key]['tmp_name'];  
+            if (empty($name)) {
+                throw new Exception("未上传图片");
+            } 
+            $suffix = strtolower(substr(strrchr($name, '.'), 1)); //获取文件类型 
+            if (!in_array($suffix, $suffix_allowed)) {  
+                throw new Exception("仅支持以下文件格式：".json_encode($suffix_allowed));
+            } 
+            if ($size > ($max_size_in_MB <<20)) { 
+                throw new Exception(sprintf("文件大小应小于%dMB,当前文件大小：%sMB",$max_size_in_MB,$size/1024/1024));  
+            }  
+            // 保存的路径
+            $path = sprintf("%s.%s",$save_path_without_prefix,$suffix); 
+            if (!move_uploaded_file($name_tmp, $path)) 
+                throw new Exception("请检测服务器权限，无法移动上传文件。");
+            return $path;
+        }else
+            throw new Exception("请用POST方式上传文件,Key=$key");
+    }
     static private function getBacktrace(){     // 记录php栈调用信息.
         $bt = debug_backtrace();
         $rst="";  

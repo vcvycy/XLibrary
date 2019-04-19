@@ -194,7 +194,17 @@ Class Books extends Base{
             "未还书列表" => $not_return
         );
     }
-
+    // 借了一本书且没还书，不存在则返回异常
+    public function getBorrowIDNotReturn($sid,$isbn){
+        $ret=$this->createSQLAndRun("select id from book_borrow 
+            where sid='%s' and return_time=0 and isbn ='%s' limit 1",
+           $sid,
+           $isbn
+        ); 
+        if (count($ret)==1) return intval($ret[0][0]);
+        else
+          throw new Exception("当前并未借阅ISBN[$isbn]这本书");
+    }
     // (*) 还一本书
     public function returnBook($sid, $isbn){ 
         $ret = $this-> createSQLAndRun(

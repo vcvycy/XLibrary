@@ -26,9 +26,14 @@ create table stu(
   sid   varchar(32),  -- 学号
   name  varchar(64),  -- 姓名
   pwd   varchar(64),   -- 密码. 通过两次sha1加密,防止网上查表爆出简单密码。
+  head_image varchar(256), -- 头像地址
+  wechat_name VARCHAR(64), -- 微信
+  openid varchar(256),
+  phone varchar(16),    -- 手机号
   degree varchar(16),   -- 本科生,研究生,博士生
   grade  varchar(8),    -- 一年级,二年级,...
-  school varchar(64)    -- 学院
+  school varchar(64),    -- 学院
+  other longtext
 );
 -- (*) 管理员
 create table su(
@@ -51,10 +56,11 @@ create table book_donate(
 create table book_borrow(
   id        int auto_increment not null primary key,
   sid       VARCHAR(32),
-  isbn  varchar(32),
+  isbn      varchar(32),
   --  借书时间/还书时间(null 表示还未归还)
   borrow_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  return_time timestamp default 0
+  return_time timestamp default 0,
+  return_image_path varchar(256)  -- 还书
 );   
 
 -- (*) 评论
