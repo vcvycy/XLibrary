@@ -34,6 +34,7 @@ myApp.onPageInit('home', function (page) {
 		$$('#login').addClass("disabled");
 		new Vue({
 			el:'#userInfo',
+			delimiters: ['${', '}'],
 			data:{
 				username: sessionStorage.getItem("name"),
 				studentnumber: sessionStorage.getItem("sid")
@@ -101,10 +102,74 @@ function cbBarcode(result){
         });
     }
 }
-let tmpl = '<li class="uploader__file" style="background-image:url(#url#)"></li>',
-    $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
-    $uploaderInput_1 = $("#uploaderInput_1"),
-    $uploaderFiles_1 = $("#uploaderFiles_1")
+function cbBarcode2(result){
+	//console.log(result);
+	if (!result){
+		alert("检测不到ISBN码");
+	}else{
+		// alert(result.codeResult.code);
+		isbn = result.codeResult.code;
+		// file = $("#uploaderFiles_2").files;
+		console.log(ff);
+		var formData = new FormData();
+		formData.append("image",ff);
+		formData.append("isbn",isbn);
+		$.ajax({
+			url: "./API/book/returnBookWithImage.php?",
+			dataType: "json",
+			data: formData,
+			type: "post",
+			processData: false,
+			contentType: false,
+			success: function (data) {
+				if(data.error_code==0){
+					alert("还书成功");
+					$(location).attr('href', 'index.html');
+					// mainView.router.load('BorrowSuccessfully');
+					// mainView.router.loadPage('BorrowSuccessfully.html');
+				}else {
+					alert(data.data);
+				}
+			},
+			error: function (xhr, textStatus) {
+				console.log('错误');
+				console.log(xhr);
+				console.log(textStatus);
+			},
+		});
+	}
+}
+var ff;
+let tmpl = '<li class="uploader__file" style="background-image:url(#url#)"></li>';
+$uploaderInput_1 = $("#uploaderInput_1");
+$uploaderFiles_1 = $("#uploaderFiles_1");
+$uploaderInput_2 = $("#uploaderInput_2");
+$uploaderFiles_2 = $("#uploaderFiles_2");
+$uploaderInput_2.on("change", function (e) {
+
+	let src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
+	let file = files[0];
+	ff=files[0];
+	if (url) {
+		src = url.createObjectURL(file);
+	} else {
+		src = e.target.result;
+	}
+	$uploaderFiles_2.empty();
+	$uploaderFiles_2.append($(tmpl.replace('#url#', src)));
+
+	console.log($uploaderFiles_2);
+	var num = $uploaderFiles_2.length;
+	if (num >= 1) {
+		$('#input_box_2').addClass("reselect-uploader__input-box");
+	}
+	else {
+		$('#input_box_2').removeClass("reselect-uploader__input-box");
+	}
+	let url1=URL.createObjectURL(this.files[0]);
+	console.log(url1);
+	RecognizeBarCode(url1,cbBarcode2);
+});
 $uploaderInput_1.on("change", function (e) {
     Quagga.stop();
     $$('#interactive').hide();
@@ -130,13 +195,6 @@ $uploaderInput_1.on("change", function (e) {
     var url1=URL.createObjectURL(this.files[0]);
     console.log(url1);
     RecognizeBarCode(url1,cbBarcode);
-});
-$uploaderFiles_1.on("click", "li", function () {
-    $galleryImg.attr("style", this.getAttribute("style"));
-    $gallery.fadeIn(100);
-});
-$gallery.on("click", function () {
-    $gallery.fadeOut(100);
 });
 $$('.popup-scan').on('closed', function () {
 	Quagga.stop();
