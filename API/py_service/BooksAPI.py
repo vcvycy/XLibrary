@@ -20,9 +20,12 @@ def doubanBooksAPI(isbn):
 
 def jisuAPI(isbn):
     url = "http://api.jisuapi.com/isbn/query?appkey=c36391e4c1161d28&isbn=%s" %(isbn)
-    resp = requests.get(url) 
-    obj = json.loads(resp.text)  
+    resp = requests.get(url)  
+	#print(type
+    #obj = json.loads(resp.text)
+    obj = json.loads(resp.content.decode("utf-8"))
     if int(obj["status"]) == 0:    
+        print(obj["result"]["title"])	
         obj = obj["result"] 
         return {
             "isbn" : isbn,
