@@ -10,7 +10,6 @@ function main(){
         $isbn = Utils::getParamWithFilter("isbn","digit");
         $donator_word = Utils::getParamWithFilter("donator_word");
         $how_to_fetch = Utils::getParamWithFilter("how_to_fetch");
-
         $b = new Books(); 
         // 如果书不在数据库中，取豆瓣爬
         if (!$b->isISBNExists($isbn)){ 

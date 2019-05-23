@@ -168,13 +168,14 @@
                             <tr>
                               <th>#</th>
                               <th>捐书者</th>
-                              <th>学号</th>
+                              <!-- <th>学号</th>-->
                               <th>ISBN</th>
                               <th>书名</th>
                               <th>作者</th>
                               <th>出版社</th> 
                               <th>出版时间</th> 
                               <th>如何取书</th>
+                              <th>联系方式</th>
                               <th>捐书者的话</th>
                               <th>审核</th>
                             </tr> 
@@ -182,13 +183,14 @@
                             <tr v-for="(item,index) in book_list">
                               <td>{{index+1}}</td>
                               <td>{{item.name}}</td>
-                              <td>{{item.sid}}</td>
+                              <!-- <td>{{item.sid}}</td> -->
                               <td>{{item.isbn}}</td>
                               <td>{{item.title}}</td>
                               <td>{{item.author}}</td>
                               <td>{{item.publisher}}</td>
                               <td>{{item.pubdate}}</td>
                               <td>{{item.how_to_fetch}}</td>
+                              <td>{{item.phone}}</td>
                               <td>{{item.donator_word}}</td>
                               <td><a href=# v-on:click="setReviewStatus(item.id,1)"><font color=green>通过</font></a>&nbsp;
                                     <a href=# v-on:click="setReviewStatus(item.id,-1)"><font color=red>拒绝</font></a></td>

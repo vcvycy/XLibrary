@@ -202,7 +202,24 @@ pages_init ={
         $.get(url,function(data){
             obj= JSON.parse(data);
             if (obj.error_code==0){
+                // 打补丁：how_to_fetch
+                for (var i=0;i<obj.data.length;i++){
+                    try{
+                        p = JSON.parse(obj.data[i].how_to_fetch);
+                        phone = p.phone
+                        if (p.how==1) 
+                           fetch = `送至分馆`;
+                        else 
+                           fetch = `上门取书:${p.where}`;
+                    }catch(err){ 
+                        fetch = `未知字符串:${obj.data[i].how_to_fetch}`;
+                        phone =``;
+                    }
+                    obj.data[i].phone = phone;
+                    obj.data[i].how_to_fetch = fetch;
+                }
                 vue_review.book_list = obj.data;
+                
             }
         });
     },

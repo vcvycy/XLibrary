@@ -82,45 +82,36 @@
                  <!--</select>-->
              <!--</a>-->
          <!--</div>-->
-
+            <div v-if="">
                 <ul class="responsive_table" id="tablesapp" >
                      <li class="table_row">
-                        <div class="table_section_2">书名</div>
-                        <div class="table_section">责任者</div>
-                        <div class="table_section_2">出版社</div>
+                        <div class="table_section">书名</div>
+                        <div class="table_section">作者</div>
+                        <div class="table_section">出版社</div> 
+                        <div class="table_section">可借/总库存</div>  
                      </li>
+
                     <template v-for="book in books">
-                        <li class="table_row">
-                            <div class="table_section_2"><a v-on:click="detail(book)">${book.title}</a></div>
+                        <li class="table_row" v-on:click="showDetail(book)">
+                            <div class="table_section">${book.title}</div>
                         <div class="table_section">${book.author}</div>
-                        <div class="table_section_2">${book.publisher}</div>
+                        <div class="table_section">${book.publisher}</div>
+                        <div class="table_section">可借${book.stock-book.lended}本；总库存${book.stock}本</div>
                         </li>
                     </template>
                     <li align="center">
                         <td>
-                            <a v-on:click="First" v-show="page_id!=1">[首  页]</a>
+                            <a v-on:click="First">[首  页]</a>
                             <a v-on:click="Last" v-show="page_id!=1">[上一页]</a>
-                            <a>${page_id}</a>
+                            <a>${page_id}/${total_pages}</a>
                             <a v-on:click="Next" v-show="page_id!=total_pages">[下一页]</a>
-                            <a v-on:click="End" v-show="page_id!=total_pages">[末  页]</a>
+                            <a v-on:click="End">[末  页]</a> 
                         </td>
                     </li>
-                    <li align="center">共${total_pages}页</li>
-
-                     <!--<li class="table_row">-->
-                         <!--<div class="table_section_2"><a href="blog-single.html">黄卫生山水画集</a></div>-->
-                        <!--<div class="table_section">黄卫生</div>-->
-                        <!--<div class="table_section_2">天津人民美术出版社</div>-->
-                     <!--</li>-->
-
-                     <!--<li class="table_row">-->
-                        <!--<div class="table_section_14">Bandwidth</div>-->
-                        <!--<div class="table_section_14">50 GB</div>-->
-                        <!--<div class="table_section_14">100 GB</div> -->
-                        <!--<div class="table_section_14">Unlimited</div> -->
-                     <!--</li>-->
+                    <li align="center">【总藏书种类：${total_books}】</li> 
 
                 </ul>
+            </div>
 
 
 

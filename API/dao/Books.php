@@ -190,8 +190,8 @@ Class Books extends Base{
                 $returned[] =$item;
         }
         return array(
-            "已还书列表" => $returned,
-            "未还书列表" => $not_return
+            "returned" => $returned,
+            "not_returned" => $not_return
         );
     }
     // 借了一本书且没还书，不存在则返回异常

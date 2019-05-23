@@ -7,9 +7,9 @@ function main(){
     $stu= new Students();
     if (\StuSess\isLogin()){
         $sid=\StuSess\getKey("sid");
-        \StuSess\setKey("dbinfo",$stu->getStuInfo($sid));
-        $data=array("sess"=> $_SESSION);
-        Utils::exit(0,$data);
+        \StuSess\setKey("dbinfo",$stu->getStuInfo($sid)); 
+        $info=$stu->getStuInfo($sid); 
+        Utils::exit(0,$info); 
     }else
         Utils::exit(-1,"请先登录");
 }

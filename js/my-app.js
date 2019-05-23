@@ -21,6 +21,104 @@ var myApp = new Framework7({
     // }
 });
 
+function index_init(){ 
+	$("#logout").click(function(){
+		$.get("./API/account/logout.php",function(data){
+			obj = JSON.parse(data);
+			if(obj.error_code==0){
+				location.href="index.html";
+			}else
+			alert(obj.data);
+		});
+	});
+	home_vue = new Vue({
+		el:'#userInfo',
+		delimiters: ['${', '}'],
+		data:{
+			isLogin: false,
+			name: "",
+			sid: ""
+		},
+        methods: { 
+		}
+	}); 
+	//借阅记录
+	rent_recort = new Vue({
+		el :"#rent-record",
+		delimiters: ['${', '}'],
+		data:{
+			"title":"我的借阅记录",
+			"returned_books":[],
+			"not_returned_books":[]
+		}
+	});
+	//捐书记录
+	donation_record = new Vue({
+		el :"#donation-record",
+		delimiters: ['${', '}'],
+		data:{
+			"title":"Donation",
+			"accepted":[],
+			"waiting":[],
+			"rejected":[]
+		} 
+	});
+	// 用户信息
+	$.ajax({
+		url: "./API/account/getCurUserInfo.php?",
+		dataType: "json",
+		data: {},
+		async: true,
+		success: function (data) { 
+			console.log(data);
+			if(data.error_code==0){
+				$("#me").show();
+				$("#login").hide(); 
+				home_vue.isLogin=true;
+				home_vue.name=data.data.name;
+				home_vue.sid = data.data.sid;
+			}else { 
+				$("#login").show();
+				$("#me").hide();
+				home_vue.isLogin=false;
+				myApp.popup(".popup-login");
+			}
+		}
+	});
+	//借阅记录
+	$.ajax({
+		url: "./API/book/myBooksBorrowList.php",
+		dataType: "json",
+		data: {},
+		async: true,
+		success: function (data) {
+			console.log(data.data);
+			if(data.error_code==0){
+				rent_recort.returned_books =data.data.returned;
+				rent_recort.not_returned_books = data.data.not_returned;
+			}else {
+			}
+		}
+	});
+	//捐书记录
+	$.ajax({
+		url: "./API/book/myBooksDonationList.php",
+		dataType: "json",
+		data: {},
+		async: true,
+		success: function (data) {
+			aaaa=data;
+			console.log(data.data);
+			console.log(data.data["审核通过"]);
+			if(data.error_code==0){
+				donation_record.accepted =data.data["审核通过"];
+				donation_record.rejected = data.data["审核失败"];
+				donation_record.waiting = data.data["等待审核"];
+			}else {
+			}
+		}
+	});
+}
 // Export selectors engine
 var $$ = Dom7;
 myApp.onPageBeforeInit('home', function(page){
@@ -29,42 +127,8 @@ myApp.onPageBeforeInit('home', function(page){
 		$$('#login').addClass("disabled");
 	}
 })
-myApp.onPageInit('home', function (page) {
-	if (sessionStorage.getItem("sid")){
-		$$('#login').addClass("disabled");
-		new Vue({
-			el:'#userInfo',
-			delimiters: ['${', '}'],
-			data:{
-				username: sessionStorage.getItem("name"),
-				studentnumber: sessionStorage.getItem("sid")
-			}
-		})
-	} else{
-		$.ajax({
-			url: "./API/account/getCurUserInfo.php?",
-			dataType: "json",
-			data: {
-			},
-			async: true,
-			success: function (data) {
-				if(data.error_code==0){
-					sessionStorage.setItem("sid", data.data.sess["stu/sid"]);
-					sessionStorage.setItem("name", data.data.sess["stu/name"]);
-					$$('#login').addClass("disabled");
-				}else {
-					console.log("tiao");
-					myApp.popup(".popup-login");
-				}
-			},
-			error: function (xhr, textStatus) {
-				console.log('错误');
-				console.log(xhr);
-				console.log(textStatus);
-			},
-		});
-	}
-
+myApp.onPageInit('home', function(page) {
+	index_init();
 }).trigger(); //And trigger it right away
 function cbBarcode(result){
     //console.log(result);
@@ -353,7 +417,7 @@ myApp.onPageBeforeInit('BorrowSuccessfully',function (page) {
 // $$(document).on('pageInit', '.page[data-page="tables"]', function (e)
 myApp.onPageInit('tables', function (page) {
     // Do something here when page with data-page="about" attribute loaded and initialized
-    books_each_page = 5;
+    books_each_page = 15;
     function getbook(page_id){
         $.ajax({
             url: "./API/public_api/getBooksListInLibrary.php?",
@@ -374,19 +438,13 @@ myApp.onPageInit('tables', function (page) {
         data: {
             books:[],
             page_id:1,
-            total_pages:0,
+			total_pages:0,
+			total_books:0
         },
         // computed:{},
         methods: {
-            detail:function(book){
-                // alert(book.title);
-                alert("书名:"+book.title+" ,被借："+book.lended+" ,馆藏："+book.stock);
-                // mainView.router.load({  //加载单独页面page
-                //     url:'blog-single.html',//页面的url
-                //     context:{//传入detail页面的数据，可以在页面中渲染
-                //         name:
-                //     }
-                // });
+            showDetail:function(book){ 
+				alert(`出版日期：${book.pubdate}；ISBN：${book.isbn}；简介：${book.summary}`);
             },
             First: function (event) {
                 this.page_id = 1;
@@ -414,49 +472,25 @@ myApp.onPageInit('tables', function (page) {
             books_each_page: books_each_page,
         },
         success(data){
-            console.log(data.data);
+			console.log(data.data);
             tablesapp.books= data.data.books;
             tablesapp.page_id=1;
-            tablesapp.total_pages=data.data.total_pages;
-            // line = "";
-            // for(var i=0;i<data.data.length;i++){
-            //     book = data.data[i];
-            //     console.log(book);
-            //     bookname = book.title;
-            //     publisher = book.publisher;
-            //     author = book.author;
-            //     line += "<li class=\"table_row\">\n" + "<div class=\"table_section_2\">"+bookname+"</div>\n"+
-            //         "<div class=\"table_section\">"+publisher+"</div>\n"+
-            //         "<div class=\"table_section_2\">"+author+"</div>\n"+"</li>";
-            // }
-            // $("#tablesapp").append(line);
-
-
+			tablesapp.total_pages=data.data.total_pages; 
+			tablesapp.total_books=data.data.total_books;
         }
 
-    })
-    // tablesapp = new Vue({
-    //     el: '#tablesapp',
-    //     data: {
-    //         title:"zhong "
-    //         // book:{
-    //         //     title:"1",author:"11",publisher:"123"
-    //         // },
-    //         // books:[
-    //         //     {title:"1",author:"11",publisher:"123"},
-    //         //     // {title:"1",author:"11",publisher:"123"}
-    //         // ]
-    //     }
-    // });
+    }) 
 })
+myApp.onPageInit('index', function (page) { 
+	location.href="./";
+});
 myApp.onPageInit('contact', function (page) {
 	var isbn;
 	function cbBarcode(result){
 		//console.log(result);
 		if (!result){
 			alert("检测不到ISBN码");
-		}else{
-			// alert(result.codeResult.code);
+		}else{ 
 			isbn = result.codeResult.code;
 			$.ajax({
 				url: "./API/isbn.php?",
@@ -498,57 +532,51 @@ myApp.onPageInit('contact', function (page) {
 	            publisher: "",
 	            author: "",
 	            class: ""
-	        },
+			},
 	        word: ""
 		},
 		methods: {
 			setFetchType: (type) => {
 	            contact_app.fetchType=type;
-	        }
-		}
-	});
-
-//捐书
-	$("#ContactForm").validate({
-		submitHandler: function(form){
-			// ajaxContact(form);
-
-			console.log(JSON.stringify(contact_app.fetchType));
-			if (contact_app.fetchType==1) {
-				//1表示送至分馆
-				how_to_fetch = {"how":1,
-				"phone":contact_app.phone};
-			}else {
-				how_to_fetch = {"how":2,
-					"where":contact_app.fetchAddr,
-				"phone":contact_app.phone};
+			},
+			DonateBook:(e)=>{
+				e.preventDefault(); 
+				console.log(JSON.stringify(contact_app.fetchType));
+				if (contact_app.fetchType==1) {
+					//1表示送至分馆
+					how_to_fetch = {"how":1,
+					"phone":contact_app.phone};
+				}else {
+					how_to_fetch = {"how":2,
+						"where":contact_app.fetchAddr,
+					"phone":contact_app.phone};
+				} 
+				$.ajax({
+					url: "API/book/donateBook.php?",
+					dataType: "json",
+					data: {
+						"isbn": isbn,
+						"donator_word":contact_app.word,
+						"how_to_fetch": JSON.stringify(how_to_fetch)  
+					},
+					async: false,
+					success: function (data) { 
+						if(data.error_code==0){
+							alert(data.data);
+							location.reload(); 
+						}
+					},
+					error: function (xhr, textStatus) {
+						console.log('错误');
+						console.log(xhr);
+						console.log(textStatus);
+					},
+				}); 
 			}
-			$.ajax({
-				url: "API/book/donateBook.php?",
-				dataType: "json",
-				data: {
-					"isbn": isbn,
-					"donator_word":contact_app.word,
-					// "how_to_fetch": json.stringify(how_to_fetch),
-					"how_to_fetch": how_to_fetch,
-
-				},
-				async: false,
-				success: function (data) {
-					alert(data.data);
-					if(data.error_code==0){
-						$(location).attr('href', 'index.html');
-					}
-				},
-				error: function (xhr, textStatus) {
-					console.log('错误');
-					console.log(xhr);
-					console.log(textStatus);
-				},
-			});
-			return false;
 		}
 	});
+
+//捐书 
 	let tmpl = '<li class="uploader__file" style="background-image:url(#url#)"></li>',
 		$gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
 		$uploaderInput_1 = $("#uploaderInput_1"),

@@ -55,7 +55,7 @@
         <div class="user_thumb">
             <img src="images/我的背景.jpg" alt="" title="" />
             <div class="user_details" id ="userInfo">
-                <p><span>${username}}</span>学号：${studentnumber}}</p>
+                <p><span>${name}</span>学号：${sid}</p>
             </div>
             <!--<div class="user_avatar"><img src="images/avatar.jpg" alt="" title="" /></div>-->
         </div>
@@ -64,10 +64,11 @@
             <ul>
                 <!--<li><a href="index.html" class="close-panel"><img src="images/icons/white/myinfo.png" alt="" title="" /><span>个人信息</span></a></li>-->
                 <!--<li><a href="features.html" class="close-panel"><img src="images/icons/white/settings.png" alt="" title="" /><span>设置</span></a></li>-->
-                <li> <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/white/mybook.png" alt="" title="" /><span>借阅记录</span></a></li>
-                <li> <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/white/积分.png" alt="" title="" /><span>我的积分</span></a></li>
-                <li> <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/white/love.png" alt="" title="" /><span>我的书架</span></a></li>
-                <li> <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/white/history.png" alt="" title="" /><span>捐书记录</span></a></li>
+                <li> <a href="#" data-popup=".popup-rent-record" class="open-popup close-panel"><img src="images/icons/white/mybook.png" alt="" title="" /><span>借阅记录</span></a></li>
+                <!-- <li> <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/white/积分.png" alt="" title="" /><span>我的积分</span></a></li>
+                <li> <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/white/love.png" alt="" title="" /><span>我的书架</span></a></li> -->
+                <li> <a href="#" data-popup=".popup-donation-record" class="open-popup close-panel"><img src="images/icons/white/history.png" alt="" title="" /><span>捐书记录</span></a></li>
+                <li> <a href="#" id="logout" class="open-popup close-panel"><img src="images/icons/white/history.png" alt="" title="" /><span>登出</span></a></li>
             </ul>
         </nav>
     </div>
@@ -143,9 +144,10 @@
                             <a href="tables.html" data-view=".view-main"><img src="images/icons/green/list.png" alt="" title="" /><span>图书列表</span></a>
                             <a href="contact.html" data-view=".view-main"><img src="images/icons/green/书.png" alt="" title="" /><span>我要捐书</span></a>
                             <a href="#" data-popup=".popup-return" class="open-popup close-panel"><img src="images/icons/green/相机.png" alt="" title="" /><span>拍照还书</span></a>
-                            <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/green/讨论.png" alt="" title="" /><span>交流区</span></a>
-                            <a href="#" data-popup=".popup-login" class="open-popup close-panel" id="login"><img src="images/icons/green/lock.png" alt="" title="" /><span>登录</span></a>
-                        </div>
+                            <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/green/讨论.png" alt="" title="" /><span>交流区</span></a> 
+                            <a id="me" href="#" data-panel="right" class="open-panel"><img src="images/icons/green/lock.png" alt="" title="" /><span >我的</span></a>
+                            <a id="login" href="#" data-popup=".popup-login" class="open-popup close-panel" id="login"><img src="images/icons/green/lock.png" alt="" title="" /><span>登录</span></a>
+                    </div>
 
                     </div>
                 </div>
@@ -253,6 +255,104 @@
             <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
         </div>
     </div>
+</div>
+<!-- 借阅记录 -->
+<div class="popup popup-rent-record" id="rent-record">
+        <div class="content-block">
+            <h2>我的借阅记录</h2>
+            <h4>未还书列表</h4>
+            <div class="loginform">
+                <ul  class="responsive_table">
+                    <li class="table_row">
+                        <div class="table_section">书名</div> <div class="table_section">作者</div> 
+                        <div class="table_section">出版社</div> 
+                        <div class="table_section">借书时间</div>
+                    </li> 
+                    <li class="table_row" v-for="b in not_returned_books">
+                        <div class="table_section">${b.title}</div> 
+                        <div class="table_section">${b.author}</div> 
+                        <div class="table_section">${b.publisher}</div>  
+                        <div class="table_section">${b.borrow_time}</div>  
+                    </li>
+                </ul>
+            </div>
+            <div class="close_popup_button">
+                <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
+            </div>
+        </div>
+        <br>
+        <div class="content-block">
+            <h4>已还书列表</h4>
+            <div class="loginform">
+                <ul  class="responsive_table">
+                    <li class="table_row">
+                        <div class="table_section">书名</div> <div class="table_section">作者</div> 
+                        <div class="table_section">出版社</div> 
+                        <div class="table_section">借/还时间</div> 
+                    </li> 
+                    <li class="table_row" v-for="b in returned_books">
+                        <div class="table_section">${b.title}</div> 
+                        <div class="table_section">${b.author}</div> 
+                        <div class="table_section">${b.publisher}</div>  
+                        <div class="table_section">${b.borrow_time}-${b.return_time}</div>  
+                    </li>
+                </ul>
+            </div>
+            <div class="close_popup_button">
+                <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
+            </div>
+        </div>
+    
+</div>
+
+<!-- 捐书记录 -->
+<div class="popup popup-donation-record" id="donation-record">
+        <div class="content-block">
+            <h2>我的捐书记录</h2>
+            <h4>捐书列表</h4>
+            <div class="loginform">
+                <ul  class="responsive_table">
+                    <li class="table_row">
+                        <div class="table_section">书名</div>  
+                        <!-- <div class="table_section">出版社</div>  -->
+                        <div class="table_section">捐书提交时间</div>
+                        <div class="table_section">你的留言</div>
+                        <div class="table_section">状态</div>
+                    </li> 
+                    <li class="table_row" v-for="b in accepted">
+                        <div class="table_section">${b.title}</div> 
+                        <!-- <div class="table_section">${b.publisher}</div>  -->
+                        <div class="table_section">${b.time}</div>  
+                        <div v-if="b.donator_word!=''" class="table_section">${b.donator_word}</div>  
+                        <div v-if="b.donator_word==''" class="table_section">你没有填写留言~</div>  
+                        <div class="table_section">${b.borrow_time}</div>  
+                        <div class="table_section" style="color:green">审核通过</div>  
+                    </li>
+                    <li class="table_row" v-for="b in waiting">
+                        <div class="table_section">${b.title}</div> 
+                        <!-- <div class="table_section">${b.publisher}</div>  -->
+                        <div class="table_section">${b.time}</div>  
+                        <div v-if="b.donator_word!=''" class="table_section">${b.donator_word}</div>  
+                        <div v-if="b.donator_word==''" class="table_section">你没有填写留言~</div>  
+                        <div class="table_section">${b.borrow_time}</div>  
+                        <div class="table_section" style="color:blue">等待审核</div>  
+                    </li>
+                    <li class="table_row" v-for="b in rejected">
+                        <div class="table_section">${b.title}</div> 
+                        <!-- <div class="table_section">${b.publisher}</div>  -->
+                        <div class="table_section">${b.time}</div>  
+                        <div v-if="b.donator_word!=''" class="table_section">${b.donator_word}</div>  
+                        <div v-if="b.donator_word==''" class="table_section">你没有填写留言~</div>  
+                        <div class="table_section">${b.borrow_time}</div>  
+                        <div class="table_section" style="color:red">审核失败</div>  
+                    </li>
+                </ul>
+            </div>
+            <div class="close_popup_button">
+                <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
+            </div>
+        </div> 
+    
 </div>
 
 <!-- Register Popup -->

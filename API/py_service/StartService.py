@@ -19,7 +19,7 @@ def index():
 def getBookInfoByISBN(isbn): 
     rst = BooksAPI.getBookInfoByISBN(isbn)
     if rst == None:
-        return returnJSON(-1,"ISBN码不存在")
+        return returnJSON(-1,"找不到ISBN：{0}对应的图书信息。请先检查ISBN是否识别错误".format(isbn))
     else:
         return returnJSON(0,rst)
 
