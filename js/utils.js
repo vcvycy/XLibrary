@@ -30,4 +30,36 @@ function GetBookInfoByISBN(isbn,cb_fun){
     $.get(url,function(rst){
         cb_fun(JSON.parse(rst)); 
     });
-} 
+}
+function cbBarcode(result){ 
+    if (!result){
+        alert("检测不到ISBN码");
+    }else{ 
+        isbn = result.codeResult.code;
+        $.ajax({
+            url: "./API/isbn.php?",
+            dataType: "json",
+            data: {
+                "isbn": isbn,
+            },
+            async: true,
+            success: function (data) {
+                if(data.error_code==0){
+                    contact_app.book={
+                        name: data.data.title,
+                        publisher: data.data.publisher,
+                        author: data.data.author,
+                        class: ""
+                    }
+                }else {
+                    alert(data.data);
+                }
+            },
+            error: function (xhr, textStatus) {
+                console.log('错误');
+                console.log(xhr);
+                console.log(textStatus);
+            },
+        });
+    }
+}

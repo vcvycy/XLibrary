@@ -2867,3 +2867,22 @@ padding:15px 0 0 0;
 	color: #696e78;
 	font-weight: bold;
 }
+
+.popup-donation-record{
+	background-image: url(images/xmu_sd_1.jpg);
+	background-size:100% 100%
+}
+.table_row{
+	background:#aaaa0044
+}
+.popup-title{
+	/* text-shadow: 5px 5px 5px rgb(41, 5, 243); */ 
+	-webkit-text-stroke: 1.5px #0abb85;  
+	color:#ffffff;
+	font-size:35px;
+	font-weight:700;
+	text-align:center;
+	padding:0 0 20px 0;
+	margin:0px;
+	align-content: center;
+}
