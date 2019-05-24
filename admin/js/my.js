@@ -19,6 +19,11 @@ sidebar_data={
                 "href":"students.html",
                 "icon" :"fa fa-bar-chart",
                 "name" :"学生"
+            },
+            {
+                "href":"account.html",
+                "icon" :"fa fa-bar-chart",
+                "name" :"账户相关"
             }
         ],
     "logo":{
@@ -247,6 +252,32 @@ pages_init ={
 
             })
         });
+    },
+    "account.html": function(){ 
+        sidebar();
+        curPageNeedLogin();
+        vue_account= new Vue({
+            el: document.getElementById("account"),
+            data: {
+                old_pwd:"",
+                new_pwd: ""
+            },
+            methods: { 
+                updatePWD:()=>{   
+                    url =  `../API/admin/updatePWD.php?old_pwd=${vue_account.old_pwd}&new_pwd=${vue_account.new_pwd}`;
+                    $.get(url,function(data){ 
+                        obj=JSON.parse(data);
+                        if (obj.error_code==0){
+                            alert(obj.data);
+                            curPageNeedLogin();
+                        }else{
+                            alert(obj.data);
+                        }
+
+                    })
+                } 
+            }   
+          });
     }
 }
 

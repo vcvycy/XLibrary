@@ -71,3 +71,6 @@ create table message(
   book_id   int,
   from_id   int
 );
+
+-- 数据库默认东西
+INSERT INTO `su`( `usr`, `pwd`) VALUES ('admin','admin')
