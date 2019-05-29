@@ -6,6 +6,7 @@
 DROP DATABASE IF EXISTS xlibrary;
 CREATE DATABASE xlibrary;
 USE xlibrary;
+set sql_mode=(select replace(@@sql_mode,'NO_ZERO_IN_DATE,NO_ZERO_DATE',''));  -- 清除日期不能为空限制。
 -- 2、建表
 -- (*) 图书表
 create table book(
