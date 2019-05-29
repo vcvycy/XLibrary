@@ -296,32 +296,44 @@
                 <ul class="shop_items">
 
                     <li v-for="b in g_data.donation_books.waiting">
-                        <div class="shop_thumb" style="width: 15%;"><a href="#"><img v-bind:src="b.picture" alt=""
+                        <div class="shop_thumb" style="width: 20%;"><a href="#"><img v-bind:src="b.picture" alt=""
                                     title="" /></a></div>
-                        <div class="shop_item_details" style="width: 80%; text-align: left;">
+                        <div class="shop_item_details" style="width: 75%; text-align: left;">
                             <div><b>${b.title}</b> <i>(${b.author})</i></div>
                             <div>${b.publisher}&nbsp; (${b.pubdate})</div>
                             <div>提交时间：${b.time}</div>
+                            <div>你的留言:
+                                    <b v-if="b.donator_word!=''">${b.donator_word}</b>
+                                    <b v-if="b.donator_word==''">你没有留下任何话~</b>
+                            </div>
                             <div style="color:blue"><b>等待审核</b>></div>
                         </div>
                     </li>
                     <li v-for="b in g_data.donation_books.accepted">
-                        <div class="shop_thumb" style="width: 15%;"><a href="#"><img v-bind:src="b.picture" alt=""
+                        <div class="shop_thumb" style="width: 20%;"><a href="#"><img v-bind:src="b.picture" alt=""
                                     title="" /></a></div>
-                        <div class="shop_item_details" style="width: 80%; text-align: left;">
+                        <div class="shop_item_details" style="width: 75%; text-align: left;">
                             <div><b>${b.title}</b> <i>(${b.author})</i></div>
                             <div>${b.publisher}&nbsp; (${b.pubdate})</div>
                             <div>提交时间：${b.time}</div>
+                            <div>你的留言:
+                                    <b v-if="b.donator_word!=''">${b.donator_word}</b>
+                                    <b v-if="b.donator_word==''">你没有留下任何话~</b>
+                            </div>
                             <div style="color:green"><b>审核通过</b></div>
                         </div>
                     </li>
                     <li v-for="b in g_data.donation_books.rejected">
-                        <div class="shop_thumb" style="width: 15%;"><a href="#"><img v-bind:src="b.picture" alt=""
+                        <div class="shop_thumb" style="width: 20%;"><a href="#"><img v-bind:src="b.picture" alt=""
                                     title="" /></a></div>
-                        <div class="shop_item_details" style="width: 80%; text-align: left;">
+                        <div class="shop_item_details" style="width: 75%; text-align: left;">
                             <div><b>${b.title}</b> <i>(${b.author})</i></div>
                             <div>${b.publisher}&nbsp; (${b.pubdate})</div>
                             <div>提交时间：${b.time}</div>
+                            <div>你的留言:
+                                    <b v-if="b.donator_word!=''">${b.donator_word}</b>
+                                    <b v-if="b.donator_word==''">你没有留下任何话~</b>
+                            </div>
                             <div style="color:red"><b>审核未通过</b></div>
                         </div>
                     </li>

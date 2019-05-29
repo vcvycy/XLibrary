@@ -2,8 +2,8 @@
 var myData={
 	isLogin:false,
 	user_info: null,          //登陆信息
-	returned_books:null,
-	not_returned_books:null,
+	returned_books:[],
+	not_returned_books:[],
 	donation_books:{
 		accepted:[],
 		rejected:[],
