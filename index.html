@@ -250,7 +250,9 @@
     <!-- 借阅记录 -->
     <div class="popup popup-rent-records" id="rent-records">
         <div class="content-block">
-            <h2 class="page_title">我的借阅记录</h2>
+            <h2 class="page_title">我的借阅记录
+                <span class="">(共${g_data.not_returned_books.length+g_data.returned_books.length}条记录，其中未还图书：${g_data.not_returned_books.length}本)</span>
+            </h2>
             <div class="loginform">
                 <ul class="shop_items">
                     <li v-for="book in g_data.not_returned_books">
@@ -285,7 +287,11 @@
     <!-- 捐书记录 -->
     <div class="popup popup-donation-records">
         <div class="content-block">
-            <h2 class="page_title">我的捐书列表</h2>
+            <h2 class="page_title">我的捐书列表
+                <span class="">
+                 (审核通过${g_data.donation_books.accepted.length}本，等待审核${g_data.donation_books.waiting.length}本)
+                </span>
+            </h2>
             <div class="loginform">
                 <ul class="shop_items">
 
