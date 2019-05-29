@@ -11,7 +11,7 @@ class Filter{
         $value=strval($value);
         $pattern=self::$re_patterns[$type]; 
         if (!preg_match($pattern,$value)){
-            throw new Exception("值$value 无法通过正则匹配$pattern,请修改参数值");
+            throw new Exception("非法参数：$value ");
         }
     } 
 }

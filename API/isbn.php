@@ -2,7 +2,11 @@
 // 通过ISBN获取图书信息
    require_once("utils.php"); 
    require_once(DIR_DAO."Books.php");
-   $isbn = Utils::getParamWithFilter("isbn","digit"); 
+   try{ 
+      $isbn = Utils::getParamWithFilter("isbn","digit"); 
+   }catch (Exception $e) { //接口中也找不到，返回错误。
+      Utils::exit(-1,$e->getMessage());
+   }
    if ($isbn!=null){
       $b = new Books(); 
       try{

@@ -3,7 +3,12 @@ var myData={
 	isLogin:false,
 	user_info: null,          //登陆信息
 	returned_books:null,
-	not_returned_books:null
+	not_returned_books:null,
+	donation_books:{
+		accepted:[],
+		rejected:[],
+		waiting:[]
+	}
 } 
 var myApp = new Framework7({
     animateNavBackIcon: true,
@@ -35,26 +40,31 @@ function index_init(){
 				});
 			}
 		}
-	}); 
+	});  
 	//借阅记录
-	rent_recort = new Vue({
-		el :"#rent-record",
+	rent_recorts = new Vue({
+		el :"#rent-records",
 		delimiters: ['${', '}'],
 		data:{
 			"title":"我的借阅记录",
-			"returned_books":[],
-			"not_returned_books":[]
+			g_data:myData
+		},
+		methods:{
+			showReturnImage: (filename)=>{
+				if (filename==null){
+					alert("还书无上传图片");
+					return;
+				} 
+				path=`API/uploads/return_book_images/${filename}`; 
+				window.open(path);
+			}
 		}
-	});
-	//捐书记录
-	donation_record = new Vue({
-		el :".popup-donation-record",
+	}); 
+	donation_records = new Vue({
+		el :".popup-donation-records",
 		delimiters: ['${', '}'],
-		data:{
-			"title":"Donation",
-			"accepted":[],
-			"waiting":[],
-			"rejected":[]
+		data:{ 
+			g_data :myData
 		} 
 	});
 	menu_vue = new Vue({
@@ -95,8 +105,8 @@ function index_init(){
 		success: function (data) {
 			console.log(data.data);
 			if(data.error_code==0){
-				rent_recort.returned_books = myData.returned_books =data.data.returned;
-				rent_recort.not_returned_books = myData.not_returned_books= data.data.not_returned;
+				myData.returned_books =data.data.returned;
+				myData.not_returned_books= data.data.not_returned;
 			}else {
 			}
 		}
@@ -107,15 +117,13 @@ function index_init(){
 		dataType: "json",
 		data: {},
 		async: true,
-		success: function (data) {
-			aaaa=data;
-			console.log(data.data);
-			console.log(data.data["审核通过"]);
-			if(data.error_code==0){
-				donation_record.accepted =data.data["审核通过"];
-				donation_record.rejected = data.data["审核失败"];
-				donation_record.waiting = data.data["等待审核"];
-			}else {
+		success: function (data) { 
+			if(data.error_code==0){ 
+				myData.donation_books.accepted = data.data["审核通过"]; 
+				myData.donation_books.rejected = data.data["审核失败"];
+				myData.donation_books.waiting = data.data["等待审核"];
+			}else{
+				console.log("无法获取捐书记录，可能是未登录");
 			}
 		}
 	});
@@ -403,8 +411,7 @@ myApp.onPageInit('borrow_book', function (page) {
 				dom_file.click();  
 			},
 			inputISBNbyHand:()=>{
-				borrow_book_vue.cur_status=1;
-				dom_input=$("#isbn_by_hand");
+				borrow_book_vue.cur_status=1;  
 				borrow_book_vue.fetchBookInfo();
 			},
 			cbAfterRecogBarcode: (result)=> {
@@ -436,7 +443,12 @@ myApp.onPageInit('borrow_book', function (page) {
 				});
 			}
 			,
-			fetchBookInfo:()=> {
+			fetchBookInfo:()=> { 
+				if (borrow_book_vue.isbn=="" || borrow_book_vue.isbn==null){
+					borrow_book_vue.cur_status=0;
+					borrow_book_vue.error_msg="ISBN 不能为空";
+					return ;
+				}
 				$.ajax({
 					url: "./API/isbn.php",
 					dataType: "json",

@@ -103,7 +103,7 @@ Class Books extends Base{
     // (*) 获取用户捐书列表
     public function getDonationListBySID($sid){
         $data = $this->createSQLAndRunAssoc(
-            "SELECT book_donate.*,book.title,book.isbn,book.author,book.publisher FROM book_donate,book WHERE SID = '%s' and book.isbn = book_donate.isbn",
+            "SELECT book_donate.*,book.* FROM book_donate,book WHERE SID = '%s' and book.isbn = book_donate.isbn",
             $sid);
         $list_accepted = array();
         $list_failed   = array();
@@ -176,7 +176,7 @@ Class Books extends Base{
     // (*) 获取用户借书列表
     public function getBorrowListBySID($sid){
         $data = $this->createSQLAndRunAssoc(
-            "SELECT book_borrow.*,book.* FROM book_borrow,book 
+            "SELECT book_borrow.id as borrow_id,book.*,book_borrow.* FROM book_borrow,book 
                 WHERE book_borrow.sid = '%s' and book.isbn = book_borrow.isbn",
             $sid);
         $not_return = array();
@@ -204,10 +204,11 @@ Class Books extends Base{
           throw new Exception("当前并未借阅ISBN[$isbn]这本书");
     }
     // (*) 还一本书
-    public function returnBook($sid, $isbn){ 
+    public function returnBook($sid, $isbn,$path){  
         $ret = $this-> createSQLAndRun(
-            "update book_borrow set return_time = NOW() 
-                where sid='%s' and return_time=0 and isbn ='%s' limit 1",
+            "update book_borrow set return_time = NOW(), return_image_path = '%s'
+                where sid='%s' and return_time=0 and isbn ='%s'  limit 1",
+                $path,
                 $sid,
                 $isbn
         ); 

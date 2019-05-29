@@ -35,12 +35,12 @@
 								</div>
 
 							</div>
-							<h2 class="page_title"><b>方式二：手工输入、纠正ISBN码</b></h2>
+							<h2 class="page_title"><b>方式二：手工输入ISBN码</b></h2>
 							<div class="page_single layout_fullwidth_padding">
 								<div class="swiper-wrapper">
-									<div style="width:80%" class="swiper-slide team-block">
-										<input id="isbn_by_hand" v-model="isbn" style="height:25px; font-size:22px;" type="text">
-										<strong>请输入ISBN码，如9787519012038</strong>
+									<div style="width:100%" class="swiper-slide team-block">
+										<input placeholder="请输入ISBN码，如9787519012038" v-model="isbn" style="width:80%;height:25px; font-size:18px;" type="text"> 
+										<strong>&nbsp;</strong>
 										<span v-on:click="inputISBNbyHand">确定</span>
 									</div>
 								</div>

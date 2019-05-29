@@ -214,7 +214,7 @@
                               </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(item,index) in cur_stu_info.borrow_list['未还书列表']">
+                                <tr v-for="(item,index) in cur_stu_info.borrow_list['not_returned']">
                                   <th scope="row">{{index+1}}</th>
                                   <td>{{item.isbn}}</td>
                                   <td>{{item.title}}</td>
@@ -222,13 +222,15 @@
                                   <td>{{item.borrow_time}}</td>
                                   <td>未还</td>
                                 </tr> 
-                                <tr v-for="(item,index) in cur_stu_info.borrow_list['已还书列表']">
-                                  <th scope="row">{{index+1+cur_stu_info.borrow_list['未还书列表'].length}}</th>
+                                <tr v-for="(item,index) in cur_stu_info.borrow_list['returned']">
+                                  <th scope="row">{{index+1+cur_stu_info.borrow_list['not_returned'].length}}</th>
                                   <td>{{item.isbn}}</td>
                                   <td>{{item.title}}</td>
                                   <td>{{item.author}}</td>
                                   <td>{{item.borrow_time}}</td>
-                                  <td>{{item.return_time}}</td>
+                                  <td>
+                                    <a target="blank" v-bind:href="`../API/uploads/return_book_images/${item.return_image_path}`">{{item.return_time}}</a>
+                                  </td>
                                 </tr> 
                             </tbody>
                           </table>

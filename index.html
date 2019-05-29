@@ -1,13 +1,17 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
-    <link href="images/apple-touch-startup-image-320x460.png" media="(device-width: 320px)" rel="apple-touch-startup-image">
-    <link href="images/apple-touch-startup-image-640x920.png" media="(device-width: 320px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+    <link href="images/apple-touch-startup-image-320x460.png" media="(device-width: 320px)"
+        rel="apple-touch-startup-image">
+    <link href="images/apple-touch-startup-image-640x920.png"
+        media="(device-width: 320px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
     <title>厦门大学图书法学与艺术分馆捐书系统</title>
     <link rel="stylesheet" href="css/framework7.css">
     <link rel="stylesheet" href="style.css">
@@ -15,274 +19,260 @@
     <link type="text/css" rel="stylesheet" href="css/animations.css" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,900" rel="stylesheet">
 </head>
+
 <body id="mobile_wrap">
 
 
 
-<!-- Status bar overlay for full screen mode (PhoneGap) -->
-<div class="statusbar-overlay"></div>
+    <!-- Status bar overlay for full screen mode (PhoneGap) -->
+    <div class="statusbar-overlay"></div>
 
-<div class="panel-overlay"></div>
+    <div class="panel-overlay"></div>
 
-<div class="panel panel-left panel-reveal">
-    <div class="view view-subnav">
-        <div class="pages">
-            <div data-page="panel-leftmenu" class="page pagepanel">
-                <div class="page-content">
-                    <nav class="main_nav_icons_inline_2">
-                        <ul>
-                             <li><a href="./" class="close-panel" data-view=".view-main"><img src="images/icons/white/home.png" alt="" title="" /><span>首页</span></a></li>
-                            <li><a href="borrow_book.html" class="close-panel"  data-view=".view-main"><img src="images/icons/white/扫一扫.png" alt="" title="" /><span>扫一扫借书</span></a></li>
-                            <li><a href="books_list.html" class="close-panel" data-view=".view-main"><img src="images/icons/white/list.png" alt="" title="" /><span>图书馆藏书</span></a></li>
+    <div class="panel panel-left panel-reveal">
+        <div class="view view-subnav">
+            <div class="pages">
+                <div data-page="panel-leftmenu" class="page pagepanel">
+                    <div class="page-content">
+                        <nav class="main_nav_icons_inline_2">
+                            <ul>
+                                <li><a href="./" class="close-panel" data-view=".view-main"><img
+                                            src="images/icons/white/home.png" alt="" title="" /><span>首页</span></a></li>
+                                <li><a href="borrow_book.html" class="close-panel" data-view=".view-main"><img
+                                            src="images/icons/white/扫一扫.png" alt="" title="" /><span>扫一扫借书</span></a>
+                                </li>
+                                <li><a href="books_list.html" class="close-panel" data-view=".view-main"><img
+                                            src="images/icons/white/list.png" alt="" title="" /><span>图书馆藏书</span></a>
+                                </li>
 
-                            <li><a href="book_donation.html" class="close-panel" data-view=".view-main"><img src="images/icons/white/书.png" alt="" title="" /><span>我要捐书</span></a></li>
-                            <li><a href="return-book.html" class="close-panel" data-view=".view-main"><img src="images/icons/white/相机（1）.png" alt="" title="" /><span>拍照还书</span></a></li>
-                            <!--			<li><a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/white/置换.png" alt="" title="" /><span>图书置换</span></a></li>-->
+                                <li><a href="book_donation.html" class="close-panel" data-view=".view-main"><img
+                                            src="images/icons/white/书.png" alt="" title="" /><span>我要捐书</span></a></li>
+                                <li><a href="return-book.html" class="close-panel" data-view=".view-main"><img
+                                            src="images/icons/white/相机（1）.png" alt="" title="" /><span>拍照还书</span></a>
+                                </li>
+                                <!--			<li><a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/white/置换.png" alt="" title="" /><span>图书置换</span></a></li>-->
 
-                            <!--<li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/我的.png" alt="" title="" /><span>待定</span></a></li>-->
-                            <!--<li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/我的.png" alt="" title="" /><span>待定</span></a></li>-->
-                        </ul>
-                    </nav>
+                                <!--<li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/我的.png" alt="" title="" /><span>待定</span></a></li>-->
+                                <!--<li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/我的.png" alt="" title="" /><span>待定</span></a></li>-->
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="panel panel-right panel-reveal">
-    <div class="user_login_info">
-        <div v-if="g_data.isLogin">
-            <div class="user_thumb">
-                <img src="images/我的背景.jpg" alt="" title="" />
-                <div class="user_details">
-                    <p><span>${g_data.user_info.name}</span>学号：${g_data.user_info.sid}</p>
+    <div class="panel panel-right panel-reveal">
+        <div class="user_login_info">
+            <div v-if="g_data.isLogin">
+                <div class="user_thumb">
+                    <img src="images/我的背景.jpg" alt="" title="" />
+                    <div class="user_details">
+                        <p><span>${g_data.user_info.name}</span>学号：${g_data.user_info.sid}</p>
+                    </div>
+                    <!--<div class="user_avatar"><img src="images/avatar.jpg" alt="" title="" /></div>-->
                 </div>
-                <!--<div class="user_avatar"><img src="images/avatar.jpg" alt="" title="" /></div>-->
+                <nav class="user-nav">
+                    <ul>
+                        <li> <a href="#" data-popup=".popup-rent-records" class="open-popup close-panel"><img
+                                    src="images/icons/white/mybook.png" alt="" title="" /><span>借阅记录</span></a></li>
+                        <li> <a href="#" data-popup=".popup-donation-records" class="open-popup close-panel"><img
+                                    src="images/icons/white/history.png" alt="" title="" /><span>捐书记录</span></a></li>
+                        <li v-on:click="logout"> <a href="#" class=""><img src="images/icons/white/love.png" alt=""
+                                    title="" /><span>登出</span></a></li>
+                    </ul>
+                </nav>
             </div>
-            <nav class="user-nav">
-                <ul>
-                    <!--<li><a href="index.html" class="close-panel"><img src="images/icons/white/myinfo.png" alt="" title="" /><span>个人信息</span></a></li>-->
-                    <!--<li><a href="features.html" class="close-panel"><img src="images/icons/white/settings.png" alt="" title="" /><span>设置</span></a></li>-->
-                    <li> <a href="#" data-popup=".popup-rent-record" class="open-popup close-panel"><img src="images/icons/white/mybook.png" alt="" title="" /><span>借阅记录</span></a></li>
-                    <!-- <li> <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/white/积分.png" alt="" title="" /><span>我的积分</span></a></li>
-                    <li> <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/white/love.png" alt="" title="" /><span>我的书架</span></a></li> -->
-                    <li> <a href="#" data-popup=".popup-donation-record" class="open-popup close-panel"><img src="images/icons/white/history.png" alt="" title="" /><span>捐书记录</span></a></li>
-                    <li v-on:click="logout"> <a href="#" class=""><img src="images/icons/white/love.png" alt="" title="" /><span>登出</span></a></li>
-                </ul>
-            </nav>
-        </div>
-        <div v-else>
-            <div class="user_thumb">
-                <img src="images/我的背景.jpg" alt="" title="" />
-                <div class="user_details">
-                    <p><span>用户未登陆</span></p>
+            <div v-else>
+                <div class="user_thumb">
+                    <img src="images/我的背景.jpg" alt="" title="" />
+                    <div class="user_details">
+                        <p><span>用户未登陆</span></p>
+                    </div>
+                    <!--<div class="user_avatar"><img src="images/avatar.jpg" alt="" title="" /></div>-->
                 </div>
-                <!--<div class="user_avatar"><img src="images/avatar.jpg" alt="" title="" /></div>-->
+                <nav class="user-nav">
+                    <ul>
+                        <li> <a data-popup=".popup-login" class="open-popup close-panel" href="#"><img
+                                    src="images/icons/white/love.png" alt="" title="" /><span>登陆</span></a></li>
+                    </ul>
+                </nav>
             </div>
-            <nav class="user-nav">
-                <ul>
-                    <li> <a  data-popup=".popup-login" class="open-popup close-panel" href="#"><img src="images/icons/white/love.png" alt="" title="" /><span>登陆</span></a></li>
-                </ul>
-            </nav>
         </div>
     </div>
-</div>
 
-<div class="views">
-    <!-- Your main view, should have "view-main" class -->
-    <div class="view view-main">
-
-
-
-        <div class="pages">
-
-            <div data-page="index" class="page homepage">
-                <div class="navbarpages">
-                    <div class="navbar_left">
-                        <div class="logo_text"><a href="index.html">法学与艺术分馆</a></div>
+    <div class="views">
+        <!-- Your main view, should have "view-main" class -->
+        <div class="view view-main">
+            <div class="pages">
+                <div data-page="index" class="page homepage">
+                    <div class="navbarpages">
+                        <div class="navbar_left">
+                            <div class="logo_text"><a href="index.html">法学与艺术分馆</a></div>
+                        </div>
+                        <div class="navbar_right navbar_right_menu">
+                            <a href="#" data-panel="left" class="open-panel"><img src="images/icons/white/menu.png"
+                                    alt="" title="" /></a>
+                        </div>
+                        <div class="navbar_right">
+                            <a href="#" data-panel="right" class="open-panel"><img src="images/icons/white/user.png"
+                                    alt="" title="" /></a>
+                        </div>
                     </div>
-                    <div class="navbar_right navbar_right_menu">
-                        <a href="#" data-panel="left" class="open-panel"><img src="images/icons/white/menu.png" alt="" title="" /></a>
-                    </div>
-                    <div class="navbar_right">
-                        <a href="#" data-panel="right" class="open-panel"><img src="images/icons/white/user.png" alt="" title="" /></a>
-                    </div>
-                </div>
+                    <!-- Slider -->
+                    <div class="swiper-container slidertoolbar swiper-init" data-effect="slide" data-parallax="true"
+                        data-pagination=".swiper-pagination" data-next-button=".swiper-button-next"
+                        data-prev-button=".swiper-button-prev">
+                        <div class="swiper-wrapper">
 
-                <!-- Slider -->
-                <div class="swiper-container slidertoolbar swiper-init" data-effect="slide" data-parallax="true" data-pagination=".swiper-pagination"  data-next-button=".swiper-button-next" data-prev-button=".swiper-button-prev">
-                    <div class="swiper-wrapper">
+                            <div class="swiper-slide" style="background-image:url(images/index01.jpg);">
+                                <div class="slider_trans">
+                                    <div class="slider-caption">
+                                        <span class="subtitle" data-swiper-parallax="-60%">法学分馆与艺术分馆</span>
+                                        <h2 data-swiper-parallax="-100%">欢迎来到法学与艺术捐书系统</h2>
 
-                        <div class="swiper-slide" style="background-image:url(images/index01.jpg);">
-                            <div class="slider_trans">
-                                <div class="slider-caption">
-                                    <span class="subtitle" data-swiper-parallax="-60%">法学分馆与艺术分馆</span>
-                                    <h2 data-swiper-parallax="-100%">欢迎来到法学与艺术捐书系统</h2>
+                                        <p data-swiper-parallax="-30%">
+                                            新用户请先登录<br />点击左上角的“法学与艺术分馆”即可返回首页<br />在这里，你可以更快捷的借到捐赠的图书，也可以将你喜欢的图书捐给我们与大家分享，谢谢您的支持！
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide" style="background-image:url(images/index02.jpg);">
+                                <div class="slider_trans">
+                                    <div class="slider-caption">
+                                        <span class="subtitle" data-swiper-parallax="-60%">借书须知</span>
+                                        <h2 data-swiper-parallax="-100%">扫一扫借书</h2>
+                                        <p data-swiper-parallax="-30%">
+                                            1、直接从图书馆扫一扫借书，快捷方便，无需消磁。<br />2、从上一位同学手中直接借走，无需返还到图书馆再次借书，省时方便。<br />3、转借同学一定要监督借走图书的同学扫一扫借书，否则在借人仍是自己。
+                                        </p>
 
-                                    <p data-swiper-parallax="-30%">新用户请先登录<br/>点击左上角的“法学与艺术分馆”即可返回首页<br/>在这里，你可以更快捷的借到捐赠的图书，也可以将你喜欢的图书捐给我们与大家分享，谢谢您的支持！</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide" style="background-image:url(images/index03.jpg);">
+                                <div class="slider_trans">
+                                    <div class="slider-caption">
+                                        <span class="subtitle" data-swiper-parallax="-60%">捐书须知</span>
+                                        <h2 data-swiper-parallax="-100%">我要捐书</h2>
+
+                                        <p data-swiper-parallax="-30%">有任何想要捐赠给图书馆的书籍，请按步骤完成捐赠。</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="swiper-slide" style="background-image:url(images/index02.jpg);">
-                            <div class="slider_trans">
-                                <div class="slider-caption">
-                                    <span class="subtitle" data-swiper-parallax="-60%">借书须知</span>
-                                    <h2 data-swiper-parallax="-100%">扫一扫借书</h2>
-                                    <p data-swiper-parallax="-30%">1、直接从图书馆扫一扫借书，快捷方便，无需消磁。<br/>2、从上一位同学手中直接借走，无需返还到图书馆再次借书，省时方便。<br/>3、转借同学一定要监督借走图书的同学扫一扫借书，否则在借人仍是自己。</p>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                    </div>
 
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide" style="background-image:url(images/index03.jpg);">
-                            <div class="slider_trans">
-                                <div class="slider-caption">
-                                    <span class="subtitle" data-swiper-parallax="-60%">捐书须知</span>
-                                    <h2 data-swiper-parallax="-100%">我要捐书</h2>
-
-                                    <p data-swiper-parallax="-30%">有任何想要捐赠给图书馆的书籍，请按步骤完成捐赠。</p>
-                                </div>
+                    <div class="swiper-container-toolbar swiper-toolbar swiper-init" data-effect="slide"
+                        data-slides-per-view="1" data-slides-per-group="1" data-space-between="0"
+                        data-pagination=".swiper-pagination-toolbar">
+                        <div class="swiper-pagination-toolbar"></div>
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide toolbar-icon">
+                                <a href="borrow_book.html" data-view=".view-main"><img src="images/icons/green/扫一扫.png"
+                                        alt="" title="" /><span>扫一扫借书</span></a>
+                                <a href="books_list.html" data-view=".view-main"><img src="images/icons/green/list.png"
+                                        alt="" title="" /><span>图书馆藏书</span></a>
+                                <a href="book_donation.html" data-view=".view-main"><img src="images/icons/green/书.png"
+                                        alt="" title="" /><span>我要捐书</span></a>
+                                <a href="return-book.html" data-popup="" class="lose-panel"><img
+                                        src="images/icons/green/相机.png" alt="" title="" /><span>拍照还书</span></a>
+                                <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img
+                                        src="images/icons/green/讨论.png" alt="" title="" /><span>交流区</span></a>
+                                <a v-if="g_data.isLogin" style="" href="#" data-panel="right" class="open-panel"><img
+                                        src="images/icons/green/lock.png" alt=""
+                                        title="" /><span>${g_data.user_info.name}</span></a>
+                                <a v-if="!g_data.isLogin" href="#" data-popup=".popup-login"
+                                    class="open-popup close-panel"><img src="images/icons/green/lock.png" alt=""
+                                        title="" /><span>登录</span></a>
                             </div>
                         </div>
                     </div>
-                    <div class="swiper-pagination"></div>
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
+
+
                 </div>
-
-                <div class="swiper-container-toolbar swiper-toolbar swiper-init" data-effect="slide" data-slides-per-view="1" data-slides-per-group="1" data-space-between="0" data-pagination=".swiper-pagination-toolbar">
-                    <div class="swiper-pagination-toolbar"></div>
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide toolbar-icon">
-                            <a href="borrow_book.html" data-view=".view-main"><img src="images/icons/green/扫一扫.png" alt="" title="" /><span>扫一扫借书</span></a>
-                            <a href="books_list.html" data-view=".view-main"><img src="images/icons/green/list.png" alt="" title="" /><span>图书馆藏书</span></a>
-                            <a href="book_donation.html" data-view=".view-main"><img src="images/icons/green/书.png" alt="" title="" /><span>我要捐书</span></a>
-                            <a href="return-book.html" data-popup="" class="lose-panel"><img src="images/icons/green/相机.png" alt="" title="" /><span>拍照还书</span></a>
-                            <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/green/讨论.png" alt="" title="" /><span>交流区</span></a> 
-                            <a v-if="g_data.isLogin" style="" href="#" data-panel="right" class="open-panel"><img src="images/icons/green/lock.png" alt="" title="" /><span >${g_data.user_info.name}</span></a>
-                            <a v-if="!g_data.isLogin" href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/green/lock.png" alt="" title="" /><span>登录</span></a>
-                        </div> 
-                    </div>
-                </div>
-
-
             </div>
         </div>
+
+
+
+    </div>
     </div>
 
 
-
-</div>
-</div>
-
-<!-- open Popup -->
-<!-- <div class="popup popup-scan">
-    <div class="content-block">
-        <div class="close_popup_button">
-            <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
-        </div>
-        <div id="result"></div>
-        <article >
-            <section class="description">
-                <p >请拍摄书后条形码；</p>
-                <p >拍摄清晰，条形码必须拍全；</p>
-                <p>如果扫描失败请手动上传</p>
-            </section>
-        </article>
-        <div id="interactive" class="viewport"><video autoplay="true" preload="auto" src="" muted="true" playsinline="true"></video><canvas class="drawingBuffer" width="640" height="480"></canvas><br clear="all"></div>
-        <label>手动上传:</label>
-        <div class="single-photo">
-            <!--<input type="file"  accept="image/*" />-->
-            <ul class="uploader__files" id="uploaderFiles_1">
-            </ul>
-            <div class="uploader__input-box" id="input_box_1">
-                <input id="uploaderInput_1" class="uploader__input barcode" type="file"
-                       name="file_1" accept="image/*">
-            </div>
-        </div>
-    </div>
-</div> -->
- 
-<!-- Login Popup -->
-<div class="popup popup-login">
-    <div class="content-block">
-        <h4>登录</h4>
-        <div class="loginform">
-            <form id="LoginForm" method="post">
-                <input type="text" name="sid" value="" class="form_input required" placeholder="学号" />
-                <input type="password" name="pwd" value="" class="form_input required" placeholder="通用密码" />
-                <!--<div class="forgot_pass"><a href="#" data-popup=".popup-forgot" class="open-popup">Forgot Password?</a></div>-->
-                <input type="submit" name="submit" class="form_submit" id="submit" value="登录" />
-                <article >
-                    <section class="description">
-                        <p >本系统账号与 <a href="http://i.xmu.edu.cn">i.xmu.edu.cn</a> 上的用户名/密码一致。<br>如果密码输入错误<b>超过3次</b>，需要先前往 <a href="http://i.xmu.edu.cn">i.xmu.edu.cn</a> 上登陆。</p>
-                    </section>
-                </article>
-            </form>
-            <!--<div class="signup_bottom">-->
-            <!--<p>Don't have an account?</p>-->
-            <!--<a href="#" data-popup=".popup-signup" class="open-popup">SIGN UP</a>-->
-            <!--</div>-->
-        </div>
-        <div class="close_popup_button">
-            <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
-        </div>
-    </div>
-</div>
-
-<!-- loading Popup -->
-<div class="popup popup-loading">
-    <div class="content-block">
-        <h4>待开发</h4>
-        <div class="loginform">
-            <label id="loader" style=""><img src="images/loader01.gif" alt="Loading..." id="LoadingGraphic"></label>
-            <div class="signup_bottom">
-                <p>该功能正在开发中，敬请期待</p>
-            </div>
-        </div>
-        <div class="close_popup_button">
-            <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
-        </div>
-    </div>
-</div>
-<!-- 借阅记录 -->
-<div class="popup popup-rent-record" id="rent-record">
+    <!-- Login Popup -->
+    <div class="popup popup-login">
         <div class="content-block">
-            <h2>我的借阅记录</h2>
-            <h4>未还书列表</h4>
+            <h4>登录</h4>
             <div class="loginform">
-                <ul  class="responsive_table">
-                    <li class="table_row">
-                        <div class="table_section">书名</div> <div class="table_section">作者</div> 
-                        <div class="table_section">出版社</div> 
-                        <div class="table_section">借书时间</div>
-                    </li> 
-                    <li class="table_row" v-for="b in not_returned_books">
-                        <div class="table_section">${b.title}</div> 
-                        <div class="table_section">${b.author}</div> 
-                        <div class="table_section">${b.publisher}</div>  
-                        <div class="table_section">${b.borrow_time}</div>  
-                    </li>
-                </ul>
+                <form id="LoginForm" method="post">
+                    <input type="text" name="sid" value="" class="form_input required" placeholder="学号" />
+                    <input type="password" name="pwd" value="" class="form_input required" placeholder="通用密码" />
+                    <!--<div class="forgot_pass"><a href="#" data-popup=".popup-forgot" class="open-popup">Forgot Password?</a></div>-->
+                    <input type="submit" name="submit" class="form_submit" id="submit" value="登录" />
+                    <article>
+                        <section class="description">
+                            <p>本系统账号与 <a href="http://i.xmu.edu.cn">i.xmu.edu.cn</a>
+                                上的用户名/密码一致。<br>如果密码输入错误<b>超过3次</b>，需要先前往 <a href="http://i.xmu.edu.cn">i.xmu.edu.cn</a>
+                                上登陆。</p>
+                        </section>
+                    </article>
+                </form>
+                <!--<div class="signup_bottom">-->
+                <!--<p>Don't have an account?</p>-->
+                <!--<a href="#" data-popup=".popup-signup" class="open-popup">SIGN UP</a>-->
+                <!--</div>-->
             </div>
             <div class="close_popup_button">
                 <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
             </div>
         </div>
-        <br>
+    </div>
+
+    <!-- loading Popup -->
+    <div class="popup popup-loading">
         <div class="content-block">
-            <h4>已还书列表</h4>
+            <h4>待开发</h4>
             <div class="loginform">
-                <ul  class="responsive_table">
-                    <li class="table_row">
-                        <div class="table_section">书名</div> <div class="table_section">作者</div> 
-                        <div class="table_section">出版社</div> 
-                        <div class="table_section">借/还时间</div> 
-                    </li> 
-                    <li class="table_row" v-for="b in returned_books">
-                        <div class="table_section">${b.title}</div> 
-                        <div class="table_section">${b.author}</div> 
-                        <div class="table_section">${b.publisher}</div>  
-                        <div class="table_section">${b.borrow_time}-${b.return_time}</div>  
+                <label id="loader" style=""><img src="images/loader01.gif" alt="Loading..." id="LoadingGraphic"></label>
+                <div class="signup_bottom">
+                    <p>该功能正在开发中，敬请期待</p>
+                </div>
+            </div>
+            <div class="close_popup_button">
+                <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 借阅记录 -->
+    <div class="popup popup-rent-records" id="rent-records">
+        <div class="content-block">
+            <h2 class="page_title">我的借阅记录</h2>
+            <div class="loginform">
+                <ul class="shop_items">
+                    <li v-for="book in g_data.not_returned_books">
+                        <div style="width:15%" class="shop_thumb"><a href="#"><img v-bind:src="book.picture" alt=""
+                                    title="" /></a></div>
+                        <div style="width:80%;text-align: left" class="shop_item_details">
+                            <div><b v-text="book.title"></b> <i v-text="`(${book.author})`">&nbsp;</i></div>
+                            <div v-text="`${book.publisher} (${book.pubdate})`"></div>
+                            <div>借书时间：${book.borrow_time}</div>
+                            <div>还书时间：<a href="return-book.html" class="close-popup"><b style="color: red">未还(点击跳到还书界面)</b></a></div>
+                        </div>
+                    </li>
+                    <li v-for="book in g_data.returned_books">
+                        <div style="width:15%" class="shop_thumb"><a href="#"><img v-bind:src="book.picture" alt=""
+                                    title="" /></a></div>
+                        <div style="width:80%;text-align: left" class="shop_item_details">
+                            <div><b v-text="book.title"></b> <i v-text="`(${book.author})`">&nbsp;</i></div>
+                            <div v-text="`${book.publisher} (${book.pubdate})`"></div>
+                            <div>借书时间：${book.borrow_time}</div>
+                            <div>还书时间：<u><b v-on:click="showReturnImage(book.return_image_path)"
+                                        style="color: green">${book.return_time}</b></u></div>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -290,114 +280,90 @@
                 <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
             </div>
         </div>
-    
-</div>
 
-<!-- 捐书记录 -->
-<div class="popup popup-donation-record">
-        <div class="content-block">  
-            <span class="popup-title">我的捐书列表</span>
+    </div>
+    <!-- 捐书记录 -->
+    <div class="popup popup-donation-records">
+        <div class="content-block">
+            <h2 class="page_title">我的捐书列表</h2>
             <div class="loginform">
-                <ul  class="responsive_table">
-                    <li class="table_row">
-                        <div class="table_section">书名</div>  
-                        <!-- <div class="table_section">出版社</div>  -->
-                        <div class="table_section">捐书提交时间</div>
-                        <div class="table_section">你的留言</div>
-                        <div class="table_section">状态</div>
-                    </li> 
-                    <li class="table_row" v-for="b in accepted">
-                        <div class="table_section">${b.title}</div> 
-                        <!-- <div class="table_section">${b.publisher}</div>  -->
-                        <div class="table_section">${b.time}</div>  
-                        <div v-if="b.donator_word!=''" class="table_section">${b.donator_word}</div>  
-                        <div v-if="b.donator_word==''" class="table_section">你没有填写留言~</div>  
-                        <div class="table_section">${b.borrow_time}</div>  
-                        <div class="table_section" style="color:green">审核通过</div>  
+                <ul class="shop_items">
+
+                    <li v-for="b in g_data.donation_books.waiting">
+                        <div class="shop_thumb" style="width: 15%;"><a href="#"><img v-bind:src="b.picture" alt=""
+                                    title="" /></a></div>
+                        <div class="shop_item_details" style="width: 80%; text-align: left;">
+                            <div><b>${b.title}</b> <i>(${b.author})</i></div>
+                            <div>${b.publisher}&nbsp; (${b.pubdate})</div>
+                            <div>提交时间：${b.time}</div>
+                            <div style="color:blue"><b>等待审核</b>></div>
+                        </div>
                     </li>
-                    <li class="table_row" v-for="b in waiting">
-                        <div class="table_section">${b.title}</div> 
-                        <!-- <div class="table_section">${b.publisher}</div>  -->
-                        <div class="table_section">${b.time}</div>  
-                        <div v-if="b.donator_word!=''" class="table_section">${b.donator_word}</div>  
-                        <div v-if="b.donator_word==''" class="table_section">你没有填写留言~</div>  
-                        <div class="table_section">${b.borrow_time}</div>  
-                        <div class="table_section" style="color:blue">等待审核</div>  
+                    <li v-for="b in g_data.donation_books.accepted">
+                        <div class="shop_thumb" style="width: 15%;"><a href="#"><img v-bind:src="b.picture" alt=""
+                                    title="" /></a></div>
+                        <div class="shop_item_details" style="width: 80%; text-align: left;">
+                            <div><b>${b.title}</b> <i>(${b.author})</i></div>
+                            <div>${b.publisher}&nbsp; (${b.pubdate})</div>
+                            <div>提交时间：${b.time}</div>
+                            <div style="color:green"><b>审核通过</b></div>
+                        </div>
                     </li>
-                    <li class="table_row" v-for="b in rejected">
-                        <div class="table_section">${b.title}</div> 
-                        <!-- <div class="table_section">${b.publisher}</div>  -->
-                        <div class="table_section">${b.time}</div>  
-                        <div v-if="b.donator_word!=''" class="table_section">${b.donator_word}</div>  
-                        <div v-if="b.donator_word==''" class="table_section">你没有填写留言~</div>  
-                        <div class="table_section">${b.borrow_time}</div>  
-                        <div class="table_section" style="color:red">审核失败</div>  
+                    <li v-for="b in g_data.donation_books.rejected">
+                        <div class="shop_thumb" style="width: 15%;"><a href="#"><img v-bind:src="b.picture" alt=""
+                                    title="" /></a></div>
+                        <div class="shop_item_details" style="width: 80%; text-align: left;">
+                            <div><b>${b.title}</b> <i>(${b.author})</i></div>
+                            <div>${b.publisher}&nbsp; (${b.pubdate})</div>
+                            <div>提交时间：${b.time}</div>
+                            <div style="color:red"><b>审核未通过</b></div>
+                        </div>
                     </li>
                 </ul>
             </div>
             <div class="close_popup_button">
                 <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
             </div>
-        </div> 
-    
-</div>
+        </div>
 
-<!-- Register Popup -->
-<div class="popup popup-signup">
-    <div class="content-block">
-        <h4>REGISTER</h4>
-        <div class="loginform">
-            <form id="RegisterForm" method="post">
-                <input type="text" name="Username" value="" class="form_input required" placeholder="Username" />
-                <input type="text" name="Email" value="" class="form_input required" placeholder="Email" />
-                <input type="password" name="Password" value="" class="form_input required" placeholder="Password" />
-                <input type="submit" name="submit" class="form_submit" value="SIGN UP" />
-            </form>
-            <h5>- OR REGISTER WITH A SOCIAL ACCOUNT -</h5>
-            <div class="signup_social">
-                <a href="http://www.facebook.com/" class="signup_facebook external">FACEBOOK</a>
-                <a href="http://www.twitter.com/" class="signup_twitter external">TWITTER</a>
+    </div>
+    <!-- Register Popup -->
+    <div class="popup popup-signup">
+        <div class="content-block">
+            <h4>REGISTER</h4>
+            <div class="loginform">
+                <form id="RegisterForm" method="post">
+                    <input type="text" name="Username" value="" class="form_input required" placeholder="Username" />
+                    <input type="text" name="Email" value="" class="form_input required" placeholder="Email" />
+                    <input type="password" name="Password" value="" class="form_input required"
+                        placeholder="Password" />
+                    <input type="submit" name="submit" class="form_submit" value="SIGN UP" />
+                </form>
+                <h5>- OR REGISTER WITH A SOCIAL ACCOUNT -</h5>
+                <div class="signup_social">
+                    <a href="http://www.facebook.com/" class="signup_facebook external">FACEBOOK</a>
+                    <a href="http://www.twitter.com/" class="signup_twitter external">TWITTER</a>
+                </div>
+            </div>
+            <div class="close_popup_button">
+                <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
             </div>
         </div>
-        <div class="close_popup_button">
-            <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
-        </div>
     </div>
-</div>
 
-<!-- Forgot Password Popup -->
-<div class="popup popup-forgot">
-    <div class="content-block">
-        <h4>FORGOT PASSWORD</h4>
-        <div class="loginform">
-            <form id="ForgotForm" method="post">
-                <input type="text" name="Email" value="" class="form_input required" placeholder="email" />
-                <input type="submit" name="submit" class="form_submit" value="RESEND PASSWORD" />
-            </form>
-            <div class="signup_bottom">
-                <p>Check your email and follow the instructions to reset your password.</p>
-            </div>
-        </div>
-        <div class="close_popup_button">
-            <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
-        </div>
-    </div>
-</div>
-
-
-
-<script src="js/vue.min.js"></script>
-<script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
-<script type="text/javascript" src="js/jquery.validate.min.js" ></script>
-<script type="text/javascript" src="js/framework7.js"></script>
-<script type="text/javascript" src="js/jquery.swipebox.js"></script>
-<script type="text/javascript" src="js/jquery.fitvids.js"></script>
-<script type="text/javascript" src="js/email.js"></script>
-<script type="text/javascript" src="js/audio.min.js"></script>
-<script type="text/javascript" src="js/my-app.js"></script>
-<script src="js/quagga.min.js" type="text/javascript"></script>
-<script src="js/utils.js" type="text/javascript"></script>
-<script src="js/qrscan.js" type="text/javascript"></script>
+    <script src="js/vue.min.js"></script>
+    <script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="js/framework7.js"></script>
+    <script type="text/javascript" src="js/jquery.swipebox.js"></script>
+    <script type="text/javascript" src="js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="js/email.js"></script>
+    <script type="text/javascript" src="js/audio.min.js"></script>
+    <script type="text/javascript" src="js/my-app.js"></script>
+    <script src="js/quagga.min.js" type="text/javascript"></script>
+    <script src="js/utils.js" type="text/javascript"></script>
+    <script src="js/qrscan.js" type="text/javascript"></script>
 
 </body>
+
 </html>
