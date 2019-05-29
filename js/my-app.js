@@ -166,37 +166,7 @@ function cbBarcode(result){
             },
         });
     }
-}
-// $$('.popup-scan').on('closed', function () {
-// 	Quagga.stop();
-// });
-// $$('.popup-scan').on('opened', function (e, popup) {
-//     Quagga.init({
-//         inputStream : {
-//             name : "Live",
-//             type : "LiveStream",
-//         },
-//         decoder : {
-//             readers : ["code_128_reader",
-//                 "ean_reader"]
-//         }
-//     }, function(err) {
-//         if (err) {
-//             console.log(err);
-//             return
-//         }
-//         console.log("Initialization finished. Ready to start");
-//         Quagga.start();
-//     });
-//     Quagga.onProcessed(function(result) {
-//         if (result) {
-//             if (result.codeResult && result.codeResult.code) {
-//                 // alert(result.codeResult.code);
-//                 Quagga.stop();
-//             }
-//         }
-//     });
-// });
+} 
 
 // Add main View
 var mainView = myApp.addView('.view-main', {
@@ -206,17 +176,17 @@ var mainView = myApp.addView('.view-main', {
 var subnaview = myApp.addView('.view-subnav');
 
 
-// $(document).ready(function() {
-// 		$("#RegisterForm").validate();
-// 		$("#LoginForm").validate();
-// 		$("#ForgotForm").validate();
-// 		$(".close-popup").click(function() {					  
-// 			$("label.error").hide();
-// 		});
-// 		$('.close_info_popup').click(function(e){
-// 			$('.info_popup').fadeOut(500);						  
-// 		});
-// });
+$(document).ready(function() {
+		$("#RegisterForm").validate();
+		$("#LoginForm").validate();
+		$("#ForgotForm").validate();
+		$(".close-popup").click(function() {					  
+			$("label.error").hide();
+		});
+		$('.close_info_popup').click(function(e){
+			$('.info_popup').fadeOut(500);						  
+		});
+});
 
 
 $$(document).on('pageInit', function (e) {
@@ -336,12 +306,13 @@ myApp.onPageInit('tables', function (page) {
                 this.page_id = this.total_pages;
                 getbook(this.page_id);
             },
-            Last:function (event) {
-                this.page_id-=1;
+            prev_page:function (event) {
+				this.page_id-=1;
+				if (this.page_id==0) this.page_id=total_pages;
                 getbook(this.page_id);
             },
-            Next:function (event) {
-                this.page_id+=1;
+            next_page:function (event) {
+				this.page_id = this.page_id % this.total_pages+1;
                 getbook(this.page_id);
             }
         }
@@ -362,7 +333,61 @@ myApp.onPageInit('tables', function (page) {
         }
 
     }) 
-})
+});
+myApp.onPageInit('books_list', function (page) {
+    // Do something here when page with data-page="about" attribute loaded and initialized
+    books_each_page = 15;
+    books_list_vue = new Vue({
+        delimiters: ['${', '}'],
+        el: '#books-list-div',
+        data: {
+            books:[],
+            page_id:1,
+			total_pages:0,
+			total_books:0
+        },
+        // computed:{},
+        methods: {
+			getbook: (page_id)=>{
+				books_list_vue.page_id = page_id;
+				$.ajax({
+					url: "./API/public_api/getBooksListInLibrary.php",
+					dataType: "json",
+					data:{
+						page_id: page_id,
+						books_each_page: books_each_page,
+					},
+					success(data){
+						if (data.error_code==0){
+							console.log(data.data);
+							books_list_vue.books= data.data.books; 
+							books_list_vue.total_pages=data.data.total_pages; 
+							books_list_vue.total_books=data.data.total_books;
+						}else{
+							alert("读取失败");
+						}
+					}
+				})
+			},
+            showDetail:(book)=>{ 
+				alert(`出版日期：${book.pubdate}；ISBN：${book.isbn}；简介：${book.summary}`);
+			},
+			goto_page: (pageid)=>{
+				pageid-=1;
+				total = books_list_vue.total_pages;
+				pageid = (pageid%total+total)%total+1;
+				books_list_vue.getbook(pageid);
+			},
+            prev_page: (event)=> {
+				books_list_vue.goto_page(books_list_vue.page_id-1); 
+            },
+            next_page: (event)=> {
+				books_list_vue.goto_page(books_list_vue.page_id+1); 
+            }
+        }
+	}); 
+	books_list_vue.getbook(1);
+});
 myApp.onPageInit('index', function (page) { 
 	location.href="./";
 });
@@ -451,8 +476,7 @@ myApp.onPageInit('borrow_book', function (page) {
 			},
 			cbAfterRecogBarcode: (result)=> {
 				if (!result ||!result.codeResult){
-					borrow_book_vue.error_msg="无法识别图中ISBN条形码，请重新拍摄!";
-					alert("set1");
+					borrow_book_vue.error_msg="无法识别图中ISBN条形码，请重新拍摄或手工输入ISBN!"; 
 					borrow_book_vue.cur_status=0;
 					return ;
 				}
