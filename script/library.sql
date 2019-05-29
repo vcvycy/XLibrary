@@ -44,7 +44,7 @@ create table su(
 -- (*) 捐赠的图书(谁在某个时间捐赠了什么书)
 create table book_donate(
    id   int auto_increment not null primary key,
-   time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
+   time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, 
    sid  varchar(32),                                 -- 学生ID
    isbn varchar(32),                                      -- 图书ID
    donator_word varchar(128),
@@ -58,15 +58,15 @@ create table book_borrow(
   sid       VARCHAR(32),
   isbn      varchar(32),
   --  借书时间/还书时间(null 表示还未归还)
-  borrow_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  return_time timestamp default 0,
+  borrow_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  return_time timestamp default '0000-00-00 00:00:00',
   return_image_path varchar(256)  -- 还书
 );   
 
 -- (*) 评论
 create table message(
   id        int auto_increment not null primary key,
-  time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
+  time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP , 
   type      varchar(8),             -- type=book 表示在某本书下的评论 type=sys表示系统消息，
   book_id   int,
   from_id   int

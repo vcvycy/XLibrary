@@ -416,7 +416,7 @@ myApp.onPageInit('return-book', function (page) {
 });
 myApp.onPageInit('borrow_book', function (page) { 
 	borrow_book_vue = new Vue({
-		el: '#pages_maincontent',
+		el: '#borrow_div',
 		delimiters:["@{","}"],
 		data: {
 			cur_status: 0,               // 0表示等待识别图片，1表示正在识别，2表示识别成功 
