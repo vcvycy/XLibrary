@@ -17,6 +17,7 @@ create table book(
   publisher  varchar(128),          -- 出版社
   summary    longtext,
   pubdate    varchar(16), 
+  picture    VARCHAR(1024),         -- 图片
   other longtext,
   stock  int DEFAULT 0 ,             -- 库存 
   lended int DEFAULT 0               -- 借出了多少本

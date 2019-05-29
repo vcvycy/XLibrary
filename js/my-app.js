@@ -77,14 +77,10 @@ function index_init(){
 		async: true,
 		success: function (data) { 
 			console.log(data);
-			if(data.error_code==0){
-				$("#me").show();
-				$("#login").hide(); 
+			if(data.error_code==0){ 
 				home_vue.g_data.user_info = data.data;
 				home_vue.g_data.isLogin = true; 
-			}else { 
-				$("#login").show();
-				$("#me").hide(); 
+			}else {  
 				home_vue.g_data.isLogin=false;
 				myApp.popup(".popup-login");
 			}
@@ -251,7 +247,7 @@ $("#LoginForm").validate({
 					$("#login").attr("disabled",true);
 					location.reload();
 				}else{
-					alert(data.data);
+					alert("用户名或密码错误");
 				}
 			},
 			error: function (xhr, textStatus) {
@@ -372,7 +368,7 @@ myApp.onPageInit('index', function (page) {
 });
 myApp.onPageInit('return-book', function (page) {  
 	return_book_vue=new Vue({
-		el:"#pages_maincontent",
+		el:"#return—book-div",
 		delimiters:["@{","}"],
 		data:{
 			g_data :myData
@@ -601,6 +597,8 @@ myApp.onPageInit('book_donation', function (page) {
 						if(data.error_code==0){
 							alert(data.data);
 							location.reload(); 
+						}else{
+							alert(data.data);
 						}
 					},
 					error: function (xhr, textStatus) {

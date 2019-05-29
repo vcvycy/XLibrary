@@ -27,9 +27,9 @@
 
 									<div class="swiper-wrapper">
 										<div class="swiper-slide team-block">
-											<a href="#" data-view=".view-main"><img src="images/isbn_sample.jpg" alt="" title="" /></a>
+											<a href="#" data-view=".view-main"><img v-on:click="selectImage()" src="images/isbn_sample.jpg" alt="" title="" /></a>
 											<strong>请对准ISBN条形码拍摄</strong>
-											<span v-on:click="selectImage">选择图片</span>
+											<span v-on:click="selectImage()">选择图片</span>
 										</div>
 									</div>
 								</div>

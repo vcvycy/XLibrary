@@ -14,12 +14,9 @@ Class Books extends Base{
     // (*) 添加一本书
     public function addBook($book_info){
         $isbn = $book_info["isbn"];
-        $title = $book_info["title"];
-        $author = $book_info["author"];
-        $publisher = $book_info["publisher"];
         if (!$this->isISBNExists($isbn)){
-            return $this->createSQLAndRun("INSERT INTO book (isbn, title,subtitle, author,publisher,summary,pubdate,other) 
-                                            VALUES ('%s','%s','%s','%s','%s','%s' ,'%s' , '%s')",
+            return $this->createSQLAndRun("INSERT INTO book (isbn, title,subtitle, author,publisher,summary,pubdate,picture,other) 
+                                            VALUES ('%s','%s','%s','%s','%s','%s' ,'%s' ,'%s', '%s')",
                                             $book_info["isbn"],
                                             $book_info["title"],
                                             $book_info["subtitle"],
@@ -27,6 +24,7 @@ Class Books extends Base{
                                             $book_info["publisher"],
                                             $book_info["summary"],
                                             $book_info["pubdate"],
+                                            $book_info["picture"],
                                             json_encode($book_info["other"])
                                         );
         }else

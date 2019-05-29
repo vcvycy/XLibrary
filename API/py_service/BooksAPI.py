@@ -35,6 +35,7 @@ def jisuAPI(isbn):
             "subtitle" : obj["subtitle"],
             "pubdate" : obj["pubdate"],
             "summary" : obj["summary"],
+            "picture" : obj["pic"],
             "other" : obj
         }
     else:
@@ -47,6 +48,7 @@ def jisuAPI(isbn):
   "publisher" :"xx",
   "pubdate" : "",
   "summary" : ""
+  "picture" : ""
   "others" : ""
 }
 """

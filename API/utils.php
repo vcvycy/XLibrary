@@ -127,6 +127,7 @@ class Utils
         $book_json = json_decode($book_json,true); 
         if ($book_json["error_code"]!=0)
             throw new Exception("查询不到ISBN= $isbn 的图书");
+        // 转换格式 
         return $book_json["data"];
     }
     

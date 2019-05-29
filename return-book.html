@@ -16,15 +16,19 @@
             </div>
 
             <div id="pages_maincontent">
-
+                <div id="return—book-div">
                 <h2  style="text-align:center;color:red" v-text="'未还图书:'+ g_data.not_returned_books.length+'本'"></h2>
 
                 <div class="page_single layout_fullwidth_padding">
 
                     <ul class="shop_items">
                         <li v-for="book in g_data.not_returned_books"> 
-                            <div class="shop_thumb"><a href="#"><img src="images/photos/photo1.jpg" alt=""
-                                        title="" /></a></div>
+                            <div class="shop_thumb"><a href="#">
+                                
+                                    <img v-if="book.picture!=''" v-bind:src="book.picture" alt="" title="" /></a>
+                                    <img v-else v-bind:src=" images/photos/photo1.jpg" alt="" title="" /></a>
+                                <!-- images/photos/photo1.jpg -->
+                            </div>
                             <div class="shop_item_details">
                                 <h4 v-text="book.title"></h4>
                                 <div v-text="book.author" class=""></div>
@@ -46,7 +50,7 @@
 
 
                 </div>
-
+                </div>
             </div>
 
 
