@@ -31,12 +31,12 @@
                 <div class="page-content">
                     <nav class="main_nav_icons_inline_2">
                         <ul>
-                            <li><a href="index.html" class="close-panel" data-view=".view-main"><img src="images/icons/white/home.png" alt="" title="" /><span>首页</span></a></li>
-                            <li><a href="#" data-popup=".popup-scan" class="open-popup close-panel"><img src="images/icons/white/扫一扫.png" alt="" title="" /><span>扫一扫借书</span></a></li>
+                             <li><a href="./" class="close-panel" data-view=".view-main"><img src="images/icons/white/home.png" alt="" title="" /><span>首页</span></a></li>
+                            <li><a href="borrow_book.html" class="close-panel"  data-view=".view-main"><img src="images/icons/white/扫一扫.png" alt="" title="" /><span>扫一扫借书</span></a></li>
                             <li><a href="tables.html" class="close-panel" data-view=".view-main"><img src="images/icons/white/list.png" alt="" title="" /><span>图书馆藏书</span></a></li>
 
                             <li><a href="book_donation.html" class="close-panel" data-view=".view-main"><img src="images/icons/white/书.png" alt="" title="" /><span>我要捐书</span></a></li>
-                            <li><a href="#" data-popup=".popup-return" class="open-popup close-panel"><img src="images/icons/white/相机（1）.png" alt="" title="" /><span>拍照还书</span></a></li>
+                            <li><a href="return-book.html" class="close-panel" data-view=".view-main"><img src="images/icons/white/相机（1）.png" alt="" title="" /><span>拍照还书</span></a></li>
                             <!--			<li><a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/white/置换.png" alt="" title="" /><span>图书置换</span></a></li>-->
 
                             <!--<li><a href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/white/我的.png" alt="" title="" /><span>待定</span></a></li>-->
@@ -55,7 +55,7 @@
             <div class="user_thumb">
                 <img src="images/我的背景.jpg" alt="" title="" />
                 <div class="user_details">
-                    <p><span>${g_data.name}</span>学号：${g_data.sid}</p>
+                    <p><span>${g_data.user_info.name}</span>学号：${g_data.user_info.sid}</p>
                 </div>
                 <!--<div class="user_avatar"><img src="images/avatar.jpg" alt="" title="" /></div>-->
             </div>
@@ -128,7 +128,6 @@
                                 <div class="slider-caption">
                                     <span class="subtitle" data-swiper-parallax="-60%">借书须知</span>
                                     <h2 data-swiper-parallax="-100%">扫一扫借书</h2>
-
                                     <p data-swiper-parallax="-30%">1、直接从图书馆扫一扫借书，快捷方便，无需消磁。<br/>2、从上一位同学手中直接借走，无需返还到图书馆再次借书，省时方便。<br/>3、转借同学一定要监督借走图书的同学扫一扫借书，否则在借人仍是自己。</p>
 
                                 </div>
@@ -154,15 +153,14 @@
                     <div class="swiper-pagination-toolbar"></div>
                     <div class="swiper-wrapper">
                         <div class="swiper-slide toolbar-icon">
-                            <a href="#" data-popup=".popup-scan" class="open-popup close-panel"><img src="images/icons/green/扫一扫.png" alt="" title="" /><span>扫一扫借书</span></a>
+                            <a href="borrow_book.html" data-view=".view-main"><img src="images/icons/green/扫一扫.png" alt="" title="" /><span>扫一扫借书</span></a>
                             <a href="tables.html" data-view=".view-main"><img src="images/icons/green/list.png" alt="" title="" /><span>图书馆藏书</span></a>
                             <a href="book_donation.html" data-view=".view-main"><img src="images/icons/green/书.png" alt="" title="" /><span>我要捐书</span></a>
-                            <a href="#" data-popup=".popup-return" class="open-popup close-panel"><img src="images/icons/green/相机.png" alt="" title="" /><span>拍照还书</span></a>
+                            <a href="return-book.html" data-popup="" class="lose-panel"><img src="images/icons/green/相机.png" alt="" title="" /><span>拍照还书</span></a>
                             <a href="#" data-popup=".popup-loading" class="open-popup close-panel"><img src="images/icons/green/讨论.png" alt="" title="" /><span>交流区</span></a> 
-                            <a id="me" style="display:none" href="#" data-panel="right" class="open-panel"><img src="images/icons/green/lock.png" alt="" title="" /><span >我的</span></a>
-                            <a id="login" href="#" data-popup=".popup-login" class="open-popup close-panel" id="login"><img src="images/icons/green/lock.png" alt="" title="" /><span>登录</span></a>
-                    </div>
-
+                            <a v-if="g_data.isLogin" href="#" data-panel="right" class="open-panel"><img src="images/icons/green/lock.png" alt="" title="" /><span >${g_data.user_info.name}</span></a>
+                            <a v-if="!g_data.isLogin" href="#" data-popup=".popup-login" class="open-popup close-panel"><img src="images/icons/green/lock.png" alt="" title="" /><span>登录</span></a>
+                        </div> 
                     </div>
                 </div>
 
@@ -203,31 +201,7 @@
         </div>
     </div>
 </div>
-
-<div class="popup popup-return">
-    <div class="content-block">
-        <div class="close_popup_button">
-            <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
-        </div>
-        <div id="return-result"></div>
-        <article >
-            <section class="description">
-                <p >请上传将书摆回到书架的照片；</p>
-                <p >拍摄清晰，书名必须拍全；</p>
-            </section>
-        </article>
-        <label>手动上传:</label>
-        <div class="single-photo">
-            <!--<input type="file"  accept="image/*" />-->
-            <ul class="uploader__files" id="uploaderFiles_2">
-            </ul>
-            <div class="uploader__input-box" id="input_box_2">
-                <input id="uploaderInput_2" class="uploader__input barcode" type="file"
-                       name="file" accept="image/*">
-            </div>
-        </div>
-    </div>
-</div>
+ 
 <!-- Login Popup -->
 <div class="popup popup-login">
     <div class="content-block">

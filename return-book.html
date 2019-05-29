@@ -1,0 +1,55 @@
+<div class="pages">
+    <div data-page="return-book" class="page no-toolbar no-navbar">
+        <div class="page-content">
+            <div class="navbarpages navbarpagesbg">
+                <div class="navbar_left">
+                    <div class="logo_text"><a href="index.html">自助还书</a></div>
+                </div>
+                <div class="navbar_right navbar_right_menu">
+                    <a href="#" data-panel="left" class="open-panel"><img src="images/icons/white/menu.png" alt=""
+                            title="" /></a>
+                </div>
+                <div class="navbar_right">
+                    <a href="#" data-panel="right" class="open-panel"><img src="images/icons/white/user.png" alt=""
+                            title="" /></a>
+                </div>
+            </div>
+
+            <div id="pages_maincontent">
+
+                <h2  style="text-align:center;color:red" v-text="'未还图书:'+ g_data.not_returned_books.length+'本'"></h2>
+
+                <div class="page_single layout_fullwidth_padding">
+
+                    <ul class="shop_items">
+                        <li v-for="book in g_data.not_returned_books"> 
+                            <div class="shop_thumb"><a href="#"><img src="images/photos/photo1.jpg" alt=""
+                                        title="" /></a></div>
+                            <div class="shop_item_details">
+                                <h4 v-text="book.title"></h4>
+                                <div v-text="book.author" class=""></div>
+                                <div v-text="book.publisher"></div>
+                                <div v-text="'ISBN:'+book.isbn" class=""></div>
+                                <div v-text="'借书时间：'+book.borrow_time"></div> 
+                                <a href="#" v-on:click="choose_image(book.isbn)" id="addtocart">还书</a>
+
+                            </div>
+                        </li>
+
+                    </ul>
+
+                    <!-- <div class="shop_pagination">
+                        <a href="shop.html" class="prev_shop">PREV PAGE</a>
+                        <span class="shop_pagenr">1/37</span>
+                        <a href="shop-page2.html" class="next_shop">NEXT PAGE</a>
+                    </div> -->
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>

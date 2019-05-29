@@ -1,6 +1,9 @@
 // Initialize your app
 var myData={
-	isLogin:false
+	isLogin:false,
+	user_info: null,          //登陆信息
+	returned_books:null,
+	not_returned_books:null
 } 
 var myApp = new Framework7({
     animateNavBackIcon: true,
@@ -13,15 +16,13 @@ var myApp = new Framework7({
 	template7Pages: true 
 });
 
-function index_init(){  
+/* 判断是否登陆，如果登陆，载入登陆信息、存取书信息 */
+function index_init(){   
 	home_vue = new Vue({
 		el:'.user_login_info',
 		delimiters: ['${', '}'],
-		data:{
-			g_data:myData,
-			isLogin: false,
-			name: "",
-			sid: ""
+		data:{ 
+			g_data:myData
 		},
         methods: { 
 			logout: function(){
@@ -56,24 +57,35 @@ function index_init(){
 			"rejected":[]
 		} 
 	});
+	menu_vue = new Vue({
+		el : ".views",
+		delimiters: ['${', '}'],
+		data:{
+			g_data :myData,
+			word :"哈哈"
+		}
+	});
+	/* 以下通过ajax获取信息 */
 	// 用户信息
 	$.ajax({
 		url: "./API/account/getCurUserInfo.php?",
 		dataType: "json",
-		data: {},
+		data: {
+			isLogin :false,
+			user_info:{}
+		},
 		async: true,
 		success: function (data) { 
 			console.log(data);
 			if(data.error_code==0){
 				$("#me").show();
 				$("#login").hide(); 
-				myData.isLogin=true;
-				myData.name=data.data.name;
-				myData.sid = data.data.sid;
+				home_vue.g_data.user_info = data.data;
+				home_vue.g_data.isLogin = true; 
 			}else { 
 				$("#login").show();
 				$("#me").hide(); 
-				myData.isLogin=false;
+				home_vue.g_data.isLogin=false;
 				myApp.popup(".popup-login");
 			}
 		}
@@ -87,8 +99,8 @@ function index_init(){
 		success: function (data) {
 			console.log(data.data);
 			if(data.error_code==0){
-				rent_recort.returned_books =data.data.returned;
-				rent_recort.not_returned_books = data.data.not_returned;
+				rent_recort.returned_books = myData.returned_books =data.data.returned;
+				rent_recort.not_returned_books = myData.not_returned_books= data.data.not_returned;
 			}else {
 			}
 		}
@@ -159,36 +171,36 @@ function cbBarcode(result){
         });
     }
 }
-$$('.popup-scan').on('closed', function () {
-	Quagga.stop();
-});
-$$('.popup-scan').on('opened', function (e, popup) {
-    Quagga.init({
-        inputStream : {
-            name : "Live",
-            type : "LiveStream",
-        },
-        decoder : {
-            readers : ["code_128_reader",
-                "ean_reader"]
-        }
-    }, function(err) {
-        if (err) {
-            console.log(err);
-            return
-        }
-        console.log("Initialization finished. Ready to start");
-        Quagga.start();
-    });
-    Quagga.onProcessed(function(result) {
-        if (result) {
-            if (result.codeResult && result.codeResult.code) {
-                // alert(result.codeResult.code);
-                Quagga.stop();
-            }
-        }
-    });
-});
+// $$('.popup-scan').on('closed', function () {
+// 	Quagga.stop();
+// });
+// $$('.popup-scan').on('opened', function (e, popup) {
+//     Quagga.init({
+//         inputStream : {
+//             name : "Live",
+//             type : "LiveStream",
+//         },
+//         decoder : {
+//             readers : ["code_128_reader",
+//                 "ean_reader"]
+//         }
+//     }, function(err) {
+//         if (err) {
+//             console.log(err);
+//             return
+//         }
+//         console.log("Initialization finished. Ready to start");
+//         Quagga.start();
+//     });
+//     Quagga.onProcessed(function(result) {
+//         if (result) {
+//             if (result.codeResult && result.codeResult.code) {
+//                 // alert(result.codeResult.code);
+//                 Quagga.stop();
+//             }
+//         }
+//     });
+// });
 
 // Add main View
 var mainView = myApp.addView('.view-main', {
@@ -198,17 +210,17 @@ var mainView = myApp.addView('.view-main', {
 var subnaview = myApp.addView('.view-subnav');
 
 
-$(document).ready(function() {
-		$("#RegisterForm").validate();
-		$("#LoginForm").validate();
-		$("#ForgotForm").validate();
-		$(".close-popup").click(function() {					  
-			$("label.error").hide();
-		});
-		$('.close_info_popup').click(function(e){
-			$('.info_popup').fadeOut(500);						  
-		});
-});
+// $(document).ready(function() {
+// 		$("#RegisterForm").validate();
+// 		$("#LoginForm").validate();
+// 		$("#ForgotForm").validate();
+// 		$(".close-popup").click(function() {					  
+// 			$("label.error").hide();
+// 		});
+// 		$('.close_info_popup').click(function(e){
+// 			$('.info_popup').fadeOut(500);						  
+// 		});
+// });
 
 
 $$(document).on('pageInit', function (e) {
@@ -286,32 +298,7 @@ myApp.onPageBeforeInit('BorrowSuccessfully',function (page) {
                 },
             },
         });
-    }
-    $("#BorrowForm").validate({
-        submitHandler: function(form){
-            // ajaxContact(form);
-            $.ajax({
-                url: "API/book/borrowBook.php?",
-                dataType: "json",
-                data: {
-                    "isbn": sessionStorage.getItem("isbn")
-                },
-                async: false,
-                success: function (data) {
-                    alert(data.data);
-                    if(data.error_code==0){
-                        $(location).attr('href', 'index.html');
-                    }
-                },
-                error: function (xhr, textStatus) {
-                    console.log('错误');
-                    console.log(xhr);
-                    console.log(textStatus);
-                },
-            });
-            return false;
-        }
-    });
+    } 
 })
 // $$(document).on('pageInit', '.page[data-page="tables"]', function (e)
 myApp.onPageInit('tables', function (page) {
@@ -364,7 +351,7 @@ myApp.onPageInit('tables', function (page) {
         }
     });
     $.ajax({
-        url: "./API/public_api/getBooksListInLibrary.php?",
+        url: "./API/public_api/getBooksListInLibrary.php",
         dataType: "json",
         data:{
             page_id: 1,
@@ -382,6 +369,147 @@ myApp.onPageInit('tables', function (page) {
 })
 myApp.onPageInit('index', function (page) { 
 	location.href="./";
+});
+myApp.onPageInit('return-book', function (page) {  
+	return_book_vue=new Vue({
+		el:"#pages_maincontent",
+		delimiters:["@{","}"],
+		data:{
+			g_data :myData
+		},
+		methods:{
+			choose_image:(isbn)=>{
+				alert("请将图书放到还书架上，然后在书架上拍照上传，即可还书成功！"); 
+				dom_file=$("<input type=file accept='image/*'></input>");
+				dom_file.change(function(){    
+					// 获取图片blob地址src
+					let src, url = window.URL || window.webkitURL || window.mozURL, files = dom_file[0].files;
+					if (files.length==0) {alert("没有选择图片");return ;} 
+					return_book_vue.return_book(isbn,files[0]);
+					//开始还书
+				});
+				dom_file.click();  
+			},
+			return_book:(isbn, file)=>{
+				var returnForm = new FormData();
+				returnForm.append("image",file);
+				returnForm.append("isbn",isbn);
+				$.ajax({
+					url: "./API/book/returnBookWithImage.php?",
+					dataType: "json",
+					data: returnForm,
+					type: "post",
+					processData: false,
+					contentType: false,
+					success: function (data) {
+						if(data.error_code==0){
+							alert("还书成功");
+							location.reload();
+						}else {
+							alert(data.data);
+						}
+					}
+				});
+			}
+		}
+	});
+});
+myApp.onPageInit('borrow_book', function (page) { 
+	borrow_book_vue = new Vue({
+		el: '#pages_maincontent',
+		delimiters:["@{","}"],
+		data: {
+			cur_status: 0,               // 0表示等待识别图片，1表示正在识别，2表示识别成功 
+			isbn : null,
+			phone : "",
+			error_msg: null,
+			book: { 
+	            name: "",
+	            publisher: "",
+	            author: "",
+				class: ""
+			}
+		},
+		methods: { 
+			selectImage: () => {
+				dom_file=$("<input type=file accept='image/*'></input>");
+				dom_file.change(function(){  
+					borrow_book_vue.cur_status=1;
+					console.log(dom_file[0].files);
+					let src, url = window.URL || window.webkitURL || window.mozURL, files = dom_file[0].files;
+					if (files.length==0) return;
+					let file = files[0];
+					if (url) {
+						src = url.createObjectURL(file);
+					} else {
+						src = e.target.result;
+					}  
+					RecognizeBarCode(src,borrow_book_vue.cbAfterRecogBarcode);
+				});
+				dom_file.click();  
+			},
+			inputISBNbyHand:()=>{
+				borrow_book_vue.cur_status=1;
+				dom_input=$("#isbn_by_hand");
+				borrow_book_vue.fetchBookInfo();
+			},
+			cbAfterRecogBarcode: (result)=> {
+				if (!result ||!result.codeResult){
+					borrow_book_vue.error_msg="无法识别图中ISBN条形码，请重新拍摄!";
+					alert("set1");
+					borrow_book_vue.cur_status=0;
+					return ;
+				}
+				borrow_book_vue.isbn=result.codeResult.code;
+				borrow_book_vue.fetchBookInfo();
+			},
+			borrow_book:()=> { 
+				$.ajax({
+					url: "API/book/borrowBook.php",
+					dataType: "json",
+					data: {
+						"isbn": borrow_book_vue.isbn
+					},
+					async: false,
+					success: function (data) { 
+						if(data.error_code==0){
+							alert("借书成功！");
+							borrow_book_vue.cur_status=0;
+							location.href="./";
+						}else{
+							alert(data.data);
+						}
+					}
+				});
+			}
+			,
+			fetchBookInfo:()=> {
+				$.ajax({
+					url: "./API/isbn.php",
+					dataType: "json",
+					data: {
+						"isbn": borrow_book_vue.isbn,
+					},
+					async: true,
+					success: function (data) {
+						if(data.error_code==0){
+							borrow_book_vue.cur_status=2;
+							borrow_book_vue.error_msg = null;
+							borrow_book_vue.book={
+								name: data.data.title,
+								publisher: data.data.publisher,
+								author: data.data.author,
+								pubdate : data.data.pubdate
+							}
+						}else {
+							borrow_book_vue.cur_status=0;
+							borrow_book_vue.error_msg = data.data;
+						}
+					}
+				});
+			}
+		}
+	});
 });
 myApp.onPageInit('book_donation', function (page) { 
 	contact_app = new Vue({

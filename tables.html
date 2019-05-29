@@ -91,13 +91,15 @@
                         <div class="table_section">可借/总库存</div>  
                      </li>
 
-                    <template v-for="book in books">
-                        <li class="table_row" v-on:click="showDetail(book)">
-                            <div class="table_section">${book.title}</div>
-                        <div class="table_section">${book.author}</div>
-                        <div class="table_section">${book.publisher}</div>
-                        <div class="table_section">可借${book.stock-book.lended}本；总库存${book.stock}本</div>
-                        </li>
+                    <template v-for="book in books"> 
+                        <a href="">
+                            <li class="table_row" v-on:click="showDetail(book)">
+                                <div class="table_section">${book.title}</div>
+                                <div class="table_section">${book.author}</div>
+                                <div class="table_section">${book.publisher}</div>
+                                <div class="table_section">可借${book.stock-book.lended}本；总库存${book.stock}本</div>
+                            </li>
+                        </a>
                     </template>
                     <li align="center">
                         <td>
