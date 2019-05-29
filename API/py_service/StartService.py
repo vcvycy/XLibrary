@@ -30,7 +30,7 @@ def login():
     stu = STULogin(sid,pwd)
     #
     if stu.needCaptcha():
-        return returnJSON(-1,"尝试次数太多,请稍后再试。或者前往i.xmu.edu.cn重置密码")
+        return returnJSON(-3,"尝试次数太多,请稍后再试。或者前往i.xmu.edu.cn重置密码")
     if stu.login()==None:
         data={
             "student" : stu.getStuInfo()

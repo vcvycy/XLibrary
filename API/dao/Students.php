@@ -39,7 +39,7 @@ Class Students extends Base{
         $ret=$this->createSQLAndRun("select count(*) from stu where sid='%s'",$sid);
         return $ret[0][0]>0;
     }
-    //(*) 登陆,成功返回null，失败返回失败信息
+    //(*) 登陆,成功返回0，失败返回失败代码。 -3表示需要输入验证码，其他表示用户名密码有误
     public function login($sid,$pwd){
         $ret = $this->loginFromXMU($sid,$pwd);
         //$ret = $this->loginFromDB($sid,$pwd);
@@ -48,12 +48,11 @@ Class Students extends Base{
             if (!$this->stuExistInDB($sid))
                 $this->register($sid,$pwd,$ret["data"]["student"]);
             else
-                $this->updatePwd($sid,$pwd);
-            return true;
+                $this->updatePwd($sid,$pwd); 
         }else{
-            $this->error_msg=$ret["data"];
-            return false;
+            $this->error_msg=$ret["data"]; 
         }
+        return $ret["error_code"];
     }
     //(*) 更新密码 (成功返回true，失败返回false)
     public function updatePwd($sid,$pwd){

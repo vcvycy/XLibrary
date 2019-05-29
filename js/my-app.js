@@ -211,12 +211,17 @@ $("#LoginForm").validate({
 			data: formData,
 			type: "post",
 			async: true,
-			success: function (data) {
+			success: function (data) { 
 				if(data.error_code==0){
 					myApp.closeModal('.popup-login');
 					$("#login").attr("disabled",true);
 					location.reload();
-				}else{
+				}else
+				if(data.error_code==-3){
+					alert("需要输入验证码！请先前往 i.xmu.edu.cn 尝试登陆，登陆成功后再在此页面登陆。点击确定跳转过去。")
+					window.open("http://i.xmu.edu.cn"); 
+				}else
+				{
 					alert("用户名或密码错误");
 				}
 			},
