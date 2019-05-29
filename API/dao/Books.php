@@ -37,7 +37,7 @@ Class Books extends Base{
         return $ret[0][0]>0;
     } 
 
-    //(*) 获取一本书的信息
+    //(*) 获取一本书的信息。
     public function getBookInfo($isbn){
         $ret = $this->createSQLAndRunAssoc("select * from book where isbn = '%s'",$isbn);
         if (count($ret)>0 && count($ret[0])>0 )

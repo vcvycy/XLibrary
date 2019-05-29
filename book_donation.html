@@ -35,7 +35,7 @@
                             <!--点击查看图片-gallery组件-->
                             <div v-if="cur_status==0">
                                 <h4 style="color:red" v-if="error_msg!=null" v-text="error_msg">
-                                </h4> 
+                                </h4>
                                 <label>请对准书本ISBN条形码拍摄，自动识别图书</label>
                                 <div class="single-photo">
                                     <ul class="uploader__files">
@@ -43,54 +43,27 @@
                                     <div class="uploader__input-box">
                                         <input v-on:change="selectImage" class="uploader__input barcode" type="file"
                                             name="file_1" accept="image/*">
-                                        
-                                    </div>
-                                </div> 
-                            </div>
-                            <div v-if="cur_status==1">
-                                <h4>正在识别图中条形码...</h4> 
-                            </div> 
-                            <div v-if="cur_status==2">
-                                <label>ISBN:<b v-text="isbn"></b></label>
-                                <label>书名:</label>
-                                <input type="text" v-bind:value="book.name" readonly="readonly"
-                                    class="form_input required" />
-                                <label>出版社:</label>
-                                <input type="text" v-bind:value="book.publisher" readonly="readonly"
-                                    class="form_input required" />
-                                <label>作者:</label>
-                                <input type="text" v-bind:value="book.author" readonly="readonly"
-                                    class="form_input required" />
-                                <div class="form_row " v-if="seen">
-                                    <label>分类:</label>
-                                    <div class="selector_overlay">
-                                        <select name="selectoptions" class="required">
-                                            <option value="" disabled selected>请选择分类</option>
-                                            <option value="2">马列主义、毛泽东思想、邓小平理论、政治</option>
-                                            <option value="3">哲学、宗教</option>
-                                            <option value="4">社会科学总论</option>
-                                            <option value="5">法律</option>
-                                            <option value="6">军事</option>
-                                            <option value="7">经济</option>
-                                            <option value="8">文化、科学、教育、体育</option>
-                                            <option value="9">语言文字</option>
-                                            <option value="10">文学</option>
-                                            <option value="11">艺术</option>
-                                            <option value="12">历史、地理、天文、地球科学</option>
-                                            <option value="13">自然科学</option>
-                                            <option value="14">数理科学、化学、生物科学</option>
-                                            <option value="15">医药、卫生</option>
-                                            <option value="16">农业科学</option>
-                                            <option value="17">工学</option>
-                                            <option value="18">交通运输、航空、航天</option>
-                                            <option value="19">环境科学、安全科学</option>
-                                            <option value="20">综合性图书</option>
-                                        </select>
-                                        </select>
+
                                     </div>
                                 </div>
-
-
+                            </div>
+                            <div v-if="cur_status==1">
+                                <h4>正在识别图中条形码...</h4>
+                            </div>
+                            <div v-if="cur_status==2">
+                                <h2 class="page_title">ISBN识别成功：<b v-text="isbn"></b></h2> 
+                                <ul class="shop_items">
+                                    <li>
+                                        <div class="shop_thumb"><a href="#"><img
+                                                    v-bind:src="book.picture" alt=""
+                                                    title=""></a></div>
+                                        <div class="shop_item_details">
+                                            <h4 v-text="book.title"></h4>
+                                            <div v-text="book.author"></div>
+                                            <div v-text="`${book.publisher} ${book.pubdate}`"></div>   
+                                        </div>
+                                    </li> 
+                                </ul>
                                 <div class="form_row">
                                     <label>捐书方式:</label>
                                     <div class="form_row_right">
@@ -122,7 +95,8 @@
                                 <input type="text" v-model="word" class="form_input required"
                                     placeholder="其他同学浏览这本书，就可以看到你的留言哦" />
 
-                                <input type="submit" v-on:click="DonateBook" class="form_submit" value="捐书提交" />
+                                    <input type="submit" v-on:click="DonateBook" class="form_submit" value="捐书提交" />
+                                    <input style="background-color:#eb3232" type="submit" v-on:click="cancel" class="form_submit" value="取消" />
                             </div>
                         </form>
                     </div>

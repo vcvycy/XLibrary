@@ -26,7 +26,7 @@
 									data-pagination=".swiper-pagination-teambigger" data-slides-per-view="1">
 
 									<div class="swiper-wrapper">
-										<div class="swiper-slide team-block">
+										<div  class="swiper-slide team-block">
 											<a href="#" data-view=".view-main"><img v-on:click="selectImage()" src="images/isbn_sample.jpg" alt="" title="" /></a>
 											<strong>请对准ISBN条形码拍摄</strong>
 											<span v-on:click="selectImage()">选择图片</span>
@@ -38,7 +38,7 @@
 							<h2 class="page_title"><b>方式二：手工输入、纠正ISBN码</b></h2>
 							<div class="page_single layout_fullwidth_padding">
 								<div class="swiper-wrapper">
-									<div class="swiper-slide team-block">
+									<div style="width:80%" class="swiper-slide team-block">
 										<input id="isbn_by_hand" v-model="isbn" style="height:25px; font-size:22px;" type="text">
 										<strong>请输入ISBN码，如9787519012038</strong>
 										<span v-on:click="inputISBNbyHand">确定</span>
@@ -54,23 +54,30 @@
 				</div>
 				<div v-if="cur_status==2" class="page_single layout_fullwidth_padding">
 					<div class="contactform">
-						<label>ISBN:<b v-text="isbn"></b></label>
-						<label>书名:</label>
-						<input type="text" v-bind:value="book.name" readonly="readonly" class="form_input required" />
-						<label>出版社:</label>
-						<input type="text" v-bind:value="book.publisher" readonly="readonly" class="form_input required" />
-						<label>作者:</label>
-						<input type="text" v-bind:value="book.author" readonly="readonly" class="form_input required" />
-
-						<label>出版日期:</label>
-						<input type="text" v-bind:value="book.pubdate" readonly="readonly" class="form_input required" />
+						<h2 class="page_title">ISBN识别成功：<b v-text="isbn"></b></h2> 
+						<ul class="shop_items">
+							<li>
+								<div class="shop_thumb"><a href="#"><img
+											v-bind:src="book.picture" alt=""
+											title=""></a></div>
+								<div class="shop_item_details">
+									<h4 v-text="book.title"></h4>
+									<div v-text="book.author"></div>
+									<div v-text="`${book.publisher} ${book.pubdate}`"></div>   
+									<div v-text="book.summary"></div>									
+                                    <b v-if="book.stock!=book.lended" style="color:green"><div v-text="`可借:${book.stock-book.lended}/${book.stock}本`"></div></b>
+                                    <b v-if="book.stock==book.lended" style="color:red"><div v-text="`可借:${book.stock-book.lended}/${book.stock}本`"></div></b>
+								</div>
+							</li> 
+						</ul>
 						<div class="swiper-wrapper">
 							<div style="width:100%" class="swiper-slide team-block">
 								<table style="width: 100%;height: 20px;" border="1">
 									<tr>
-										<td v-on:click="borrow_book"><span> 确认借书</span></td>
-										<td v-on:click="cur_status=0">
-											<span style="background-color: red"> 取消</span>
+										<td v-if="book.stock!=book.lended" v-on:click="borrow_book"><span> 确认借书</span></td>
+										<td v-if="book.stock==book.lended"  v-on:click="alert('馆中无可借书籍')"><span style="background-color: gray"> 暂无库存</span></td>
+										<td  v-on:click="cur_status=0">
+											<span style="background-color:#cccccc"> 返回</span>
 										</td>
 									</tr>
 								</table>

@@ -382,12 +382,7 @@ myApp.onPageInit('borrow_book', function (page) {
 			isbn : null,
 			phone : "",
 			error_msg: null,
-			book: { 
-	            name: "",
-	            publisher: "",
-	            author: "",
-				class: ""
-			}
+			book:{}
 		},
 		methods: { 
 			selectImage: () => {
@@ -421,7 +416,7 @@ myApp.onPageInit('borrow_book', function (page) {
 				borrow_book_vue.isbn=result.codeResult.code;
 				borrow_book_vue.fetchBookInfo();
 			},
-			borrow_book:()=> { 
+			borrow_book:()=> {
 				$.ajax({
 					url: "API/book/borrowBook.php",
 					dataType: "json",
@@ -453,12 +448,7 @@ myApp.onPageInit('borrow_book', function (page) {
 						if(data.error_code==0){
 							borrow_book_vue.cur_status=2;
 							borrow_book_vue.error_msg = null;
-							borrow_book_vue.book={
-								name: data.data.title,
-								publisher: data.data.publisher,
-								author: data.data.author,
-								pubdate : data.data.pubdate
-							}
+							borrow_book_vue.book=data.data;
 						}else {
 							borrow_book_vue.cur_status=0;
 							borrow_book_vue.error_msg = data.data;
@@ -481,11 +471,7 @@ myApp.onPageInit('book_donation', function (page) {
 			fetchType: 1,            // 1:送至分馆；2: 上门取书
 			fetchAddr:"如海韵6-XXX",            // 上门取书此字段才有意义
 			phone : "",
-			book: {
-	            name: "",
-	            publisher: "",
-	            author: "",
-				class: ""
+			book: { 
 			},
 	        word: ""
 		},
@@ -521,12 +507,7 @@ myApp.onPageInit('book_donation', function (page) {
 						if(data.error_code==0){
 							contact_app.cur_status=2;
 							contact_app.error_msg = null;
-							contact_app.book={
-								name: data.data.title,
-								publisher: data.data.publisher,
-								author: data.data.author,
-								class: ""
-							}
+							contact_app.book=data.data;
 						}else {
 							contact_app.cur_status=0;
 							contact_app.error_msg = data.data;
@@ -534,9 +515,12 @@ myApp.onPageInit('book_donation', function (page) {
 					}
 				});
 			},
+			cancel: (e)=>{
+				e.preventDefault();
+				contact_app.cur_status=0;
+			},
 			DonateBook:(e)=>{
-				e.preventDefault(); 
-				console.log(JSON.stringify(contact_app.fetchType));
+				e.preventDefault();  
 				if (contact_app.fetchType==1) {
 					//1表示送至分馆
 					how_to_fetch = {"how":1,
@@ -547,7 +531,7 @@ myApp.onPageInit('book_donation', function (page) {
 					"phone":contact_app.phone};
 				} 
 				$.ajax({
-					url: "API/book/donateBook.php?",
+					url: "API/book/donateBook.php",
 					dataType: "json",
 					data: {
 						"isbn": contact_app.isbn,
