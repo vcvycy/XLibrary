@@ -63,3 +63,14 @@ function cbBarcode(result){
         });
     }
 }
+
+function filterISBN(_isbn){ // 过滤掉isbn中非数字字符
+    _isbn=`${_isbn}`;
+    isbn="";
+    for (var i=0;i<_isbn.length;i++){
+        if (_isbn[i]>='0' && _isbn[i]<='9'){
+            isbn+=_isbn[i];
+        }
+    }  
+    return isbn;
+}

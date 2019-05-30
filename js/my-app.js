@@ -482,9 +482,108 @@ myApp.onPageInit('borrow_book', function (page) {
 		}
 	});
 });
-myApp.onPageInit('book_donation', function (page) { 
-	contact_app = new Vue({
-		el: '#donation',
+// myApp.onPageInit('book_donation', function (page) { 
+// 	contact_app = new Vue({
+// 		el: '#donation',
+// 		delimiters:["@{","}"],
+// 		data: {
+// 			cur_status: 0,               // 0表示等待识别图片，1表示正在识别，2表示识别成功 
+// 			isbn : null,
+// 			error_msg:null,
+// 			seen: false,
+// 			fetchType: 1,            // 1:送至分馆；2: 上门取书
+// 			fetchAddr:"如海韵6-XXX",            // 上门取书此字段才有意义
+// 			phone : "",
+// 			book: { 
+// 			},
+// 	        word: ""
+// 		},
+// 		methods: {
+// 			setFetchType: (type) => {
+// 	            contact_app.fetchType=type;
+// 			},
+// 			selectImage: (e) =>{ 
+// 				contact_app.cur_status=1;
+// 				let src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
+// 				let file = files[0];
+// 				if (url) {
+// 					src = url.createObjectURL(file);
+// 				} else {
+// 					src = e.target.result;
+// 				}  
+// 				RecognizeBarCode(src,contact_app.cbAfterRecogBarcode);
+// 			},
+// 			cbAfterRecogBarcode: (result) => { 
+// 				if (!result ||!result.codeResult){
+// 					contact_app.error_msg="无法识别图中ISBN条形码，请重新拍摄!";
+// 					contact_app.cur_status=0;
+// 				}
+// 				contact_app.isbn=result.codeResult.code;
+// 				$.ajax({
+// 					url: "./API/isbn.php",
+// 					dataType: "json",
+// 					data: {
+// 						"isbn": contact_app.isbn,
+// 					},
+// 					async: true,
+// 					success: function (data) {
+// 						if(data.error_code==0){
+// 							contact_app.cur_status=2;
+// 							contact_app.error_msg = null;
+// 							contact_app.book=data.data;
+// 						}else {
+// 							contact_app.cur_status=0;
+// 							contact_app.error_msg = data.data;
+// 						}
+// 					}
+// 				});
+// 			},
+// 			cancel: (e)=>{
+// 				e.preventDefault();
+// 				contact_app.cur_status=0;
+// 			},
+// 			DonateBook:(e)=>{
+// 				e.preventDefault();  
+// 				if (contact_app.fetchType==1) {
+// 					//1表示送至分馆
+// 					how_to_fetch = {"how":1,
+// 					"phone":contact_app.phone};
+// 				}else {
+// 					how_to_fetch = {"how":2,
+// 						"where":contact_app.fetchAddr,
+// 					"phone":contact_app.phone};
+// 				} 
+// 				$.ajax({
+// 					url: "API/book/donateBook.php",
+// 					dataType: "json",
+// 					data: {
+// 						"isbn": contact_app.isbn,
+// 						"donator_word":contact_app.word,
+// 						"how_to_fetch": JSON.stringify(how_to_fetch)  
+// 					},
+// 					async: false,
+// 					success: function (data) { 
+// 						if(data.error_code==0){
+// 							alert(data.data);
+// 							location.reload(); 
+// 						}else{
+// 							alert(data.data);
+// 						}
+// 					},
+// 					error: function (xhr, textStatus) {
+// 						console.log('错误');
+// 						console.log(xhr);
+// 						console.log(textStatus);
+// 					},
+// 				}); 
+// 			}
+// 		}
+// 	});
+// });
+
+myApp.onPageInit('books_donation', function (page) { 
+	books_donation = new Vue({
+		el: '#books_donation_div',
 		delimiters:["@{","}"],
 		data: {
 			cur_status: 0,               // 0表示等待识别图片，1表示正在识别，2表示识别成功 
@@ -500,65 +599,77 @@ myApp.onPageInit('book_donation', function (page) {
 		},
 		methods: {
 			setFetchType: (type) => {
-	            contact_app.fetchType=type;
+	            books_donation.fetchType=type;
 			},
-			selectImage: (e) =>{ 
-				contact_app.cur_status=1;
-				let src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
-				let file = files[0];
-				if (url) {
-					src = url.createObjectURL(file);
-				} else {
-					src = e.target.result;
-				}  
-				RecognizeBarCode(src,contact_app.cbAfterRecogBarcode);
+			selectImage: (e) =>{
+				dom_file=$("<input type=file accept='image/*'></input>");
+				dom_file.change(function(){  
+					books_donation.cur_status=1; 
+					let src, url = window.URL || window.webkitURL || window.mozURL, files = dom_file[0].files;
+					if (files.length==0) return;
+					let file = files[0];
+					if (url) {
+						src = url.createObjectURL(file);
+					} else {
+						src = e.target.result;
+					}  
+					RecognizeBarCode(src,books_donation.cbAfterRecogBarcode);
+				});
+				dom_file.click();   
 			},
-			cbAfterRecogBarcode: (result) => { 
-				if (!result ||!result.codeResult){
-					contact_app.error_msg="无法识别图中ISBN条形码，请重新拍摄!";
-					contact_app.cur_status=0;
-				}
-				contact_app.isbn=result.codeResult.code;
+			inputISBNbyHand: ()=>{
+				books_donation.cur_status=1;
+				books_donation.updateBookInfo();
+			},
+			updateBookInfo:()=>{
 				$.ajax({
 					url: "./API/isbn.php",
 					dataType: "json",
 					data: {
-						"isbn": contact_app.isbn,
+						"isbn": filterISBN(books_donation.isbn),
 					},
 					async: true,
 					success: function (data) {
 						if(data.error_code==0){
-							contact_app.cur_status=2;
-							contact_app.error_msg = null;
-							contact_app.book=data.data;
+							books_donation.cur_status=2;
+							books_donation.error_msg = null;
+							books_donation.book=data.data;
 						}else {
-							contact_app.cur_status=0;
-							contact_app.error_msg = data.data;
+							books_donation.cur_status=0;
+							books_donation.error_msg = data.data;
 						}
 					}
 				});
 			},
+			cbAfterRecogBarcode: (result) => { 
+				if (!result ||!result.codeResult){
+					books_donation.error_msg="无法识别图中ISBN条形码，请重新拍摄!";
+					books_donation.cur_status=0;
+				} 
+				books_donation.isbn=result.codeResult.code;
+				books_donation.updateBookInfo();
+			},
 			cancel: (e)=>{
 				e.preventDefault();
-				contact_app.cur_status=0;
+				books_donation.cur_status=0;
 			},
 			DonateBook:(e)=>{
 				e.preventDefault();  
-				if (contact_app.fetchType==1) {
+				if (books_donation.fetchType==1) {
 					//1表示送至分馆
 					how_to_fetch = {"how":1,
-					"phone":contact_app.phone};
+					"phone":books_donation.phone};
 				}else {
 					how_to_fetch = {"how":2,
-						"where":contact_app.fetchAddr,
-					"phone":contact_app.phone};
+						"where":books_donation.fetchAddr,
+					"phone":books_donation.phone};
 				} 
 				$.ajax({
 					url: "API/book/donateBook.php",
 					dataType: "json",
 					data: {
-						"isbn": contact_app.isbn,
-						"donator_word":contact_app.word,
+						"isbn": books_donation.isbn,
+						"donator_word":books_donation.word,
 						"how_to_fetch": JSON.stringify(how_to_fetch)  
 					},
 					async: false,
@@ -580,6 +691,7 @@ myApp.onPageInit('book_donation', function (page) {
 		}
 	});
 }) 
+
 
 myApp.onPageInit('form', function (page) {
     $("#CustomForm").validate({
