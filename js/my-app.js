@@ -387,7 +387,7 @@ myApp.onPageInit('borrow_book', function (page) {
 		delimiters:["@{","}"],
 		data: {
 			cur_status: 0,               // 0表示等待识别图片，1表示正在识别，2表示识别成功 
-			isbn : null,
+			isbn : "",
 			phone : "",
 			error_msg: null,
 			book:{}
@@ -423,12 +423,22 @@ myApp.onPageInit('borrow_book', function (page) {
 				borrow_book_vue.isbn=result.codeResult.code;
 				borrow_book_vue.fetchBookInfo();
 			},
+			getCurrentISBN: ()=>{
+				_isbn=borrow_book_vue.isbn;
+				isbn="";
+				for (var i=0;i<_isbn.length;i++){
+					if (_isbn[i]>='0' && _isbn[i]<='9'){
+						isbn+=_isbn[i];
+					}
+				}  
+				return isbn;
+			},
 			borrow_book:()=> {
 				$.ajax({
 					url: "API/book/borrowBook.php",
 					dataType: "json",
 					data: {
-						"isbn": borrow_book_vue.isbn
+						"isbn": borrow_book_vue.getCurrentISBN()
 					},
 					async: false,
 					success: function (data) { 
@@ -444,7 +454,8 @@ myApp.onPageInit('borrow_book', function (page) {
 			}
 			,
 			fetchBookInfo:()=> { 
-				if (borrow_book_vue.isbn=="" || borrow_book_vue.isbn==null){
+				isbn = borrow_book_vue.getCurrentISBN();
+				if (isbn==""){
 					borrow_book_vue.cur_status=0;
 					borrow_book_vue.error_msg="ISBN 不能为空";
 					return ;
@@ -453,7 +464,7 @@ myApp.onPageInit('borrow_book', function (page) {
 					url: "./API/isbn.php",
 					dataType: "json",
 					data: {
-						"isbn": borrow_book_vue.isbn,
+						"isbn": isbn,
 					},
 					async: true,
 					success: function (data) {
