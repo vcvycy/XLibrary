@@ -645,6 +645,7 @@ myApp.onPageInit('books_donation', function (page) {
 				if (!result ||!result.codeResult){
 					books_donation.error_msg="无法识别图中ISBN条形码，请重新拍摄!";
 					books_donation.cur_status=0;
+					return;
 				} 
 				books_donation.isbn=result.codeResult.code;
 				books_donation.updateBookInfo();
