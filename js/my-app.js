@@ -20,7 +20,27 @@ var myApp = new Framework7({
 	pushState: true,
 	template7Pages: true 
 });
-
+// 正在处理窗口
+var pending={
+    show:(msg="正在处理，请稍后...")=>{
+        myApp.openModal(".popup-pending");
+		$(".popup-pending").show();
+		$(".popup-pending").find(".pendding-text").text(msg);
+    },
+    close: () =>{
+        myApp.closeModal();
+    }
+}
+var error_window={
+    show:(msg="出错！")=>{
+        myApp.openModal(".popup-error");
+		$(".popup-error").show();
+		$(".popup-error").find(".error-text").text(msg);
+    },
+    close: () =>{
+        myApp.closeModal();
+    }
+}
 /* 判断是否登陆，如果登陆，载入登陆信息、存取书信息 */
 function index_init(){   
 	home_vue = new Vue({
@@ -289,6 +309,7 @@ myApp.onPageInit('return-book', function (page) {
 				var returnForm = new FormData();
 				returnForm.append("image",file);
 				returnForm.append("isbn",isbn);
+				pending.show("正在处理还书请求...");
 				$.ajax({
 					url: "./API/book/returnBookWithImage.php",
 					dataType: "json",
@@ -297,12 +318,13 @@ myApp.onPageInit('return-book', function (page) {
 					processData: false,
 					contentType: false,
 					success: function (data) {
+						pending.close();
 						if(data.error_code==0){
 							alert("还书成功");
 							location.reload();
 						}else {
-							alert(data.data);
-						}
+							error_window.show(`出错啦！${data.data}`);
+						} 
 					}
 				});
 			}
@@ -316,15 +338,14 @@ myApp.onPageInit('borrow_book', function (page) {
 		data: {
 			cur_status: 0,               // 0表示等待识别图片，1表示正在识别，2表示识别成功 
 			isbn : "",
-			phone : "",
-			error_msg: null,
+			phone : "", 
 			book:{}
 		},
 		methods: { 
 			selectImage: () => {
 				dom_file=$("<input type=file accept='image/*'></input>");
-				dom_file.change(function(){  
-					borrow_book_vue.cur_status=1;
+				dom_file.change(function(){
+					pending.show("正在识别ISBN码");
 					console.log(dom_file[0].files);
 					let src, url = window.URL || window.webkitURL || window.mozURL, files = dom_file[0].files;
 					if (files.length==0) return;
@@ -339,12 +360,12 @@ myApp.onPageInit('borrow_book', function (page) {
 				dom_file.click();  
 			},
 			inputISBNbyHand:()=>{
-				borrow_book_vue.cur_status=1;  
 				borrow_book_vue.fetchBookInfo();
 			},
-			cbAfterRecogBarcode: (result)=> {
-				if (!result ||!result.codeResult){
-					borrow_book_vue.error_msg="无法识别图中ISBN条形码，请重新拍摄或手工输入ISBN!"; 
+			cbAfterRecogBarcode: (result)=> { 
+				if (!result ||!result.codeResult){ 
+					pending.close();
+					error_window.show("无法识别图中ISBN条形码，请重新拍摄或手工输入ISBN!");
 					borrow_book_vue.cur_status=0;
 					return ;
 				}
@@ -381,11 +402,13 @@ myApp.onPageInit('borrow_book', function (page) {
 				});
 			}
 			,
-			fetchBookInfo:()=> { 
+			fetchBookInfo:()=> {  
 				isbn = borrow_book_vue.getCurrentISBN();
+				pending.show(`正在获取ISBN码为${isbn}的图书信息...`);
 				if (isbn==""){
-					borrow_book_vue.cur_status=0;
-					borrow_book_vue.error_msg="ISBN 不能为空";
+					pending.close();
+					borrow_book_vue.cur_status=0; 
+					error_window.show("ISBN 不能为空");
 					return ;
 				}
 				$.ajax({
@@ -396,13 +419,13 @@ myApp.onPageInit('borrow_book', function (page) {
 					},
 					async: true,
 					success: function (data) {
+						pending.close();
 						if(data.error_code==0){
-							borrow_book_vue.cur_status=2;
-							borrow_book_vue.error_msg = null;
+							borrow_book_vue.cur_status=2; 
 							borrow_book_vue.book=data.data;
 						}else {
-							borrow_book_vue.cur_status=0;
-							borrow_book_vue.error_msg = data.data;
+							borrow_book_vue.cur_status=0; 
+							error_window.show(data.data);
 						}
 					}
 				});
@@ -416,8 +439,7 @@ myApp.onPageInit('books_donation', function (page) {
 		delimiters:["@{","}"],
 		data: {
 			cur_status: 0,               // 0表示等待识别图片，1表示正在识别，2表示识别成功 
-			isbn : null,
-			error_msg:null,
+			isbn : null, 
 			seen: false,
 			fetchType: 1,            // 1:送至分馆；2: 上门取书
 			fetchAddr:"如海韵6-XXX",            // 上门取书此字段才有意义
@@ -432,8 +454,8 @@ myApp.onPageInit('books_donation', function (page) {
 			},
 			selectImage: (e) =>{
 				dom_file=$("<input type=file accept='image/*'></input>");
-				dom_file.change(function(){  
-					books_donation.cur_status=1; 
+				dom_file.change(function(){   
+					pending.show("正在识别图片ISBN码...");
 					let src, url = window.URL || window.webkitURL || window.mozURL, files = dom_file[0].files;
 					if (files.length==0) return;
 					let file = files[0]; 
@@ -446,33 +468,38 @@ myApp.onPageInit('books_donation', function (page) {
 				});
 				dom_file.click();   
 			},
-			inputISBNbyHand: ()=>{
-				books_donation.cur_status=1;
+			inputISBNbyHand: ()=>{ 
 				books_donation.updateBookInfo();
 			},
 			updateBookInfo:()=>{
+				isbn=filterISBN(books_donation.isbn);
+				pending.show(`正在获取ISBN码为${isbn}的图书信息...`);
 				$.ajax({
 					url: "./API/isbn.php",
 					dataType: "json",
 					data: {
-						"isbn": filterISBN(books_donation.isbn),
+						"isbn": isbn,
 					},
 					async: true,
 					success: function (data) {
+						pending.close();
 						if(data.error_code==0){
-							books_donation.cur_status=2;
-							books_donation.error_msg = null;
+							books_donation.cur_status=2; 
 							books_donation.book=data.data;
 						}else {
-							books_donation.cur_status=0;
-							books_donation.error_msg = data.data;
+							books_donation.cur_status=0; 
+							error_window.show(data.data);
 						}
+					},
+					error:function(){
+						pending.close();
 					}
 				});
 			},
 			cbAfterRecogBarcode: (result) => { 
-				if (!result ||!result.codeResult){
-					books_donation.error_msg="无法识别图中ISBN条形码，请重新拍摄!";
+				if (!result ||!result.codeResult){ 
+					pending.close();
+					error_window.show("无法识别图中ISBN条形码，请重新拍摄!");
 					books_donation.cur_status=0;
 					return;
 				} 

@@ -247,6 +247,28 @@
         </div>
     </div>
 
+    <!-- 正在处理提示窗 -->
+    <div class="popup popup-pending" style="text-align:center;background-color: rgba(0,0,0,0.5);">
+        <div class="content-block" style="padding:40% 5%"> 
+            <label><img src="images/loader01.gif" alt="Loading..." ></label>
+            <h4 style="color:white;margin:0 auto;" class="pendding-text">正在处理...</h4> 
+            <div class="close_popup_button">
+                <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 出错提示窗 -->
+    <div class="popup popup-error" onclick="error_window.close()" style="text-align:center;background-color: rgba(0,0,0,0.5);">
+            <div class="content-block" style="padding:30% 5%"> 
+                <label><img src="images/error.png" style="width:20%;height:20%" alt="Loading..." ></label>
+                <b><h2 style="color:red;margin:0 auto;font-weight: 900" class="error-text"></h2> </b>
+                <div class="close_popup_button">
+                    <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
+                </div>
+            </div>
+    </div>
+
     <!-- 借阅记录 -->
     <div class="popup popup-rent-records" id="rent-records">
         <div class="content-block">
