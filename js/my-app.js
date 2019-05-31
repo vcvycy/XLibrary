@@ -88,17 +88,17 @@ function index_init(){
 		} 
 	});
 	menu_vue = new Vue({
-		el : ".views",
+		el : ".toolbar-icon",
 		delimiters: ['${', '}'],
 		data:{
-			g_data :myData,
-			word :"哈哈"
+			g_data :myData
 		}
 	});
+
 	/* 以下通过ajax获取信息 */
 	// 用户信息
 	$.ajax({
-		url: "./API/account/getCurUserInfo.php?",
+		url: "./API/account/getCurUserInfo.php",
 		dataType: "json",
 		data: {
 			isLogin :false,
