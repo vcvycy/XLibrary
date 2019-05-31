@@ -108,6 +108,7 @@ function index_init(){
 				myData.returned_books =data.data.returned;
 				myData.not_returned_books= data.data.not_returned;
 			}else {
+				console.log("无法获取借书记录，可能是未登录");
 			}
 		}
 	});
@@ -138,43 +139,7 @@ myApp.onPageBeforeInit('home', function(page){
 })
 myApp.onPageInit('home', function(page) {
 	index_init();
-}).trigger(); //And trigger it right away
-function cbBarcode(result){
-    //console.log(result);
-    if (!result){
-        alert("检测不到ISBN码");
-    }else{
-        // alert(result.codeResult.code);
-        isbn = result.codeResult.code;
-        $.ajax({
-            url: "./API/isbn.php?",
-            dataType: "json",
-            data: {
-                "isbn": isbn,
-            },
-            async: true,
-            success: function (data) {
-                if(data.error_code==0){
-                    myApp.closeModal('.popup-scan');
-                    mainView.router.load({'url':'BorrowSuccessfully.html',
-                        'ignoreCache': true});
-                    sessionStorage.setItem("bookname", data.data.title);
-                    sessionStorage.setItem("publisher", data.data.publisher);
-                    sessionStorage.setItem("author", data.data.author);
-                    sessionStorage.setItem("isbn", data.data.isbn);
-                    // mainView.router.load('BorrowSuccessfully');
-                    // mainView.router.loadPage('BorrowSuccessfully.html');
-                }else {
-                }
-            },
-            error: function (xhr, textStatus) {
-                console.log('错误');
-                console.log(xhr);
-                console.log(textStatus);
-            },
-        });
-    }
-} 
+}).trigger(); //And trigger it right away 
 
 // Add main View
 var mainView = myApp.addView('.view-main', {
@@ -242,47 +207,11 @@ $("#LoginForm").validate({
 
 	}
 });
-myApp.onPageInit('music', function (page) {
-		  audiojs.events.ready(function() {
-			var as = audiojs.createAll();
-		  });
-})
-myApp.onPageInit('videos', function (page) {
-		  $(".videocontainer").fitVids();
-})
-myApp.onPageBeforeInit('BorrowSuccessfully',function (page) {
-    if(sessionStorage.getItem("bookname")){
-        console.log('value');
-        bsapp = new Vue({
-            el: '#BorrowForm',
-            delimiters:["@{","}"],
-            data: {
-                book: {
-                    name: sessionStorage.getItem("bookname"),
-                    publisher: sessionStorage.getItem("publisher"),
-                    author: sessionStorage.getItem("author")
-                },
-            },
-        });
-    }else{
-        console.log('novalue')
-        bsapp = new Vue({
-            el: '#BorrowForm',
-            delimiters:["@{","}"],
-            data: {
-                book: {
-                    name: "计算机导论",
-                    publisher: "机械工业出版社",
-                    author: "XXX",
-                },
-            },
-        });
-    } 
-})
-// $$(document).on('pageInit', '.page[data-page="tables"]', function (e) 
+ 
+
 myApp.onPageInit('books_list', function (page) {
     // Do something here when page with data-page="about" attribute loaded and initialized
-    books_each_page = 15;
+    books_each_page = 10;
     books_list_vue = new Vue({
         delimiters: ['${', '}'],
         el: '#books-list-div',
@@ -314,10 +243,7 @@ myApp.onPageInit('books_list', function (page) {
 						}
 					}
 				})
-			},
-            showDetail:(book)=>{ 
-				alert(`出版日期：${book.pubdate}；ISBN：${book.isbn}；简介：${book.summary}`);
-			},
+			}, 
 			goto_page: (pageid)=>{
 				pageid-=1;
 				total = books_list_vue.total_pages;
@@ -334,9 +260,11 @@ myApp.onPageInit('books_list', function (page) {
 	}); 
 	books_list_vue.getbook(1);
 });
+
 myApp.onPageInit('index', function (page) { 
 	location.href="./";
 });
+
 myApp.onPageInit('return-book', function (page) {  
 	return_book_vue=new Vue({
 		el:"#return—book-div",
@@ -346,7 +274,7 @@ myApp.onPageInit('return-book', function (page) {
 		},
 		methods:{
 			choose_image:(isbn)=>{
-				alert("请将图书放到还书架上，然后在书架上拍照上传，即可还书成功！"); 
+				alert("请将书放在还书书架上，并拍照上传"); 
 				dom_file=$("<input type=file accept='image/*'></input>");
 				dom_file.change(function(){    
 					// 获取图片blob地址src
@@ -362,7 +290,7 @@ myApp.onPageInit('return-book', function (page) {
 				returnForm.append("image",file);
 				returnForm.append("isbn",isbn);
 				$.ajax({
-					url: "./API/book/returnBookWithImage.php?",
+					url: "./API/book/returnBookWithImage.php",
 					dataType: "json",
 					data: returnForm,
 					type: "post",
@@ -481,106 +409,7 @@ myApp.onPageInit('borrow_book', function (page) {
 			}
 		}
 	});
-});
-// myApp.onPageInit('book_donation', function (page) { 
-// 	contact_app = new Vue({
-// 		el: '#donation',
-// 		delimiters:["@{","}"],
-// 		data: {
-// 			cur_status: 0,               // 0表示等待识别图片，1表示正在识别，2表示识别成功 
-// 			isbn : null,
-// 			error_msg:null,
-// 			seen: false,
-// 			fetchType: 1,            // 1:送至分馆；2: 上门取书
-// 			fetchAddr:"如海韵6-XXX",            // 上门取书此字段才有意义
-// 			phone : "",
-// 			book: { 
-// 			},
-// 	        word: ""
-// 		},
-// 		methods: {
-// 			setFetchType: (type) => {
-// 	            contact_app.fetchType=type;
-// 			},
-// 			selectImage: (e) =>{ 
-// 				contact_app.cur_status=1;
-// 				let src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
-// 				let file = files[0];
-// 				if (url) {
-// 					src = url.createObjectURL(file);
-// 				} else {
-// 					src = e.target.result;
-// 				}  
-// 				RecognizeBarCode(src,contact_app.cbAfterRecogBarcode);
-// 			},
-// 			cbAfterRecogBarcode: (result) => { 
-// 				if (!result ||!result.codeResult){
-// 					contact_app.error_msg="无法识别图中ISBN条形码，请重新拍摄!";
-// 					contact_app.cur_status=0;
-// 				}
-// 				contact_app.isbn=result.codeResult.code;
-// 				$.ajax({
-// 					url: "./API/isbn.php",
-// 					dataType: "json",
-// 					data: {
-// 						"isbn": contact_app.isbn,
-// 					},
-// 					async: true,
-// 					success: function (data) {
-// 						if(data.error_code==0){
-// 							contact_app.cur_status=2;
-// 							contact_app.error_msg = null;
-// 							contact_app.book=data.data;
-// 						}else {
-// 							contact_app.cur_status=0;
-// 							contact_app.error_msg = data.data;
-// 						}
-// 					}
-// 				});
-// 			},
-// 			cancel: (e)=>{
-// 				e.preventDefault();
-// 				contact_app.cur_status=0;
-// 			},
-// 			DonateBook:(e)=>{
-// 				e.preventDefault();  
-// 				if (contact_app.fetchType==1) {
-// 					//1表示送至分馆
-// 					how_to_fetch = {"how":1,
-// 					"phone":contact_app.phone};
-// 				}else {
-// 					how_to_fetch = {"how":2,
-// 						"where":contact_app.fetchAddr,
-// 					"phone":contact_app.phone};
-// 				} 
-// 				$.ajax({
-// 					url: "API/book/donateBook.php",
-// 					dataType: "json",
-// 					data: {
-// 						"isbn": contact_app.isbn,
-// 						"donator_word":contact_app.word,
-// 						"how_to_fetch": JSON.stringify(how_to_fetch)  
-// 					},
-// 					async: false,
-// 					success: function (data) { 
-// 						if(data.error_code==0){
-// 							alert(data.data);
-// 							location.reload(); 
-// 						}else{
-// 							alert(data.data);
-// 						}
-// 					},
-// 					error: function (xhr, textStatus) {
-// 						console.log('错误');
-// 						console.log(xhr);
-// 						console.log(textStatus);
-// 					},
-// 				}); 
-// 			}
-// 		}
-// 	});
-// });
-
+});  
 myApp.onPageInit('books_donation', function (page) { 
 	books_donation = new Vue({
 		el: '#books_donation_div',
@@ -607,7 +436,7 @@ myApp.onPageInit('books_donation', function (page) {
 					books_donation.cur_status=1; 
 					let src, url = window.URL || window.webkitURL || window.mozURL, files = dom_file[0].files;
 					if (files.length==0) return;
-					let file = files[0];
+					let file = files[0]; 
 					if (url) {
 						src = url.createObjectURL(file);
 					} else {
@@ -692,252 +521,3 @@ myApp.onPageInit('books_donation', function (page) {
 		}
 	});
 }) 
-
-
-myApp.onPageInit('form', function (page) {
-    $("#CustomForm").validate({
-        rules: {         
-            selectoptions: {
-                required: true
-            }
-        },
-        messages: {
-            selectoptions: "Please select one option"
-        }
-    });
-	var calendarDefault = myApp.calendar({
-		input: '#calendar-input',
-	});   
-
-		
-})
-myApp.onPageInit('blog', function (page) {
- 
-		$(".posts li").hide();	
-		size_li = $(".posts li").size();
-		x=4;
-		$('.posts li:lt('+x+')').show();
-		$('#loadMore').click(function () {
-			x= (x+1 <= size_li) ? x+1 : size_li;
-			$('.posts li:lt('+x+')').show();
-			if(x == size_li){
-				$('#loadMore').hide();
-				$('#showLess').show();
-			}
-		});
-
-})
-myApp.onPageInit('blogsingle', function (page) {
-    $(".like").click(function (e) {
-        $(this).toggleClass('cs');
-    });
-})
-
-myApp.onPageInit('shop', function (page) {
-			
-		$('.qntyplusshop').click(function(e){
-									  
-			e.preventDefault();
-			var fieldName = $(this).attr('field');
-			var currentVal = parseInt($('input[name='+fieldName+']').val());
-			if (!isNaN(currentVal)) {
-				$('input[name='+fieldName+']').val(currentVal + 1);
-			} else {
-				$('input[name='+fieldName+']').val(0);
-			}
-			
-		});
-		$(".qntyminusshop").click(function(e) {
-			e.preventDefault();
-			var fieldName = $(this).attr('field');
-			var currentVal = parseInt($('input[name='+fieldName+']').val());
-			if (!isNaN(currentVal) && currentVal > 0) {
-				$('input[name='+fieldName+']').val(currentVal - 1);
-			} else {
-				$('input[name='+fieldName+']').val(0);
-			}
-		});	
-  
-})
-myApp.onPageInit('shopitem', function (page) {
-		$(".swipebox").swipebox();	
-		$('.qntyplusshop').click(function(e){
-									  
-			e.preventDefault();
-			var fieldName = $(this).attr('field');
-			var currentVal = parseInt($('input[name='+fieldName+']').val());
-			if (!isNaN(currentVal)) {
-				$('input[name='+fieldName+']').val(currentVal + 1);
-			} else {
-				$('input[name='+fieldName+']').val(0);
-			}
-			
-		});
-		$(".qntyminusshop").click(function(e) {
-			e.preventDefault();
-			var fieldName = $(this).attr('field');
-			var currentVal = parseInt($('input[name='+fieldName+']').val());
-			if (!isNaN(currentVal) && currentVal > 0) {
-				$('input[name='+fieldName+']').val(currentVal - 1);
-			} else {
-				$('input[name='+fieldName+']').val(0);
-			}
-		});	
-  
-})
-myApp.onPageInit('myBookshelf', function (page) {
-			
-    $('.item_delete').click(function(e){
-        // e.preventDefault();
-        // var currentVal = $(this).attr('id');
-        // $('div#'+currentVal).fadeOut('slow');
-        if (confirm("确认要删除？")) {
-            var box = e.parentNode;
-            var id = box.getAttribute("noticeid");
-            console.log(id);
-            $.ajax({
-                url: "../back/clanotice/del.php?",
-                dataType: "json",
-                data: {
-                    "id": id,
-                },
-                type: "post",
-                async: true,
-                success: function (data) {
-                    remove(box.parentNode);
-                    alert("删除成功");
-                },
-                error: function (xhr, textStatus) {
-                    console.log('错误');
-                    console.log(xhr);
-                    console.log(textStatus);
-                },
-            });
-        }
-    });
-})
-myApp.onPageInit('photos', function (page) {
-	$(".swipebox").swipebox();
-	$("a.switcher").bind("click", function(e){
-		e.preventDefault();
-		
-		var theid = $(this).attr("id");
-		var theproducts = $("ul#photoslist");
-		var classNames = $(this).attr('class').split(' ');
-		
-		
-		if($(this).hasClass("active")) {
-			// if currently clicked button has the active class
-			// then we do nothing!
-			return false;
-		} else {
-			// otherwise we are clicking on the inactive button
-			// and in the process of switching views!
-
-  			if(theid == "view13") {
-				$(this).addClass("active");
-				$("#view11").removeClass("active");
-				$("#view11").children("img").attr("src","images/switch_11.png");
-				
-				$("#view12").removeClass("active");
-				$("#view12").children("img").attr("src","images/switch_12.png");
-			
-				var theimg = $(this).children("img");
-				theimg.attr("src","images/switch_13_active.png");
-			
-				// remove the list class and change to grid
-				theproducts.removeClass("photo_gallery_11");
-				theproducts.removeClass("photo_gallery_12");
-				theproducts.addClass("photo_gallery_13");
-
-			}
-			
-			else if(theid == "view12") {
-				$(this).addClass("active");
-				$("#view11").removeClass("active");
-				$("#view11").children("img").attr("src","images/switch_11.png");
-				
-				$("#view13").removeClass("active");
-				$("#view13").children("img").attr("src","images/switch_13.png");
-			
-				var theimg = $(this).children("img");
-				theimg.attr("src","images/switch_12_active.png");
-			
-				// remove the list class and change to grid
-				theproducts.removeClass("photo_gallery_11");
-				theproducts.removeClass("photo_gallery_13");
-				theproducts.addClass("photo_gallery_12");
-
-			} 
-			else if(theid == "view11") {
-				$("#view12").removeClass("active");
-				$("#view12").children("img").attr("src","images/switch_12.png");
-				
-				$("#view13").removeClass("active");
-				$("#view13").children("img").attr("src","images/switch_13.png");
-			
-				var theimg = $(this).children("img");
-				theimg.attr("src","images/switch_11_active.png");
-			
-				// remove the list class and change to grid
-				theproducts.removeClass("photo_gallery_12");
-				theproducts.removeClass("photo_gallery_13");
-				theproducts.addClass("photo_gallery_11");
-
-			} 
-			
-		}
-
-	});	
-})
-
-myApp.onPageInit('chat', function (page) {
-// Conversation flag
-var conversationStarted = false;
- 
-// Init Messages
-var myMessages = myApp.messages('.messages', {
-  autoLayout:true
-});
- 
-// Init Messagebar
-var myMessagebar = myApp.messagebar('.messagebar');
- 
-// Handle message
-$$('.messagebar .link').on('click', function () {
-  // Message text
-  var messageText = myMessagebar.value().trim();
-  // Exit if empy message
-  if (messageText.length === 0) return;
- 
-  // Empty messagebar
-  myMessagebar.clear()
- 
-  // Random message type
-  var messageType = (['sent', 'received'])[Math.round(Math.random())];
- 
-  // Avatar and name for received message
-  var avatar, name;
-  if(messageType === 'received') {
-    avatar = 'http://lorempixel.com/output/people-q-c-100-100-9.jpg';
-    name = 'Kate';
-  }
-  // Add message
-  myMessages.addMessage({
-    // Message text
-    text: messageText,
-    // Random message type
-    type: messageType,
-    // Avatar and name:
-    avatar: avatar,
-    name: name,
-    // Day
-    day: !conversationStarted ? 'Today' : false,
-    time: !conversationStarted ? (new Date()).getHours() + ':' + (new Date()).getMinutes() : false
-  })
- 
-  // Update conversation flag
-  conversationStarted = true;
-});  
-})           
-
