@@ -267,7 +267,7 @@ Class Books extends Base{
         $total = $this->createSQLAndRun("select count(*) from book")[0][0];  
         $pages = ceil($total/$books_each_page);
         $start_idx = ($page_id-1)*$books_each_page;
-        $ret = $this->createSQLAndRunAssoc("select * from book limit %s,%s",$start_idx,$books_each_page);
+        $ret = $this->createSQLAndRunAssoc("select * from book where stock>0 limit %s,%s",$start_idx,$books_each_page);
         return array(
             "cur_page" =>$page_id,
             "books_each_page" => $books_each_page,
