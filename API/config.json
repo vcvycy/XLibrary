@@ -1,0 +1,10 @@
+{
+    "log_path":"${DIR_API}log.txt",
+    "pyAddr" : "http://localhost:81",
+    "db" :{
+        "host" : "localhost",
+        "user" : "root",
+        "pass" : "youpass",
+        "dbname" : "xlibrary"
+    }
+}

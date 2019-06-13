@@ -8,8 +8,23 @@ require_once(DIR_API."xsession.php");
  */
 class Utils
 {
+    // 全局配置，从config.json中读取配置
+    static $g_config =null; 
+    static function initConfig(){
+        $config_file = DIR_API."config.json";
+        $f=fopen($config_file,"r");
+        $config= json_decode(fread($f,99999),true);
+        // 字符串替换，将${DIR_API} 替换成真实地址DIR_API。仅支持一层递归
+        foreach($config as $key=>$val){
+            if (is_string($val)){
+                $config[$key] = str_ireplace('${DIR_API}',DIR_API,$val,$count);
+            }
+        }
+        self::$g_config = $config;
+    }
     static function init(){ // 全局初始化函数 
         date_default_timezone_set('PRC');
+        self::initConfig();
         session_start();
         // 记录每次访问的URL和参数和IP.
         $post_data="";
@@ -23,17 +38,6 @@ class Utils
                     $who);
         self::log($data);
     }
-    // 全局配置
-    static $g_config = array(
-        "log_path" => DIR_API . "log.txt",
-        "pyAddr" => "http://localhost:81",
-        "db" => array(
-            "host" => "localhost",
-            "user" => "root",
-            "pass" => "youpass",
-            "dbname" => "xlibrary"
-        )
-    ); 
     //返回数据给前端,如果error_code不为0，则$data返回具体出错信息，否则返回前端需要的信息
     static function exit($error_code, $data)
     {
