@@ -78,6 +78,8 @@
                                     src="images/icons/white/mybook.png" alt="" title="" /><span>借阅记录</span></a></li>
                         <li> <a href="#" data-popup=".popup-donation-records" class="open-popup close-panel"><img
                                     src="images/icons/white/history.png" alt="" title="" /><span>捐书记录</span></a></li>
+                        <li> <a href="#" data-popup=".popup-personal-info" class="open-popup close-panel"><img
+                                    src="images/icons/white/history.png" alt="" title="" /><span>修改个人信息</span></a></li>
                         <li v-on:click="logout"> <a href="#" class=""><img src="images/icons/white/love.png" alt=""
                                     title="" /><span>登出</span></a></li>
                     </ul>
@@ -219,11 +221,7 @@
                                 上登陆。</p>
                         </section>
                     </article>
-                </form>
-                <!--<div class="signup_bottom">-->
-                <!--<p>Don't have an account?</p>-->
-                <!--<a href="#" data-popup=".popup-signup" class="open-popup">SIGN UP</a>-->
-                <!--</div>-->
+                </form> 
             </div>
             <div class="close_popup_button">
                 <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
@@ -364,28 +362,39 @@
         </div>
 
     </div>
-    <!-- Register Popup -->
-    <div class="popup popup-signup">
+    <!-- 个人信息 -->
+    <div class="popup popup-personal-info" v-if="g_data.isLogin">
         <div class="content-block">
-            <h4>REGISTER</h4>
-            <div class="loginform">
-                <form id="RegisterForm" method="post">
-                    <input type="text" name="Username" value="" class="form_input required" placeholder="Username" />
-                    <input type="text" name="Email" value="" class="form_input required" placeholder="Email" />
-                    <input type="password" name="Password" value="" class="form_input required"
-                        placeholder="Password" />
-                    <input type="submit" name="submit" class="form_submit" value="SIGN UP" />
-                </form>
-                <h5>- OR REGISTER WITH A SOCIAL ACCOUNT -</h5>
-                <div class="signup_social">
-                    <a href="http://www.facebook.com/" class="signup_facebook external">FACEBOOK</a>
-                    <a href="http://www.twitter.com/" class="signup_twitter external">TWITTER</a>
+            <h4>修改个人信息</h4>
+            <div class="page_single layout_fullwidth_padding">
+                <div class="contactform">
+                <form class="" id="CustomForm" method="post" action="" novalidate="novalidate">  
+                <div class="form_row">
+                    <label>姓名</label>     
+                    <input type="text" v-model="g_data.user_info.name" readonly="readonly"  class="form_input required"/>
+                    <label>学号</label>     
+                    <input type="text" v-model="g_data.user_info.sid"  readonly class="form_input required"/>
+                    <label>学院</label>     
+                    <input type="text" v-model="g_data.user_info.school" placeholder="如人文学院" class="form_input required"/>
+                    <label>学位</label>     
+                    <input type="text" v-model="g_data.user_info.degree" placeholder="如本科生、研究生、博士等" class="form_input required"/>
+                    <label>年级</label>     
+                    <input type="text" v-model="g_data.user_info.grade" placeholder="如2016级" class="form_input required"/>
+                    <label>微信号</label>     
+                    <input type="text" v-model="g_data.user_info.wechat_name" placeholder="请输入你的微信号" class="form_input required"/>
+                    <label>手机号码</label>     
+                    <input type="text" v-model="g_data.user_info.phone" placeholder="请输入你的手机号码" class="form_input required"/>
+                      
+                    <label>个性签名</label>
+                    <textarea name="message" class="form_textarea" rows="" v-model="g_data.user_info.other" placeholder="用一句话描述你自己吧~" cols=""></textarea>
                 </div>
-            </div>
-            <div class="close_popup_button">
-                <a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title="" /></a>
-            </div>
+                 
+                <input type="submit" name="submit" class="form_submit" v-on:click="update_user_info" value="更新个人信息">
+                </form>
+                </div>  
+              </div>
         </div>
+        <div class="close_popup_button"><a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title=""></a></div>
     </div>
 
     <script src="js/vue.min.js"></script>

@@ -175,7 +175,8 @@
                               <th>出版社</th> 
                               <th>出版时间</th> 
                               <th>如何取书</th>
-                              <th>联系方式</th>
+                              <th>手机</th>
+                              <th>微信</th>
                               <th>捐书者的话</th>
                               <th>审核</th>
                             </tr> 
@@ -191,6 +192,7 @@
                                 <td>{{item.pubdate}}</td>
                                 <td>{{item.how_to_fetch}}</td>
                                 <td>{{item.phone}}</td>
+                                <td>{{item.wechat_name}}</td>
                                 <td>{{item.donator_word}}</td>
                                 <td><a href=# v-on:click="setReviewStatus(item.id,1)"><font color=green>通过</font></a>&nbsp;
                                       <a href=# v-on:click="setReviewStatus(item.id,-1)"><font color=red>拒绝</font></a></td>   
@@ -207,6 +209,7 @@
                                   <td>{{item.pubdate}}</td>
                                   <td>{{item.how_to_fetch}}</td>
                                   <td>{{item.phone}}</td>
+                                  <td>{{item.wechat_name}}</td>
                                   <td>{{item.donator_word}}</td>
                                   <td v-if="item.status=='1'"><p style="color: green">已通过</p> <a href=# v-on:click="reset(item.id)"><p style="color: gray">重置</p></a></td>
                                   <td v-if="item.status=='-1'"><p style="color: red">已拒绝</p> <a href=# v-on:click="reset(item.id)"><p style="color: gray">重置</p></a></td>   

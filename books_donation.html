@@ -102,9 +102,12 @@
                                         </label>
                                     </div>
                                 </div>
-                                <label>联系方式:</label>
-                                <input type="text" v-model="phone" class="form_input required error"
-                                    placeholder="请留个联系方式，方便联系取书" />
+                                <label>手机联系方式 </label>
+                                <input v-on:click="change_contact" type="text" v-model="g_data.user_info.phone" readonly class="form_input required error"
+                                    placeholder="" />
+                                <label>微信联系方式</label>
+                                <input v-on:click="change_contact" type="text" v-model="g_data.user_info.wechat_name" readonly class="form_input required error"
+                                    placeholder="" />
                                 <label>留言:</label>
                                 <input type="text" v-model="word" class="form_input required"
                                     placeholder="其他同学浏览这本书，就可以看到你的留言哦" />

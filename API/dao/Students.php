@@ -74,8 +74,16 @@ Class Students extends Base{
     // 想法： 每次登陆都更新似乎太慢了。可以每隔几天统一更新，或者一段时间后再更新，以后实现
     //(*) 获取用户信息
     public function getStuInfo($sid){
-        $rst=$this->createSQLAndRunAssoc("select sid,name,phone,wechat_name,head_image,degree,grade,school from stu where sid=%s",$sid);
+        $rst=$this->createSQLAndRunAssoc("select sid,name,phone,wechat_name,head_image,degree,grade,school,other from stu where sid=%s",$sid);
         return $rst[0];
+    }
+    // 更新用户信息
+    public function updateStuInfo($sid,$school,$degree,$wechat_name,$phone,$grade,$other){
+        $rst = $this->createSQLAndRun(
+            "UPDATE `stu` SET `wechat_name`='%s',`phone`='%s',
+                              `degree`='%s',`grade`='%s',`school`='%s',`other`='%s'
+                  where sid='%s'",$wechat_name,$phone,$degree,$grade,$school,$other,$sid);
+        return $this->lastAffectedRows()==1;
     }
     // 获取所有学生信息
     public function getStudentsList(){

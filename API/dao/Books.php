@@ -124,10 +124,10 @@ Class Books extends Base{
                      "审核失败" => $list_failed,
                      "等待审核" => $list_waiting);
     }
-    // 获取未审核过的图书
+    // 获取捐书列表
     public function getDonationList(){
         $data = $this->createSQLAndRunAssoc(
-            "SELECT book_donate.*,book.title,book.author,book.publisher, book.pubdate ,stu.name
+            "SELECT book_donate.*,book.title,book.author,book.publisher, book.pubdate ,stu.name,stu.phone,stu.wechat_name
                 FROM stu, book_donate,book 
                 WHERE book_donate.sid =stu.sid and book.isbn = book_donate.isbn"
         );

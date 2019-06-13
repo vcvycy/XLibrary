@@ -94,6 +94,31 @@ function index_init(){
 			g_data :myData
 		}
 	});
+	personal_info_vue = new Vue({
+		el : ".popup-personal-info",
+		delimiters: ['${', '}'],
+		data:{
+			g_data :myData
+		},
+		methods:{
+			update_user_info:(e)=>{
+				$.ajax({
+					url: "./API/account/updateUserInfo.php",
+					dataType: "json",
+					data: myData.user_info, 
+					success: function (data) {  
+						if(data.error_code==0){  
+							alert("更新成功");
+							myApp.closeModal();
+						}else {   
+							alert(data.data);
+						}
+					}
+				});
+				e.preventDefault();
+			}
+		}
+	});
 
 	/* 以下通过ajax获取信息 */
 	// 用户信息
@@ -438,17 +463,22 @@ myApp.onPageInit('books_donation', function (page) {
 		el: '#books_donation_div',
 		delimiters:["@{","}"],
 		data: {
+			g_data:myData,
 			cur_status: 0,               // 0表示等待识别图片，1表示正在识别，2表示识别成功 
 			isbn : null, 
 			seen: false,
 			fetchType: 1,            // 1:送至分馆；2: 上门取书
-			fetchAddr:"如海韵6-XXX",            // 上门取书此字段才有意义
-			phone : "",
+			fetchAddr:"如海韵6-XXX",            // 上门取书此字段才有意义 
 			book: { 
 			},
 	        word: ""
 		},
 		methods: {
+			change_contact: ()=>{
+				alert("即将跳转到个人信息页面修改联系方式"); 
+				myApp.openModal(".popup-personal-info");
+				$(".popup-personal-info").show(); 
+			},
 			setFetchType: (type) => {
 	            books_donation.fetchType=type;
 			},
@@ -514,12 +544,10 @@ myApp.onPageInit('books_donation', function (page) {
 				e.preventDefault();  
 				if (books_donation.fetchType==1) {
 					//1表示送至分馆
-					how_to_fetch = {"how":1,
-					"phone":books_donation.phone};
+					how_to_fetch = {"how":1};
 				}else {
 					how_to_fetch = {"how":2,
-						"where":books_donation.fetchAddr,
-					"phone":books_donation.phone};
+						"where":books_donation.fetchAddr};
 				} 
 				$.ajax({
 					url: "API/book/donateBook.php",

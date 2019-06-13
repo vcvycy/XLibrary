@@ -10,7 +10,7 @@ class Utils
 {
     // 全局配置，从config.json中读取配置
     static $g_config =null; 
-    static function initConfig(){
+    static function initConfig(){  // 读取配置文件
         $config_file = DIR_API."config.json";
         $f=fopen($config_file,"r");
         $config= json_decode(fread($f,99999),true);

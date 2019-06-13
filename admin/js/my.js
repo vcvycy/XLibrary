@@ -235,8 +235,7 @@ pages_init ={
                     }catch(err){ 
                         fetch = `未知字符串:${obj.data[i].how_to_fetch}`;
                         phone =``;
-                    }
-                    obj.data[i].phone = phone;
+                    } 
                     obj.data[i].how_to_fetch = fetch;
                 }
                 vue_review.book_list = obj.data;

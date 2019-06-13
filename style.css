@@ -2215,6 +2215,11 @@ width:93%;
 margin:0 0 5px 0;
 border:1px solid #ddd;
 }
+.table-user-info{
+	padding:3%; 
+	width:93%; 
+	margin:0 0 5px 0; 
+}
 /* --------Custom select input----------- */
 .selector_overlay{
 padding:0; 
