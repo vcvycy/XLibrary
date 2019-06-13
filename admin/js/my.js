@@ -179,10 +179,11 @@ pages_init ={
     "book_review.html":function(){ 
         sidebar();
         curPageNeedLogin();
-        var vue_review= new Vue({
+        vue_review= new Vue({
             el: document.getElementById("book_review"),
             data: {
-                book_list : []
+                book_list : [],
+                hide_has_reviewed : window.localStorage["hide_has_reviewed"]==undefined?false:window.localStorage["hide_has_reviewed"]=="true"
             },
             methods: { 
                 setReviewStatus:(id,status)=>{  
@@ -200,10 +201,25 @@ pages_init ={
                 },
                 reject:(id)=>{
                     setReviewStatus(id,-1);
+                },
+                reset:(id)=>{
+                    var b=confirm("重置状态后，将会变成待审核，是否继续？");
+                    if (!b) return; 
+                    url=`${getRootURL()}API/admin/resetDonationStatus.php?book_donate_id=${id}`;
+                    $.get(url,function(data){
+                        obj=JSON.parse(data);
+                        if (obj.error_code==0){
+                            window.location.reload();
+                        }else
+                        alert(obj.data);
+                    })
+                },
+                update_hide: ()=>{ 
+                    window.localStorage["hide_has_reviewed"]=!vue_review.hide_has_reviewed;
                 }
             }   
           });
-        url=`${getRootURL()}API/admin/getDonationListWaitingForReview.php`;
+        url=`${getRootURL()}API/admin/getDonationList.php`;
         $.get(url,function(data){
             obj= JSON.parse(data);
             if (obj.error_code==0){

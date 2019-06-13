@@ -74,6 +74,13 @@ Class Books extends Base{
         return 0;
     }
 
+    // (*) 减去一本书的库存
+    public function decStock($isbn){ 
+        $cur_stock = $this->getStock($isbn);
+        $cur_stock --;
+        $this->setStock($isbn,$cur_stock);
+        return 0;
+    }
     // 设置库存值
     public function setStock($isbn,$stock){
         $ret = $this->createSQLAndRun(
@@ -118,11 +125,11 @@ Class Books extends Base{
                      "等待审核" => $list_waiting);
     }
     // 获取未审核过的图书
-    public function getDonationListWaitingForReview(){
+    public function getDonationList(){
         $data = $this->createSQLAndRunAssoc(
             "SELECT book_donate.*,book.title,book.author,book.publisher, book.pubdate ,stu.name
                 FROM stu, book_donate,book 
-                WHERE book_donate.sid =stu.sid and book.isbn = book_donate.isbn and book_donate.status=0"
+                WHERE book_donate.sid =stu.sid and book.isbn = book_donate.isbn"
         );
         return $data;
     }
@@ -254,6 +261,37 @@ Class Books extends Base{
                 "select book_donate.isbn from book_donate where book_donate.id =%d",
                 $book_donate_id)[0][0];
             $this->incStock($isbn);
+        } 
+        return ;
+    }
+    
+    // (*) 捐书审核状态重置
+    public function resetDonationStatus($book_donate_id){
+        // 状态值判断
+        // 原来的status
+        $status_old = $this->createSQLAndRun(
+            "select status from book_donate where id = %d",$book_donate_id
+        );
+        if (count($status_old)>0)
+            $status_old= $status_old[0][0];
+        else
+            throw new Exception("book donate id $book_donate_id 不存在");
+        if ($status_old=='0'){
+            throw new Exception ("已经是待审核状态，无法重置");
+        } 
+        // 重置status值
+        $ret = $this->createSQLAndRun(
+            "update book_donate set status = '0' where id = %d", 
+            $book_donate_id);
+            
+        if ($ret ==0) throw new Exception("未知失败!");
+
+        // 若原来为审核通过，则减去一个库存
+        if ($status_old == 1){
+            $isbn = $this->createSQLAndRun(
+                "select book_donate.isbn from book_donate where book_donate.id =%d",
+                $book_donate_id)[0][0];
+            $this->decStock($isbn);
         } 
         return ;
     }
