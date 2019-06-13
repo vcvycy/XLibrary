@@ -264,7 +264,7 @@ Class Books extends Base{
     } 
     // 读取馆中图书
     public function getBooksListInLibraryAtPage($page_id,$books_each_page){
-        $total = $this->createSQLAndRun("select count(*) from book")[0][0];  
+        $total = $this->createSQLAndRun("select count(*) from book where stock>0")[0][0];  
         $pages = ceil($total/$books_each_page);
         $start_idx = ($page_id-1)*$books_each_page;
         $ret = $this->createSQLAndRunAssoc("select * from book where stock>0 limit %s,%s",$start_idx,$books_each_page);
