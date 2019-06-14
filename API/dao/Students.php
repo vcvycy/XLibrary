@@ -87,7 +87,7 @@ Class Students extends Base{
     }
     // 获取所有学生信息
     public function getStudentsList(){
-        $rst=$this->createSQLAndRunAssoc("select sid,name,phone,wechat_name,head_image,degree,grade,school from stu");
+        $rst=$this->createSQLAndRunAssoc("select sid,name,phone,wechat_name,head_image,degree,grade,school,other from stu");
         return $rst;
     }
 }; 

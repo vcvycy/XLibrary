@@ -68,13 +68,16 @@ pages_init ={
         sidebar();
         curPageNeedLogin();
         // 载入学生列表
-        var vue_stu= new Vue({
+        vue_stu= new Vue({
             el: document.getElementById("student_list"),
             data: {
                 stu_list:[],
                 cur_stu_info :null
             },
             methods: { 
+                goback:()=>{
+                    vue_stu.cur_stu_info=null;
+                },
                 showStuDetail:(sid, name)=>{ 
                     if ($("#toggle-btn").attr("class")=="menu-btn active")
                         $("#toggle-btn").click();

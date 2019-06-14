@@ -150,7 +150,7 @@
             <div class="container-fluid">
               <div class="row">
                 
-                <div class="col-lg-6">
+                <div v-if="cur_stu_info==null" style="width: 100%">
                   <div class="card">
                     <div class="card-close">
                       <div class="dropdown">
@@ -171,6 +171,10 @@
                               <th>学号</th> 
                               <th>年级</th>
                               <th>学院</th>
+                              <th>手机号码</th>
+                              <th>微信号码</th>
+                              <th>个性签名</th>
+                              
                             </tr>
                           </thead>
                           <tbody>
@@ -180,6 +184,9 @@
                               <td>{{item.sid}}</td>
                               <td>{{item.grade}}</td>
                               <td>{{item.school}}</td> 
+                              <th>{{item.phone}}</th>
+                              <th>{{item.wechat_name}}</th>
+                              <th>{{item.other}}</th>
                             </tr> 
                           </tbody>
                         </table>
@@ -188,16 +195,15 @@
                   </div>
                 </div>
                 
-                <div class="col-lg-6" v-if="cur_stu_info!=null">
+                <div v-if="cur_stu_info!=null">
                   <div class="card">
                     <div class="card-close">
                       <div class="dropdown">
-                        <button type="button" id="closeCard4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
-                        <div aria-labelledby="closeCard4" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a><a href="#" class="dropdown-item edit"> <i class="fa fa-gear"></i>Edit</a></div>
+                          <a href="#" v-on:click="goback">back</a>
                       </div>
                     </div>
                     <div class="card-header d-flex align-items-center">
-                      <h3 class="h4">{{cur_stu_info.name}} 借书-捐书情况</h3>
+                      <h3 class="h4">{{cur_stu_info.name}} [{{cur_stu_info.sid}}] 借书-捐书情况</h3>
                     </div>
                     <div class="card-body">
                         <b>借书情况</b>
@@ -210,7 +216,7 @@
                                 <th>书名</th>
                                 <th>作者</th>
                                 <th>借书时间</th>
-                                <th>还书时间</th>
+                                <th>还书时间(点击查看用户上传照片)</th>
                               </tr>
                             </thead>
                             <tbody>
