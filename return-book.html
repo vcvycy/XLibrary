@@ -22,6 +22,9 @@
                 <div class="page_single layout_fullwidth_padding">
 
                     <ul class="shop_items">
+                        <li v-if="g_data.not_returned_books.length==0">
+                            你当前没有图书需要归还~
+                        </li>
                         <li v-for="book in g_data.not_returned_books"> 
                             <div class="shop_thumb"><a href="#">
                                 
