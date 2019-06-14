@@ -2,6 +2,7 @@
 var myData={
 	isLogin:false,
 	user_info: null,          //登陆信息
+	cur_book_info:null,
 	returned_books:[],
 	not_returned_books:[],
 	donation_books:{
@@ -40,6 +41,9 @@ var error_window={
     close: () =>{
         myApp.closeModal();
     }
+}
+function  loadBookDetail(book){
+	console.log(book);
 }
 /* 判断是否登陆，如果登陆，载入登陆信息、存取书信息 */
 function index_init(){   
@@ -94,6 +98,7 @@ function index_init(){
 			g_data :myData
 		}
 	});
+
 	personal_info_vue = new Vue({
 		el : ".popup-personal-info",
 		delimiters: ['${', '}'],
@@ -120,6 +125,22 @@ function index_init(){
 		}
 	});
 
+	book_detail_vue = new Vue({
+		el : ".popup-book-detail",
+		delimiters: ['${', '}'],
+		data:{
+			g_data :myData
+		},
+		methods:{
+			update_cur_book:(book)=>{
+				console.log(book);
+				myData.cur_book_info=book;
+				// 载入评论等 
+				myApp.openModal(".popup-book-detail");
+				$(".popup-book-detail").show();
+			}
+		}
+	})
 	/* 以下通过ajax获取信息 */
 	// 用户信息
 	$.ajax({

@@ -61,7 +61,7 @@
                                 <li>
                                     <div class="shop_thumb"><a href="#"><img v-bind:src="book.picture" alt=""
                                                 title=""></a></div>
-                                    <div class="shop_item_details">
+                                    <div class="shop_item_details"  v-on:click="book_detail_vue.update_cur_book(book)">
                                         <h4 v-text="book.title"></h4>
                                         <div v-text="book.author"></div>
                                         <div v-text="`${book.publisher} ${book.pubdate}`"></div>

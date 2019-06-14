@@ -384,18 +384,63 @@
                     <input type="text" v-model="g_data.user_info.wechat_name" placeholder="请输入你的微信号" class="form_input required"/>
                     <label>手机号码</label>     
                     <input type="text" v-model="g_data.user_info.phone" placeholder="请输入你的手机号码" class="form_input required"/>
-                      
+                        
                     <label>个性签名</label>
                     <textarea name="message" class="form_textarea" rows="" v-model="g_data.user_info.other" placeholder="用一句话描述你自己吧~" cols=""></textarea>
                 </div>
-                 
+                    
                 <input type="submit" name="submit" class="form_submit" v-on:click="update_user_info" value="更新个人信息">
                 </form>
                 </div>  
-              </div>
+                </div>
         </div>
         <div class="close_popup_button"><a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title=""></a></div>
     </div>
+
+    <!-- 图书信息 -->
+    <div class="popup popup-book-detail">
+            <div id="pages_maincontent" class="">   
+            <div v-if="g_data.cur_book_info!=null">
+            <h2 class="page_title">${g_data.cur_book_info.title}</h2>
+            <div class="page_single layout_fullwidth_padding">
+                <div class="shop_item">
+                    <div class="shop_thumb">
+                    <a rel="gallery-3"  title="Photo title" class="swipebox">
+                        <img v-bind:src="g_data.cur_book_info.picture" alt="" title="">
+                    </a> 
+                    </div>
+                    <div class="shop_item_details">
+                        
+                    <div class="post_single"> 
+                        <span class=""><b>${g_data.cur_book_info.publisher}</b></span>
+                        <span class=""> <a href="#"><b>${g_data.cur_book_info.author}</b></a></span>
+                        <span class=""> <span class="like">&#10084;</span><a href="#"><b>收藏</b></a></span>
+                    </div>
+                    <p v-text="g_data.cur_book_info.summary"></p>
+                    <!-- <p><strong>CATEGORY:</strong> <a href="shop.html">cars</a></p> -->
+                    
+                    <ul class="responsive_table">
+                            <li class="table_row">
+                                <div class="table_section_2">馆藏地</div>
+                                <div class="table_section">书刊状态</div>
+                                <div class="table_section_2">在借同学联系方式</div>
+                            </li>
+                            <li class="table_row">
+                                <div class="table_section_2">{{site}}</div>
+                                <div class="table_section">{{state}}</div>
+                                <div class="table_section_2">{{contactInfo}}</div>
+                            </li>
+                    
+                        </ul>
+                    <!-- <a href="cart.html" class="button_full btyellow">ADD TO CART</a>  -->
+                    </div> 
+                </div> 
+                </div> 
+                </div>        
+            </div>
+            <div class="close_popup_button"><a href="#" class="close-popup"><img src="images/icons/black/menu_close.png" alt="" title=""></a></div>
+
+        </div>
 
     <script src="js/vue.min.js"></script>
     <script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
