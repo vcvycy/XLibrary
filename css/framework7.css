@@ -6478,3 +6478,51 @@ aui-timeline {
 .aui-bg-info {
   background-color: #3498db !important;
 }
+
+/*角标*/
+.superscript01{
+  position: absolute;
+  top: 250px;
+  right: 40px;
+  font-size: 10px;
+  width: 7%;
+  height: 2.5%;
+  background-color: #eaca02;
+  color: #ffffff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 9px;
+  box-shadow: 0px 0px 4px 0px #303030;
+}
+.superscript02{
+  position:absolute;
+  top: 55%;
+  right:37%;
+  font-size:10px;
+  width:25px;
+  height:25px;
+  background-color:#eaca02;
+  color: #ffffff;
+  border-radius:50%;
+  text-align: center;
+  line-height: 25px;
+  box-shadow: 0px 0px 4px 0px #303030;
+}
+.superscript03{
+position: absolute;
+top: 5px;
+right: 0;
+font-size: 10px;
+width: 15px;
+height: 15px;
+background-color: #eaca02;
+color: #fff;
+-webkit-border-radius: 50%;
+-moz-border-radius: 50%;
+border-radius: 50%;
+text-align: center;
+line-height: 15px;
+-webkit-box-shadow: 0px 0px 4px 0px #303030;
+-moz-box-shadow: 0px 0px 4px 0px #303030;
+box-shadow: 0px 0px 4px 0px #303030;
+}
