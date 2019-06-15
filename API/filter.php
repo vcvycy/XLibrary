@@ -4,7 +4,8 @@ class Filter{
     //正则表达式 模式串
     static private $re_patterns=array(
         "digit" => "/^-?[\d]+$/u",
-        "word" => "/^[\w]+$/u"              
+        "word" => "/^[\w]+$/u",
+        "phone" =>"/^1[34578]\d{9}$/"           
     );
     // 匹配,失败则抛出异常
     static public function match($value,$type="word"){

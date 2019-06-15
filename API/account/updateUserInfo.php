@@ -8,7 +8,7 @@ function main(){
         $school = Utils::getParamWithFilter("school");
         $degree = Utils::getParamWithFilter("degree");
         $wechat_name = Utils::getParamWithFilter("wechat_name");
-        $phone = Utils::getParamWithFilter("phone");
+        $phone = Utils::getParamWithFilter("phone","phone");
         $grade = Utils::getParamWithFilter("grade");
         $other = Utils::getParamWithFilter("other");
         

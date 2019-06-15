@@ -70,9 +70,13 @@ class Utils
     //最后一个参数是正则匹配类型
     static function getParamWithFilter($key,$re_type=null){
         $val=self::__getParam($key);
-        if ($re_type!=null){
-            Filter::match($val,$re_type);
-        }
+        try{
+            if ($re_type!=null){
+                Filter::match($val,$re_type);
+            } 
+        }catch (Exception $e) {
+            throw new Exception("参数$key = $val 格式错误");
+        } 
         return $val;
     }  
     // 获取参数中的图片并保存
