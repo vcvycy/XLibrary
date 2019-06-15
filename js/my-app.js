@@ -3,6 +3,8 @@ var myData={
 	isLogin:false,
 	user_info: null,          //登陆信息
 	cur_book_info:null,
+	cur_book_donators:null,
+	cur_book_borrower:null,
 	returned_books:[],
 	not_returned_books:[],
 	donation_books:{
@@ -134,8 +136,35 @@ function index_init(){
 		methods:{
 			update_cur_book:(book)=>{
 				console.log(book);
-				myData.cur_book_info=book;
-				// 载入评论等 
+				myData.cur_book_info=book; 
+				myData.cur_book_donators=null;
+				myData.cur_book_borrower=null;
+				// 载入捐赠者信息
+				$.ajax({
+					url: `./API/public_api/whoDonateTheBook.php?isbn=${book.isbn}`,
+					dataType: "json",
+					data: myData.user_info, 
+					success: function (data) {  
+						if(data.error_code==0){   
+							myData.cur_book_donators=data.data;
+						}else {   
+							alert(data.data);
+						}
+					}
+				});
+				// 载入借阅者信息
+				$.ajax({
+					url: `./API/public_api/whoBorrowTheBook.php?isbn=${book.isbn}`,
+					dataType: "json",
+					data: myData.user_info, 
+					success: function (data) {  
+						if(data.error_code==0){   
+							myData.cur_book_borrower=data.data;
+						}else {   
+							alert(data.data);
+						}
+					}
+				});
 				myApp.openModal(".popup-book-detail");
 				$(".popup-book-detail").show();
 			}

@@ -317,7 +317,7 @@ Class Books extends Base{
     // 查看某本书被谁借走了(名字/学号/借书时间)
     public function whoBorrowTheBook($isbn){
         $ret = $this->createSQLAndRunAssoc(
-            "SELECT book_borrow.id as book_borrow_id,stu.name,stu.sid,book_borrow.borrow_time FROM stu,book_borrow 
+            "SELECT book_borrow.id as book_borrow_id,stu.name,stu.sid,stu.phone,stu.wechat_name,book_borrow.borrow_time FROM stu,book_borrow 
               WHERE stu.sid = book_borrow.sid 
                    and book_borrow.isbn='%s'
                    and book_borrow.return_time =0",$isbn

@@ -413,22 +413,50 @@
                         
                     <div class="post_single"> 
                         <span class=""><b>${g_data.cur_book_info.publisher}</b></span>
-                        <span class=""> <a href="#"><b>${g_data.cur_book_info.author}</b></a></span>
-                        <span class=""> <span class="like">&#10084;</span><a href="#"><b>收藏</b></a></span>
+                        <span class=""> <b>${g_data.cur_book_info.author}</b></span>
+                        <!-- <span class=""> <span class="like">&#10084;</span><b>收藏</b></span> -->
+                        <span class=""> <b v-bind:style="`color:${g_data.cur_book_info.stock==g_data.cur_book_info.lended?'red':'green'}`" v-text="`可借:${g_data.cur_book_info.stock-g_data.cur_book_info.lended}/${g_data.cur_book_info.stock}本`"></b></span>
                     </div>
                     <p v-text="g_data.cur_book_info.summary"></p>
                     <!-- <p><strong>CATEGORY:</strong> <a href="shop.html">cars</a></p> -->
-                    
+                    <div><span><b>捐书者信息</b></span></div>
                     <ul class="responsive_table">
                             <li class="table_row">
-                                <div class="table_section_2">馆藏地</div>
-                                <div class="table_section">书刊状态</div>
-                                <div class="table_section_2">在借同学联系方式</div>
+                                <div class="table_section_2">捐书日期</div> 
+                                <div class="table_section">捐书者</div> 
+                                <div class="table_section">捐书留言</div> 
                             </li>
+                            <li v-if="g_data.cur_book_donators==null">
+                                <div style="width: 100%;text-align: center;color:red" >正在载入捐书者信息...</div>
+                            </li>
+                            <li v-else class="table_row">
+                                <div v-for="item in g_data.cur_book_donators">
+                                    <div class="table_section_2">${item.donate_time}</div> 
+                                    <div class="table_section">${item.name}</div> 
+                                    <div class="table_section" v-text='item["捐书留言"]==``?`-`:item["捐书留言"]'></div> 
+                                </div>
+                            </li>
+                    
+                        </ul>
+                        <div><span><b>当前借阅读者(可联系当前借阅同学转借)</b></span></div>
+                    <ul class="responsive_table">
                             <li class="table_row">
-                                <div class="table_section_2">{{site}}</div>
-                                <div class="table_section">{{state}}</div>
-                                <div class="table_section_2">{{contactInfo}}</div>
+                                <div class="table_section_2">借阅时间</div>
+                                <div class="table_section">借阅读者</div>
+                                <div class="table_section_2">联系方式</div>
+                            </li>
+                            <li v-if="g_data.cur_book_borrower==null">
+                                <div style="width: 100%;text-align: center;color:red" >正在载入当前借阅读者...</div>
+                            </li>
+                            <li v-else class="table_row">
+                                <div v-if="g_data.cur_book_borrower.length==0">
+                                        <div style="width: 100%;text-align: center;color:red" >当前没人借走这本书~</div>
+                                </div>
+                                <div v-for="item in g_data.cur_book_borrower">
+                                    <div class="table_section_2">${item.borrow_time}</div> 
+                                    <div class="table_section">${item.name}</div> 
+                                    <div class="table_section">${item.phone}</div> 
+                                </div>
                             </li>
                     
                         </ul>
