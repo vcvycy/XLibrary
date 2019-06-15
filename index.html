@@ -411,11 +411,11 @@
                     </div>
                     <div class="shop_item_details">
                         
-                    <div class="post_single"> 
-                        <span class=""><b>${g_data.cur_book_info.publisher}</b></span>
+                    <div class="post_single">  
+                        <span class=""><b>${g_data.cur_book_info.publisher}(${g_data.cur_book_info.pubdate})</b></span>
                         <span class=""> <b>${g_data.cur_book_info.author}</b></span>
                         <!-- <span class=""> <span class="like">&#10084;</span><b>收藏</b></span> -->
-                        <span class=""> <b v-bind:style="`color:${g_data.cur_book_info.stock==g_data.cur_book_info.lended?'red':'green'}`" v-text="`可借:${g_data.cur_book_info.stock-g_data.cur_book_info.lended}/${g_data.cur_book_info.stock}本`"></b></span>
+                        <span class="" style="float:right"> <b v-bind:style="`color:${g_data.cur_book_info.stock==g_data.cur_book_info.lended?'red':'green'}`" v-text="`可借:${g_data.cur_book_info.stock-g_data.cur_book_info.lended}/${g_data.cur_book_info.stock}本`"></b></span>
                     </div>
                     <p v-text="g_data.cur_book_info.summary"></p>
                     <!-- <p><strong>CATEGORY:</strong> <a href="shop.html">cars</a></p> -->
