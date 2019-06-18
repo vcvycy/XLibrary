@@ -13,14 +13,14 @@ function main(){
         $site_id = Utils::getParamWithFilter("site_id","digit");
         $b =new Books();
         $book_borrow_id = $b->getBorrowIDNotReturn($sid,$isbn); 
-        // 藏书点添加一本库存
-        $s =new Site();
-        $book_id= $b->getBookID($isbn);
-        $s->incStock($site_id,$book_id);
         // 保存图片
         $save_path_without_suffix = sprintf("%suploads/return_book_images/return_book_image_%d",DIR_API,$book_borrow_id);//上传路径 
         $path = Utils::saveUploadedFile("image",$save_path_without_suffix,"jpg|jpeg|bmp|gif|png",5);  
         $filename=basename($path);
+        // 藏书点添加一本库存
+        $s =new Site();
+        $book_id= $b->getBookID($isbn);
+        $s->incStock($site_id,$book_id);
         // 写入还书信息
         $b->returnBook($sid,$isbn,$filename);
         Utils::exit(0,"还书成功");
