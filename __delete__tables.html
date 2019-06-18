@@ -1,0 +1,127 @@
+<div class="pages">
+  <div data-page="tables" class="page no-toolbar no-navbar">
+
+    <div class="page-content">
+    
+	<div class="navbarpages navbarpagesbg">
+        <div class="navbar_left">
+            <div class="logo_text"><a href="index.html" class="back">图书馆藏书</a></div>
+        </div>
+			    <div class="navbar_right navbar_right_menu">
+				<a href="#" data-panel="left" class="open-panel"><img src="images/icons/white/menu.png" alt="" title="" /></a>
+			    </div>			
+			    <div class="navbar_right">
+				<a href="#" data-panel="right" class="open-panel"><img src="images/icons/white/user.png" alt="" title="" /></a>
+			    </div>
+	</div>
+
+     <div id="pages_maincontent">
+         <!-- Search bar -->
+         <!--<form data-search-list=".list-block-search" data-search-in=".item-title" class="searchbar searchbar-init">-->
+             <!--<div class="searchbar-input">-->
+                 <!--<input type="search" placeholder="搜索"><a href="#" class="searchbar-clear"></a>-->
+             <!--</div><a href="#" class="searchbar-cancel">取消</a>-->
+         <!--</form>-->
+
+         <!--&lt;!&ndash; Search bar overlay &ndash;&gt;-->
+         <!--<div class="searchbar-overlay"></div>-->
+
+             <!--&lt;!&ndash; This block will be displayed if nothing found &ndash;&gt;-->
+             <!--<div class="content-block searchbar-not-found">-->
+                 <!--<div class="content-block-inner">没有找到符合条件的项目</div>-->
+             <!--</div>-->
+
+             <!--&lt;!&ndash; This block will be displayed if anything found, and this list block is used a searbar target &ndash;&gt;-->
+             <!--<div class="list-block list-block-search searchbar-found">-->
+                 <!--<ul>-->
+                     <!--<li class="item-content">-->
+                         <!--<div class="item-inner">-->
+                             <!--<div class="item-title">Acura </div>-->
+                         <!--</div>-->
+                     <!--</li>-->
+                     <!--<li class="item-content">-->
+                         <!--<div class="item-inner">-->
+                             <!--<div class="item-title">Audi</div>-->
+                         <!--</div>-->
+                     <!--</li>-->
+                     <!--...-->
+                 <!--</ul>-->
+             <!--</div>-->
+
+     <!--<div class="page_single layout_fullwidth_padding" >-->
+              <!--<h3>搜索列表</h3>-->
+         <!--<div class="form_row custom_select">-->
+             <!--<a href="#" class="item-link smart-select" data-open-in="picker">-->
+                 <!--<div class="item-content">-->
+                     <!--<div class="item-inner">-->
+                         <!--<div class="item-after">请选择分类</div>-->
+                     <!--</div>-->
+                 <!--</div>-->
+                 <!--<select name="selectors">-->
+                     <!--<option value="" disabled selected>请选择分类</option>-->
+                     <!--<option value="1">所有分类</option>-->
+                     <!--<option value="2">马列主义、毛泽东思想、邓小平理论、政治</option>-->
+                     <!--<option value="3">哲学、宗教</option>-->
+                     <!--<option value="4">社会科学总论</option>-->
+                     <!--<option value="5">法律</option>-->
+                     <!--<option value="6">军事</option>-->
+                     <!--<option value="7">经济</option>-->
+                     <!--<option value="8">文化、科学、教育、体育</option>-->
+                     <!--<option value="9">语言文字</option>-->
+                     <!--<option value="10">文学</option>-->
+                     <!--<option value="11">艺术</option>-->
+                     <!--<option value="12">历史、地理、天文、地球科学</option>-->
+                     <!--<option value="13">自然科学</option>-->
+                     <!--<option value="14">数理科学、化学、生物科学</option>-->
+                     <!--<option value="15">医药、卫生</option>-->
+                     <!--<option value="16">农业科学</option>-->
+                     <!--<option value="17">工学</option>-->
+                     <!--<option value="18">交通运输、航空、航天</option>-->
+                     <!--<option value="19">环境科学、安全科学</option>-->
+                     <!--<option value="20">综合性图书</option>-->
+                 <!--</select>-->
+             <!--</a>-->
+         <!--</div>-->
+            <div v-if="">
+                <ul class="responsive_table" id="tablesapp" >
+                     <li class="table_row">
+                        <div class="table_section">书名</div>
+                        <div class="table_section">作者</div>
+                        <div class="table_section">出版社</div> 
+                        <div class="table_section">可借/总库存</div>  
+                     </li>
+
+                    <template v-for="book in books"> 
+                        <a href="">
+                            <li class="table_row" v-on:click="showDetail(book)">
+                                <div class="table_section">${book.title}</div>
+                                <div class="table_section">${book.author}</div>
+                                <div class="table_section">${book.publisher}</div>
+                                <div class="table_section">可借${book.stock-book.lended}本；总库存${book.stock}本</div>
+                            </li>
+                        </a>
+                    </template>
+                    <li align="center">
+                        <td>
+                            <a v-on:click="First">[首  页]</a>
+                            <a v-on:click="Last" v-show="page_id!=1">[上一页]</a>
+                            <a>${page_id}/${total_pages}</a>
+                            <a v-on:click="Next" v-show="page_id!=total_pages">[下一页]</a>
+                            <a v-on:click="End">[末  页]</a> 
+                        </td>
+                    </li>
+                    <li align="center">【总藏书种类：${total_books}】</li> 
+
+                </ul>
+            </div>
+
+
+
+              </div>
+
+      </div>
+      
+      
+    </div>
+  </div>
+</div>

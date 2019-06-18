@@ -204,10 +204,7 @@ pages_init ={
                 cur_donate_stus:null,
                 cur_stock_in_sites:null
             },
-            methods: { 
-                whoBorrowTheBook:(isbn,title)=>{
-                    //url=`${getRootURL()}`
-                },
+            methods: {  
                 goback:()=>{
                     vue_books.cur_book=null;
                     vue_books.cur_borrow_stus=null;
@@ -250,7 +247,7 @@ pages_init ={
                             vue_books.cur_borrow_stus = obj.data;
                         }
                     })
-                }
+                } 
             }
           });
         url=`${getRootURL()}API/public_api/getBooksListInLibrary.php?page_id=1&books_each_page=10000`;

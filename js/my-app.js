@@ -5,6 +5,7 @@ var myData={
 	cur_book_info:null,
 	cur_book_donators:null,
 	cur_book_borrower:null,
+	cur_book_stock_in_sites:null,
 	sites: null,              // 藏书点
 	returned_books:[],
 	not_returned_books:[],
@@ -44,10 +45,7 @@ var error_window={
     close: () =>{
         myApp.closeModal();
     }
-}
-function  loadBookDetail(book){
-	console.log(book);
-}
+} 
 /* 判断是否登陆，如果登陆，载入登陆信息、存取书信息 */
 function index_init(){   
 	home_vue = new Vue({
@@ -140,6 +138,7 @@ function index_init(){
 				myData.cur_book_info=book; 
 				myData.cur_book_donators=null;
 				myData.cur_book_borrower=null;
+				myData.cur_book_stock_in_sites=null;
 				// 载入捐赠者信息
 				$.ajax({
 					url: `./API/public_api/whoDonateTheBook.php?isbn=${book.isbn}`,
@@ -164,6 +163,14 @@ function index_init(){
 						}else {   
 							alert(data.data);
 						}
+					}
+				});
+				//载入藏书点藏书信息
+				url =`./API/site/getStockInAllSites.php?book_id=${book.id}`;
+				$.get(url,function(data){
+					obj= JSON.parse(data);
+					if (obj.error_code==0){
+						myData.cur_book_stock_in_sites=obj.data;
 					}
 				});
 				myApp.openModal(".popup-book-detail");
@@ -374,10 +381,15 @@ myApp.onPageInit('return-book', function (page) {
 		el:"#return—book-div",
 		delimiters:["@{","}"],
 		data:{
-			g_data :myData
+			g_data : myData,
+			return_site_id : 0
 		},
 		methods:{
 			choose_image:(isbn)=>{
+				if (return_book_vue.return_site_id == 0){
+					alert("请选择还书地点");
+					return;
+				}
 				alert("请将书放在还书书架上，并拍照上传"); 
 				dom_file=$("<input type=file accept='image/*'></input>");
 				dom_file.change(function(){    
@@ -393,6 +405,7 @@ myApp.onPageInit('return-book', function (page) {
 				var returnForm = new FormData();
 				returnForm.append("image",file);
 				returnForm.append("isbn",isbn);
+				returnForm.append("site_id",return_book_vue.return_site_id)
 				pending.show("正在处理还书请求...");
 				$.ajax({
 					url: "./API/book/returnBookWithImage.php",
@@ -423,7 +436,9 @@ myApp.onPageInit('borrow_book', function (page) {
 			cur_status: 0,               // 0表示等待识别图片，1表示正在识别，2表示识别成功 
 			isbn : "",
 			phone : "", 
-			book:{}
+			book:{},
+			stock_in_sites:[],
+			borrow_site_id:0
 		},
 		methods: { 
 			selectImage: () => {
@@ -467,11 +482,17 @@ myApp.onPageInit('borrow_book', function (page) {
 				return isbn;
 			},
 			borrow_book:()=> {
+				site_id= borrow_book_vue.borrow_site_id;
+				if (site_id==0){
+					alert("请选中借书的地点~");
+					return;
+				} 
 				$.ajax({
 					url: "API/book/borrowBook.php",
 					dataType: "json",
 					data: {
-						"isbn": borrow_book_vue.getCurrentISBN()
+						"isbn": borrow_book_vue.getCurrentISBN(),
+						"site_id" : site_id
 					},
 					async: false,
 					success: function (data) { 
@@ -484,8 +505,17 @@ myApp.onPageInit('borrow_book', function (page) {
 						}
 					}
 				});
-			}
-			,
+			},
+			fetchStockInSites: (book_id)=>{ 
+				//载入藏书点藏书信息
+				url =`./API/site/getStockInAllSites.php?book_id=${book_id}`;
+				$.get(url,function(data){
+					obj= JSON.parse(data);
+					if (obj.error_code==0){
+						borrow_book_vue.stock_in_sites=obj.data;
+					}
+				});
+			},
 			fetchBookInfo:()=> {  
 				isbn = borrow_book_vue.getCurrentISBN();
 				pending.show(`正在获取ISBN码为${isbn}的图书信息...`);
@@ -505,8 +535,9 @@ myApp.onPageInit('borrow_book', function (page) {
 					success: function (data) {
 						pending.close();
 						if(data.error_code==0){
-							borrow_book_vue.cur_status=2; 
-							borrow_book_vue.book=data.data;
+							borrow_book_vue.cur_status = 2; 
+							borrow_book_vue.book = data.data;
+							borrow_book_vue.fetchStockInSites(data.data.id);
 						}else {
 							borrow_book_vue.cur_status=0; 
 							error_window.show(data.data);

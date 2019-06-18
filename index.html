@@ -419,6 +419,30 @@
                     </div>
                     <p v-text="g_data.cur_book_info.summary"></p>
                     <!-- <p><strong>CATEGORY:</strong> <a href="shop.html">cars</a></p> -->
+
+                    <div><span><b>藏书点藏书</b></span></div>
+                    <ul class="responsive_table">
+                            <li class="table_row">
+                                <div class="table_section_2">藏书点</div> 
+                                <div class="table_section">描述</div> 
+                                <div class="table_section">库存</div> 
+                            </li>
+                            <li v-if="g_data.cur_book_stock_in_sites==null">
+                                <div style="width: 100%;text-align: center;color:red" >正在获取各藏书点藏书信息...</div>
+                            </li>
+                            <li v-else class="table_row">
+                                <div v-for="item in g_data.cur_book_stock_in_sites">
+                                    <div class="table_section_2">${item.name}</div> 
+                                    <div class="table_section">${item.description}</div> 
+                                    <div class="table_section" >${item.stock}本</div> 
+                                </div>
+                                <div v-if="g_data.cur_book_stock_in_sites.length==0"> 
+                                        <div style="color:darkred;width:100%;text-align: center">馆中图书已经被借光了~可联系当前借阅的同学转借~</div> 
+                                </div>
+                            </li>
+                    
+                        </ul>
+
                     <div><span><b>捐书者信息</b></span></div>
                     <ul class="responsive_table">
                             <li class="table_row">

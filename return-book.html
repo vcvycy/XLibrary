@@ -1,5 +1,6 @@
 <div class="pages">
     <div data-page="return-book" class="page no-toolbar no-navbar">
+        
         <div class="page-content">
             <div class="navbarpages navbarpagesbg">
                 <div class="navbar_left">
@@ -17,17 +18,14 @@
 
             <div id="pages_maincontent">
                 <div id="return—book-div">
-<!--                <h2 class="page_title">还书流程：<br>(1)将图书放到还书架上,并拍照记录;<br> (2) 点击<b style="background-color:#0be0af">还书</b>按钮上传所拍照片"</h2> -->
-                <!-- <h2  style="text-align:center;color:red" v-text="'未还图书:'+ g_data.not_returned_books.length+'本'"></h2> -->
                     <div class="return-process">
                         <ul class="aui-timeline">
                             <li>
                                 <div class="aui-iconfont aui-bg-info">1</div>
                                 <div class="aui-timeline-item">
                                     <!-- <text class="aui-timeline-header"></text> -->
-                                    <div class="aui-timeline-body">将图书归还到还书架上</div>
-                                    <!-- <view class="aui-timeline-footer">
-
+                                    <div class="aui-timeline-body">选择要还书的地点</div>
+                                    <!-- <view class="aui-timeline-footer"> 
                                     </view> -->
                                 </div>
                             </li>
@@ -35,7 +33,7 @@
                                 <i class="aui-iconfont aui-icon-home aui-bg-warning">2</i>
                                 <div class="aui-timeline-item">
                                     <!-- <text class="aui-timeline-header"></text> -->
-                                    <div class="aui-timeline-body">拍摄书摆在书架上的照片</div>
+                                    <div class="aui-timeline-body">将图书放到还书架上并拍照</div>
                                     <!-- <view class="aui-timeline-footer">
 
                                     </view> -->
@@ -53,26 +51,13 @@
                             </li>
                             <li>
                                 <i class="aui-iconfont aui-icon-home aui-bg-warning">4</i>
-                                <div class="aui-timeline-item">
-                                    <!-- <text class="aui-timeline-header"></text> -->
-                                    <div class="aui-timeline-body">还书完成</div>
-                                    <!-- <view class="aui-timeline-footer">
-
-                                    </view>  -->
+                                <div class="aui-timeline-item"> 
+                                    <div class="aui-timeline-body">还书完成</div> 
                                 </div>
-                            </li>
-                            <li>
-                                <i class="aui-iconfont aui-icon-home aui-bg-warning">5</i>
-                                <div class="aui-timeline-item">
-                                    <!-- <text class="aui-timeline-header"></text> -->
-                                    <div class="aui-timeline-body">没有借书不显示还书按钮</div>
-                                    <!-- <view class="aui-timeline-footer">
-
-                                    </view>  -->
-                                </div>
-                            </li>
+                            </li> 
                         </ul>
                     </div>
+              
                 <div class="page_single layout_fullwidth_padding">
 
                     <ul class="shop_items">
@@ -92,19 +77,28 @@
                                 <div v-text="book.publisher"></div>
                                 <div v-text="'ISBN:'+book.isbn" class=""></div>
                                 <div v-text="'借书时间：'+book.borrow_time"></div> 
+                                <select v-model="return_site_id">
+                                    <option value=0>请选择还书地点</option>
+                                    <option v-for="(site,index) in myData.sites" v-bind:value="site.id" v-text="site.name">
+                                    </option>
+                                </select>
                                 <a href="#" v-on:click="choose_image(book.isbn)" id="addtocart">还书</a>
-
                             </div>
+                            <!-- <div class="contactform" style="left:18px">
+                                <div class="form_row"><label>请选择你当前所在的位置:</label>
+                                    <div class="form_row_right">
+                                        <label v-for="(site,index) in myData.sites" class="label-radio item-content">
+                                            <input type="radio" name="borrow-site-radio" v-bind:value="site.id" v-model="return_site_id" >
+                                            <div class="item-inner">
+                                                <div class="item-title" v-text="`[${index+1}] ${site.name}`"></div>
+                                            </div> 
+                                        </label>
+                                    </div>
+                                </div>
+                            </div> -->
                         </li>
 
-                    </ul>
-
-                    <!-- <div class="shop_pagination">
-                        <a href="shop.html" class="prev_shop">PREV PAGE</a>
-                        <span class="shop_pagenr">1/37</span>
-                        <a href="shop-page2.html" class="next_shop">NEXT PAGE</a>
-                    </div> -->
-
+                    </ul> 
 
                 </div>
                 </div>
