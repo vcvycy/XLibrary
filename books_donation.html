@@ -83,9 +83,17 @@
                                     <div class="form_row_right">
                                         <label class="label-radio item-content">
                                             <!-- Checked by default -->
-                                            <input type="radio" name="my-radio" value="0" checked="checked">
+                                            <input type="radio" name="my-radio" value="0" checked>
                                             <div class="item-inner" v-on:click="setFetchType(1)">
                                                 <div class="item-title">送至分馆</div>
+                                            </div>
+                                        </label>
+
+                                        <label class="label-radio item-content">
+                                            <!-- Checked by default -->
+                                            <input type="radio" name="my-radio" value="0">
+                                            <div class="item-inner" v-on:click="setFetchType(3)">
+                                                <div class="item-title">放到书箱</div>
                                             </div>
                                         </label>
 
@@ -97,7 +105,7 @@
                                             </div>
                                             <div v-if="fetchType==2">
                                                 <label>取书地点:</label>
-                                                <input type="text" v-model="fetchAddr" class="form_input required" />
+                                                <input type="text" placeholder="去哪里可以找到你~" v-model="fetchAddr" class="form_input required" />
                                             </div>
                                         </label>
                                     </div>

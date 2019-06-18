@@ -126,12 +126,19 @@ Class Books extends Base{
     }
     // 获取捐书列表
     public function getDonationList(){
-        $data = $this->createSQLAndRunAssoc(
-            "SELECT book_donate.*,book.title,book.author,book.publisher, book.pubdate ,stu.name,stu.phone,stu.wechat_name
-                FROM stu, book_donate,book 
-                WHERE book_donate.sid =stu.sid and book.isbn = book_donate.isbn"
+        // 审核成功。则添加一个入库地点
+        $arr_succ = $this->createSQLAndRunAssoc(
+            "SELECT site.name as site_name,book_donate.*,book.title,book.author,book.publisher, book.pubdate ,stu.name,stu.phone,stu.wechat_name
+                FROM stu, book_donate,book,site
+                WHERE book_donate.sid =stu.sid and book.isbn = book_donate.isbn and book_donate.site_id=site.id and book_donate.status=1"
         );
-        return $data;
+        // 审核失败+待审核
+        $arr_other = $this->createSQLAndRunAssoc(
+            "SELECT  book_donate.*,book.title,book.author,book.publisher, book.pubdate ,stu.name,stu.phone,stu.wechat_name
+                FROM stu, book_donate,book
+                WHERE book_donate.sid =stu.sid and book.isbn = book_donate.isbn and book_donate.status!=1"
+        );
+        return array_merge($arr_other,$arr_succ);
     }
     // 查看被借了多少书
     public function getLended($isbn){
@@ -228,16 +235,18 @@ Class Books extends Base{
         }
         return ;
     } 
-
+    
+    // 通过book_donate_id获取 book.id
+    function getBookIDByDonateID($donate_id){
+        $ret= $this->createSQLAndRun(
+           "select book.id from book,book_donate where book_donate.isbn=book.isbn and book_donate.id=%d",
+           $donate_id
+        ); 
+        return intval($ret[0][0]);
+    }
     // 管理员接口
     
-    // (*) 捐书审核
-    public function reviewDonation($book_donate_id, $status){
-        // 状态值判断
-        if ($status<-1 || $status>1){
-            throw new Exception ("status 取值范围{-1,0,1}，分别表示不通过、等待审核、审核通过");
-        }
-        // 原来的status
+    public function getDonationStatus($book_donate_id){ 
         $status_old = $this->createSQLAndRun(
             "select status from book_donate where id = %d",$book_donate_id
         );
@@ -245,12 +254,23 @@ Class Books extends Base{
             $status_old= $status_old[0][0];
         else
             throw new Exception("book donate id $book_donate_id 不存在");
-        if ($status_old!="0")
+        return intval($status_old[0][0]);
+    }
+    // (*) 捐书审核
+    public function reviewDonation($book_donate_id, $status,$site_id=0){
+        // 状态值判断
+        if ($status<-1 || $status>1){
+            throw new Exception ("status 取值范围{-1,0,1}，分别表示不通过、等待审核、审核通过");
+        } 
+        $status_old = $this->getDonationStatus($book_donate_id);
+        if ($status_old!=0)
             throw new Exception("之前审核过了(状态$status_old)，请勿重新提交!");
-        // 更新status值
+
+        // 更新status值和入库仓库ID
         $ret = $this->createSQLAndRun(
-            "update book_donate set status = %d where id = %d",
+            "update book_donate set status = %d ,site_id=%d where id = %d",
             $status,
+            $site_id,
             $book_donate_id);
             
         if ($ret ==0) throw new Exception("未知失败!");
@@ -264,19 +284,20 @@ Class Books extends Base{
         } 
         return ;
     }
-    
+    // 
+    public function getDonationSiteIDAndBookID($book_donate_id){
+        $ret=$this->createSQLAndRunAssoc("SELECT book_donate.site_id as site_id,book.id as book_id
+                         FROM book,book_donate WHERE book_donate.id=%d and book.isbn=book_donate.isbn",
+                         $book_donate_id);
+        if (count($ret)==0) throw new Exception("getDonationSiteID 失败");
+        return $ret[0];
+    }
     // (*) 捐书审核状态重置
     public function resetDonationStatus($book_donate_id){
         // 状态值判断
-        // 原来的status
-        $status_old = $this->createSQLAndRun(
-            "select status from book_donate where id = %d",$book_donate_id
-        );
-        if (count($status_old)>0)
-            $status_old= $status_old[0][0];
-        else
-            throw new Exception("book donate id $book_donate_id 不存在");
-        if ($status_old=='0'){
+        // 原来的status  
+        $status_old = $this->getDonationStatus($book_donate_id);
+        if ($status_old==0){
             throw new Exception ("已经是待审核状态，无法重置");
         } 
         // 重置status值
@@ -330,8 +351,10 @@ Class Books extends Base{
             "SELECT stu.name,
                     stu.sid,
                     book_donate.time as 'donate_time',
-                    book_donate.donator_word '捐书留言' from stu,book_donate 
-                    where book_donate.isbn='%s' and book_donate.status=1 and book_donate.sid=stu.sid",
+                    book_donate.donator_word as '捐书留言',
+                    site.name as 'site_name' from stu,book_donate,site
+                    where book_donate.isbn='%s' and book_donate.status=1 
+                        and book_donate.sid=stu.sid and site.id=book_donate.site_id",
             $isbn
         );
         return $ret;

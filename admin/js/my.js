@@ -6,6 +6,11 @@ sidebar_data={
                 "name" :"主页"
             },
             {
+                "href" :"sites.html",
+                "icon" :"fa fa-bar-chart",
+                "name" :"藏书库"
+            },
+            {
                 "href":"book_review.html",
                 "icon" :"icon-grid",
                 "name" :"图书入馆审核"
@@ -119,6 +124,73 @@ pages_init ={
             }else alert("未知失败"+url);
         });
     },
+    "sites.html" : function(){
+        sidebar();
+        curPageNeedLogin();  
+        vue_sites=new Vue({
+            el: document.getElementById("site_list"),
+            data: {
+                site_list:[],
+                new_site:{
+                    name:"",
+                    description:""
+                }
+            },
+            methods:{
+                // 删除
+                "deleteSite": (site_id)=>{
+                    var b=confirm("确认删除此藏书点??");
+                    if (!b) return;
+                    url=`${getRootURL()}API/site/deleteSite.php?id=${site_id}`;
+                    $.get(url,function(data){
+                        obj = JSON.parse(data);
+                        if (obj.error_code==0){
+                            location.reload();
+                        }else{
+                            alert(obj.data);
+                        }
+                    });
+                },
+                // 更新
+                "updateSite": (item)=>{  
+                    $.ajax({
+                        url: `${getRootURL()}/API/site/updateSiteByID.php`,
+                        dataType: "json",  
+                        data:item,
+                        success: function (data) { 
+                            if (data.error_code==0)
+                                location.reload();
+                            else 
+                                alert(data.data);
+                        }
+                    });
+                },
+                "addSite" : (name,description)=>{
+                    $.ajax({
+                        url: `${getRootURL()}/API/site/addSite.php`,
+                        dataType: "json",  
+                        data:vue_sites.new_site,
+                        success: function (data) { 
+                            if (data.error_code==0)
+                                location.reload();
+                            else 
+                                alert(data.data);
+                        }
+                    }); 
+                }
+            }
+        });
+        // 载入所有藏书点
+        url=`${getRootURL()}API/site/getAllSites.php`;
+        $.get(url,function(data){
+            obj = JSON.parse(data);
+            if (obj.error_code==0){
+                vue_sites.site_list = obj.data;
+            }else{
+                alert("unknown error"+url);
+            }
+        });
+    },
     "books.html" : function(){
         sidebar();
         curPageNeedLogin();
@@ -129,7 +201,8 @@ pages_init ={
                 books:[], 
                 cur_book:null,
                 cur_borrow_stus:null,
-                cur_donate_stus:null
+                cur_donate_stus:null,
+                cur_stock_in_sites:null
             },
             methods: { 
                 whoBorrowTheBook:(isbn,title)=>{
@@ -139,6 +212,16 @@ pages_init ={
                     vue_books.cur_book=null;
                     vue_books.cur_borrow_stus=null;
                     vue_books.cur_donate_stus=null;
+                    vue_books.cur_stock_in_sites=null;
+                },
+                stockInSites:(book_id)=>{
+                    url =`${getRootURL()}/API/site/getStockInAllSites.php?book_id=${book_id}`;
+                    $.get(url,function(data){
+                        obj= JSON.parse(data);
+                        if (obj.error_code==0){
+                            vue_books.cur_stock_in_sites=obj.data;
+                        }
+                    })
                 },
                 // 捐书者列表
                 whoDonateTheBook:(isbn,title)=>{
@@ -185,12 +268,18 @@ pages_init ={
         vue_review= new Vue({
             el: document.getElementById("book_review"),
             data: {
+                sites:[],
                 book_list : [],
                 hide_has_reviewed : window.localStorage["hide_has_reviewed"]==undefined?false:window.localStorage["hide_has_reviewed"]=="true"
             },
             methods: { 
-                setReviewStatus:(id,status)=>{  
-                    url=`${getRootURL()}API/admin/reviewDonation.php?book_donate_id=${id}&status=${status}`;
+                setReviewStatus:(id,status)=>{   
+                    var site_id="";
+                    if (status==1){
+                        site_id=$(`#select_${id}`).val();
+                        if (site_id=="0"){alert("请选择要入哪个库!");return;}
+                    }
+                    url=`${getRootURL()}API/admin/reviewDonation.php?book_donate_id=${id}&status=${status}&site_id=${site_id}`;
                     $.get(url,function(data){
                         obj=JSON.parse(data);
                         if (obj.error_code==0){
@@ -206,7 +295,7 @@ pages_init ={
                     setReviewStatus(id,-1);
                 },
                 reset:(id)=>{
-                    var b=confirm("重置状态后，将会变成待审核，是否继续？");
+                    var b=confirm("重置状态后，将会变成待审核,且从其入库点删掉一本书，是否继续？");
                     if (!b) return; 
                     url=`${getRootURL()}API/admin/resetDonationStatus.php?book_donate_id=${id}`;
                     $.get(url,function(data){
@@ -221,7 +310,18 @@ pages_init ={
                     window.localStorage["hide_has_reviewed"]=!vue_review.hide_has_reviewed;
                 }
             }   
-          });
+        });
+
+        // 藏书地点
+        $.ajax({
+            url: `${getRootURL()}/API/site/getAllSites.php`,
+            dataType: "json",  
+            success: function (data) { 
+                vue_review.sites=data.data;
+            }
+        });
+
+        // 捐书列表
         url=`${getRootURL()}API/admin/getDonationList.php`;
         $.get(url,function(data){
             obj= JSON.parse(data);
@@ -233,8 +333,10 @@ pages_init ={
                         phone = p.phone
                         if (p.how==1) 
                            fetch = `送至分馆`;
-                        else 
+                        else if (p.how==2)
                            fetch = `上门取书:${p.where}`;
+                        else
+                            fetch = `放到书箱`;
                     }catch(err){ 
                         fetch = `未知字符串:${obj.data[i].how_to_fetch}`;
                         phone =``;

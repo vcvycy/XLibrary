@@ -47,8 +47,9 @@ create table su(
 create table book_donate(
    id   int auto_increment not null primary key,
    time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-   sid  varchar(32),                                 -- 学生ID
+   sid  varchar(32),                                      -- 学生ID
    isbn varchar(32),                                      -- 图书ID
+   site_id int default 1,                                           -- 捐书时，入库地点.只有审核成功，此字段才有意义
    donator_word varchar(128),
    how_to_fetch varchar(256),                        -- 如何取书
    status int  -- 0表示等待审核，1表示审核通过，-1表示审核不通过                               -- 是否已经捐入库中，由管理员来设置
@@ -74,5 +75,22 @@ create table message(
   from_id   int
 );
 
+-- (*) 仓库
+create table site(
+  id        int auto_increment not null primary key,
+  name      VARCHAR(128),         -- 名称 
+  description  VARCHAR(1024)         -- 位置信息
+);
+
+-- (*) 仓库藏书统计
+create table site_stock(
+  id        int auto_increment not null primary key,
+  site_id    int,
+  book_id    int,
+  stock      int,
+  foreign key(site_id) references site(id),
+  foreign key(book_id) references book(id)
+);
 -- 数据库默认东西
-INSERT INTO `su`( `usr`, `pwd`) VALUES ('admin','admin')
+INSERT INTO `su`( `usr`, `pwd`) VALUES ('admin','admin');
+INSERT INTO `site`(`name`, `description`) VALUES ('XMU Library','description')

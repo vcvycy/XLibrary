@@ -5,6 +5,7 @@ var myData={
 	cur_book_info:null,
 	cur_book_donators:null,
 	cur_book_borrower:null,
+	sites: null,              // 藏书点
 	returned_books:[],
 	not_returned_books:[],
 	donation_books:{
@@ -189,6 +190,14 @@ function index_init(){
 				home_vue.g_data.isLogin=false;
 				myApp.popup(".popup-login");
 			}
+		}
+	});
+	
+	$.ajax({
+		url: "./API/site/getAllSites.php",
+		dataType: "json",  
+		success: function (data) { 
+			myData.sites=data.data;
 		}
 	});
 	//借阅记录
@@ -517,8 +526,8 @@ myApp.onPageInit('books_donation', function (page) {
 			cur_status: 0,               // 0表示等待识别图片，1表示正在识别，2表示识别成功 
 			isbn : null, 
 			seen: false,
-			fetchType: 1,            // 1:送至分馆；2: 上门取书
-			fetchAddr:"如海韵6-XXX",            // 上门取书此字段才有意义 
+			fetchType: 1,            // 1:送至分馆；2: 上门取书 , 3: 放到书箱
+			fetchAddr:"",            // 上门取书此字段才有意义 
 			book: { 
 			},
 	        word: ""
@@ -592,13 +601,16 @@ myApp.onPageInit('books_donation', function (page) {
 			},
 			DonateBook:(e)=>{
 				e.preventDefault();  
-				if (books_donation.fetchType==1) {
-					//1表示送至分馆
-					how_to_fetch = {"how":1};
-				}else {
-					how_to_fetch = {"how":2,
-						"where":books_donation.fetchAddr};
+				how_to_fetch={
+					"how":books_donation.fetchType
 				} 
+				if (books_donation.fetchType==2){ //上门取书
+					if (books_donation.fetchAddr==""){
+						alert("请输入取书地点");
+						return ;
+					}
+					how_to_fetch["where"]=books_donation.fetchAddr; 
+				}
 				$.ajax({
 					url: "API/book/donateBook.php",
 					dataType: "json",

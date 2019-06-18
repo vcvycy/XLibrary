@@ -58,6 +58,7 @@
     // 创建并执行sql. 自动会对所有参数执行escape操作。
     public function createSQLAndRun(){ 
         $sql=self::createSQL(...func_get_args());   
+        // echo $sql;
         return self::runSQL($sql);
     }
     public function createSQLAndRunAssoc(){ 
