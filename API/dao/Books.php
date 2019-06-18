@@ -254,7 +254,7 @@ Class Books extends Base{
             $status_old= $status_old[0][0];
         else
             throw new Exception("book donate id $book_donate_id 不存在");
-        return intval($status_old[0][0]);
+        return intval($status_old);
     }
     // (*) 捐书审核
     public function reviewDonation($book_donate_id, $status,$site_id=0){
