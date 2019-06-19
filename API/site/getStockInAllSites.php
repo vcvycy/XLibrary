@@ -6,7 +6,6 @@ require_once(DIR_DAO."Site.php");
 function main(){ 
     // 参数读取
     try{
-        \AdminSess\isLoginOrThrowException(); 
         $s = new Site();   
         $book_id = Utils::getParamWithFilter("book_id"); 
         $data=$s->getStockInAllSites($book_id);
