@@ -442,7 +442,7 @@
                             <li v-else class="table_row">
                                 <div v-for="item in g_data.cur_book_stock_in_sites">
                                     <div class="table_section_2">${item.name}</div> 
-                                    <div class="table_section">${item.description.substr(0,5)}</div> 
+                                    <div class="table_section">${(item.description=='')?'-':item.description.substr(0,5)}</div> 
                                     <div class="table_section">${item.stock}本</div> 
                                 </div>
                                 <div v-if="g_data.cur_book_stock_in_sites.length==0"> 
