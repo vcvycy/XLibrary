@@ -646,7 +646,7 @@ myApp.onPageInit('books_donation', function (page) {
 					url: "API/book/donateBook.php",
 					dataType: "json",
 					data: {
-						"isbn": books_donation.isbn,
+						"isbn": filterISBN(books_donation.isbn),
 						"donator_word":books_donation.word,
 						"how_to_fetch": JSON.stringify(how_to_fetch)  
 					},
