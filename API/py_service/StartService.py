@@ -40,9 +40,11 @@ def login():
         return returnJSON(0,data)
     else:
         return returnJSON(-1,stu.loginFailedReason)
-@get("/book_search")
-def book_search():
-    global
+@get("/book_retrieval")
+def book_retrieval():
+    qry = request.query.qry
+    books = br.user_search(qry)
+    return returnJSON(0,books)
 
 def load_config(path):
     f = open(path,"r")
@@ -53,7 +55,7 @@ def load_config(path):
 if __name__ == "__main__": 
     config_path= os.path.join(os.path.split(__file__)[0],"../config.json")
     config=load_config(config_path)
-    b = BookRetrieval(config)
+    br = BookRetrieval(config)
     # exit();
     print("[*] 此服务用于登陆、ISBN信息提取等...")
     port = int(config["pyAddr"].split(":")[-1])
