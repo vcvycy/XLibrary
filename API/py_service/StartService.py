@@ -40,9 +40,9 @@ def login():
         return returnJSON(0,data)
     else:
         return returnJSON(-1,stu.loginFailedReason)
-@get("/book_retrieval")
-def book_retrieval():
-    qry = request.query.qry
+
+@get("/book_retrieval/<qry>")
+def book_retrieval(qry): 
     books = br.user_search(qry)
     return returnJSON(0,books)
 

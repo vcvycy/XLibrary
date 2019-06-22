@@ -30,7 +30,7 @@ class BookRetrieval:
         return
 
     def updateKGram(self,book):
-        str = book["title"]+book["author"]+book["publisher"]
+        str = book["title"]+  book["title"]+ book["author"]+book["publisher"]+book["summary"]
         # unigram
         l = len(str)
         for i in range(l):
@@ -64,6 +64,7 @@ class BookRetrieval:
             self.books.append(book)
             self.max_book_id = max(self.max_book_id, book["id"])
             self.id2book[book["id"]] = book
+            print("[*]update_books: %s" %(book["title"]))
         return
 
     # 返回 book_id -> score
@@ -78,7 +79,7 @@ class BookRetrieval:
         return
 
     # 返回{ book_id -> cnt} , {book_id->book}
-    def user_search(self,str):
+    def user_search(self,str,max_num=50): 
         self.update_books()
         id2score={}
         id2b = {}
@@ -96,9 +97,22 @@ class BookRetrieval:
 
         books=[]
         # 按照分数从高到低排序
-        while len(id2score)!=0:
-
-        return id2score, id2b
+        while len(id2score)!=0: 
+            max_score=-1
+            max_id = -1
+            for id in id2score:
+                if id2score[id]> max_score:
+                    max_score = max(id2score[id], max_score)
+                    max_id = id
+            id2score.pop(max_id) 
+            # 
+            if len(books)>max_num:
+                break
+            # 超过5本，且score太小
+            if len(books)>5 and max_score<=1:
+                break
+            books.append(id2b[max_id]) 
+        return books
     #
     def show(self):
         print("[*] 当前最大的book_id = %s" %(self.max_book_id))
@@ -114,11 +128,10 @@ def load_config(path):
     obj = json.loads(data)
     return obj
 if __name__ == "__main__":
-    config_path= os.path.join(os.path.split(__file__)[0],"../config.json");
+    config_path= os.path.join(os.path.split(__file__)[0],"../config.json")
     config=load_config(config_path)
     b = BookRetrieval(config)
-    id2score,id2book = b.user_search("刑法与民法")
-    for id in id2score:
-        print("[*] score=%s" %(id))
-        print("   [*] %s" %(id2book[id]["title"]))
+    books = b.user_search("法学书籍")
+    for b in books:
+        print(b["title"])
     # b.show();

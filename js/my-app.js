@@ -330,10 +330,11 @@ myApp.onPageInit('books_list', function (page) {
             books:[],
             page_id:1,
 			total_pages:0,
-			total_books:0
+			total_books:0,
+			search_mode: false
         },
         // computed:{},
-        methods: {
+        methods: { 
 			getbook: (page_id)=>{
 				books_list_vue.page_id = page_id;
 				$.ajax({
@@ -375,7 +376,41 @@ myApp.onPageInit('books_list', function (page) {
 myApp.onPageInit('index', function (page) { 
 	location.href="./";
 });
-
+myApp.onPageInit('books_retrieval', function (page) {
+	books_retrieval_vue=new Vue({
+		el:"#books-retrieval-div",
+		delimiters:["@{","}"],
+		data:{
+			 search_str:"",
+			 books:null,   // null表示未搜索
+			 show_items:10,
+			 search_finish: false
+		},
+		methods:{
+			more: ()=>{
+				books_retrieval_vue.show_items+=10;
+			},
+			search_book: ()=>{
+				str=books_retrieval_vue.search_str;
+				if (str== ""){
+					error_window.show("搜索内容不能为空！") 
+					return;
+				}
+				pending.show(); 
+				url=`API/public_api/bookRetrieval.php?qry=${str}`;
+				$.get(url,function(data){
+					obj = JSON.parse(data);
+					if (obj.error_code==0){
+						books_retrieval_vue.books=obj.data; 
+						pending.close(); 
+					}else{
+						alert(obj.data); 
+					}
+				});
+			}
+		}
+	});
+});
 myApp.onPageInit('return-book', function (page) {  
 	return_book_vue=new Vue({
 		el:"#return—book-div",

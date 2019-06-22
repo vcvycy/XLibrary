@@ -1,9 +1,9 @@
 <div class="pages">
-    <div data-page="books_list" class="page no-toolbar no-navbar">
+    <div data-page="books_retrieval" class="page no-toolbar no-navbar">
         <div class="page-content">
             <div class="navbarpages navbarpagesbg">
                 <div class="navbar_left">
-                    <div class="logo_text"><a href="index.html">图书馆藏书</a></div>
+                    <div class="logo_text"><a href="index.html">图书检索</a></div>
                 </div>
                 <div class="navbar_right navbar_right_menu">
                     <a href="#" data-panel="left" class="open-panel"><img src="images/icons/white/menu.png" alt=""
@@ -16,21 +16,25 @@
             </div>
 
             <div id="pages_maincontent">
-                <div id="books-list-div">
-                    <h2 class="page_title" >图书信息
-                        <span>馆中共${total_books}本图书</span>
-                        <a style="float:right;width:25px" href="books_retrieval.html"><img src="images/icons/black/search.png" class=""></a>
-                    </h2>
+                <div id="books-retrieval-div"> 
+                    <a href="books_list.html" class="backto"><img src="images/icons/black/back.png" alt="" title=""></a>
+                    <h2 class="page_title" >
+                        <input type=text id="search_input" v-model="search_str" style="width:80%;border:0;font-size: 20px;margin:5px" placeholder="查找馆中图书~"/>
+                        <img v-on:click="search_book" style="float:right;width:25px" src="images/icons/black/search.png"></img>
+                        
+                    </h2> 
+                    <h2 class="page_title" v-if= "books!=null && books.length>0"><span>搜索成功：找到<i v-text="books.length"></i> 本书~</span></h2>
+                    <h2 class="page_title" v-if= "books!=null && books.length==0"><span style="color:red">查找不到图书！</span></h2>
                     <div class="page_single layout_fullwidth_padding">
                         <ul class="shop_items">
-                            <li v-for="book in books">
+                            <li v-for="(book,index) in books" v-if="index<show_items"> 
                                 <div class="shop_thumb" style="width:25%"><a href="#">
                                         <img v-if="book.picture!=''" v-bind:src="book.picture" alt="" title="" /></a>
                                     <img v-else v-bind:src=" images/photos/photo1.jpg" alt="" title="" /></a>
                                     <!-- images/photos/photo1.jpg -->
                                 </div>
                                 <div class="shop_item_details">
-                                    <h4 v-text="book.title"></h4>
+                                    <h4 v-text="`${book.title}`"></h4>
                                     <div v-text="book.author" class=""></div>
                                     <div v-text="`${book.publisher} ${book.pubdate}`"></div>
                                     <div v-text="'ISBN:'+book.isbn" class=""></div>
@@ -40,18 +44,13 @@
                                     </b>
                                     <b v-if="book.stock!=book.lended" style="color:green"><div v-text="`可借:${book.stock-book.lended}/${book.stock}本`"></div></b>
                                     <b v-if="book.stock==book.lended" style="color:red"><div v-text="`可借:${book.stock-book.lended}/${book.stock}本`"></div></b>
-
-                                </div>
+                                </div> 
                             </li>
 
                         </ul>
 
-                        <div class="shop_pagination">
-                            <a href="#" v-on:click="goto_page(1)" class="prev_shop">第一页</a>
-                            <a href="#" v-on:click="prev_page" class="prev_shop">上一页</a>
-                            <span class="shop_pagenr" v-text="`${page_id}/${total_pages}`"></span>
-                            <a href="#" v-on:click="goto_page(total_pages)" class="next_shop">最后一页</a>
-                            <a href="#" v-on:click="next_page" class="next_shop">下一页</a>
+                        <div class="shop_pagination" v-if="books!=null && books.length>show_items">
+                            <a style="font-size: 15px;width:60%" href="#" v-on:click="more" v-text="`显示剩下${books.length-show_items}本图书`"></a> 
                         </div>
 
 
