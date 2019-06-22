@@ -17,3 +17,4 @@
         见:./API/utils.php 中$g_config["db"]
 3.  api 文档：
     https://documenter.getpostman.com/view/6886443/S11RLG5y
+4. 注意查看log.txt是否有写权限，upload是否有写权限；book_retrieval(linuxe:use_unicode:true,chatset:utf8)
