@@ -81,26 +81,26 @@
                             <div class="form_row">
                                     <label>捐书方式:</label>
                                     <div class="form_row_right">
-                                        <label class="label-radio item-content">
+                                        <label class="label-radio item-content" v-on:click="setFetchType(1)">
                                             <!-- Checked by default -->
                                             <input type="radio" name="my-radio" value="0" checked>
-                                            <div class="item-inner" v-on:click="setFetchType(1)">
+                                            <div class="item-inner">
                                                 <div class="item-title">送至分馆</div>
                                             </div>
                                         </label>
 
-                                        <label class="label-radio item-content">
+                                        <label class="label-radio item-content" v-on:click="setFetchType(3)">
                                             <!-- Checked by default -->
                                             <input type="radio" name="my-radio" value="0">
-                                            <div class="item-inner" v-on:click="setFetchType(3)">
+                                            <div class="item-inner">
                                                 <div class="item-title">放到书箱</div>
                                             </div>
                                         </label>
 
-                                        <label class="label-radio item-content" id="getBooks">
+                                        <label class="label-radio item-content" id="getBooks" v-on:click="setFetchType(2)">
                                             <!-- Checked by default -->
                                             <input type="radio" name="my-radio" value="" />
-                                            <div class="item-inner" v-on:click="setFetchType(2)">
+                                            <div class="item-inner">
                                                 <div class="item-title">上门取书</div>
                                             </div>
                                             <div v-if="fetchType==2">

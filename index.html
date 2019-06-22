@@ -464,7 +464,7 @@
                             </li>
                             <li v-else class="table_row">
                                 <div v-for="item in g_data.cur_book_donators">
-                                    <div class="table_section_2">${item.donate_time}</div> 
+                                    <div class="table_section_2" v-text="item.donate_time.substr(0,9)"></div> 
                                     <div class="table_section">${item.name}</div> 
                                     <div class="table_section" v-text='item["捐书留言"]==``?`-`:item["捐书留言"]'></div> 
                                 </div>
