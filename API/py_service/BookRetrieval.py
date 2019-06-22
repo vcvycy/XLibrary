@@ -54,13 +54,13 @@ class BookRetrieval:
     # 从服务器读取
     def update_books(self):
         cursor = self.mysql.cursor()
-        cursor.execute("select * from book where id> %d" %(self.max_book_id))
+        cursor.execute("select * from book where id> %d and stock>0" %(self.max_book_id))
         self.mysql.commit()
         data = cursor.fetchall()
         field_name = [field[0] for field in cursor.description]
         for item in data:
             item = dict(zip(field_name, item))
-            book = self.myUtf8Decoder(item)
+            book = self.myUtf8Decoder(item) 
             self.updateKGram(book)
             self.books.append(book)
             self.max_book_id = max(self.max_book_id, book["id"])
