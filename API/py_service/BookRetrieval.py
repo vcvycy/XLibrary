@@ -55,6 +55,7 @@ class BookRetrieval:
     def update_books(self):
         cursor = self.mysql.cursor()
         cursor.execute("select * from book where id> %d" %(self.max_book_id))
+        self.mysql.commit()
         data = cursor.fetchall()
         field_name = [field[0] for field in cursor.description]
         for item in data:
