@@ -1,14 +1,38 @@
 import pymysql
 import json
+import platform
+import threading
+import time
 class BookRetrieval:
-    def __init__(self,config):
-        config= config["db"]
-        self.mysql = pymysql.connect(host=config["host"],
+    @staticmethod  
+    def osType():  # Linux返回 1，window返回2 （解决use_unicode的问题，虽然方法不优美）
+        str = platform.platform()
+        if str.find("Linux")!=-1:
+            return 1
+        elif str.find("Windows")!=-1:
+            return 2
+        else:
+            exit(-3)
+        return 
+
+    def connDB(self):
+        config = self.config["db"]
+        if BookRetrieval.osType==1:
+            use_unicode = True
+            charset = "utf8"
+        else:
+            use_unicode = False
+            charset = "latin1"
+        return pymysql.connect(host=config["host"],
                                      user=config["user"],
                                      passwd=config["pass"],
                                      db=config["dbname"],
-                                     use_unicode=False,
-                                     charset="latin1")
+                                     use_unicode=use_unicode,
+                                     charset=charset) 
+
+    def __init__(self,config): 
+        self.last_update_time=-9999       # 最后更新books的时间
+        self.config= config 
         self.max_book_id=0
         self.books=[]
         self.id2book = {}
@@ -53,9 +77,12 @@ class BookRetrieval:
 
     # 从服务器读取
     def update_books(self):
-        cursor = self.mysql.cursor()
-        cursor.execute("select * from book where id> %d and stock>0" %(self.max_book_id))
-        self.mysql.commit()
+        # 10秒从服务器上更新一次
+        if time.time()-self.last_update_time < 10 :
+            return 
+        conn = self.connDB() # 由于有超时存在，每次重新连接数据库
+        cursor = conn.cursor()
+        cursor.execute("select * from book where id> %d and stock>0" %(self.max_book_id)) 
         data = cursor.fetchall()
         field_name = [field[0] for field in cursor.description]
         for item in data:
@@ -66,6 +93,8 @@ class BookRetrieval:
             self.max_book_id = max(self.max_book_id, book["id"])
             self.id2book[book["id"]] = book
             print("[*]update_books: %s" %(book["title"]))
+        
+        self.last_update_time = time.time()
         return
 
     # 返回 book_id -> score

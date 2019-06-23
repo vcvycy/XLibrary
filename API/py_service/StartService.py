@@ -1,8 +1,10 @@
+# coding=utf-8
 from STULogin import STULogin
 from bottle import *
 import json
 import BooksAPI
 import os
+import time
 from BookRetrieval import BookRetrieval
 
 def returnJSON(code,data):
@@ -42,7 +44,7 @@ def login():
         return returnJSON(-1,stu.loginFailedReason)
 
 @get("/book_retrieval/<qry>")
-def book_retrieval(qry): 
+def book_retrieval(qry):  
     books = br.user_search(qry)
     return returnJSON(0,books)
 
@@ -55,8 +57,8 @@ def load_config(path):
 if __name__ == "__main__": 
     config_path= os.path.join(os.path.split(__file__)[0],"../config.json")
     config=load_config(config_path)
-    br = BookRetrieval(config)
-    # exit();
+    br = BookRetrieval(config) 
     print("[*] 此服务用于登陆、ISBN信息提取等...")
     port = int(config["pyAddr"].split(":")[-1])
+    # 接口仅本机可以调用.默认为单线程
     run(host="localhost", port=port)
