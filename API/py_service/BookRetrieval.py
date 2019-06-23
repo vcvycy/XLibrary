@@ -17,7 +17,7 @@ class BookRetrieval:
 
     def connDB(self):
         config = self.config["db"]
-        if BookRetrieval.osType==1:
+        if BookRetrieval.osType()==1:
             use_unicode = True
             charset = "utf8"
         else:
@@ -33,11 +33,9 @@ class BookRetrieval:
     def __init__(self,config): 
         self.last_update_time=-9999       # 最后更新books的时间
         self.config= config 
-        self.max_book_id=0
-        self.books=[]
-        self.id2book = {}
-        self.kgram = {}
-        self.update_books()
+        self.id2book = {}                 # 需要考虑库存量、已借出图书数量的更新
+        self.kgram = {}                   # 图书信息一般不变，同一本书无需更新 
+        self.update_books() 
         return
 
     # 添加关键字  key(电脑) -> book_id (2) ->score(10)
@@ -77,22 +75,23 @@ class BookRetrieval:
 
     # 从服务器读取
     def update_books(self):
-        # 10秒从服务器上更新一次
+        # 最多10秒与数据库更新数据
         if time.time()-self.last_update_time < 10 :
             return 
         conn = self.connDB() # 由于有超时存在，每次重新连接数据库
         cursor = conn.cursor()
-        cursor.execute("select * from book where id> %d and stock>0" %(self.max_book_id)) 
+        # 查看当前存储的东西是否更新
+        cursor.execute("select * from book")  # 库存为空的情况也算进去，查询的时候再剔除
         data = cursor.fetchall()
         field_name = [field[0] for field in cursor.description]
+
         for item in data:
             item = dict(zip(field_name, item))
-            book = self.myUtf8Decoder(item) 
-            self.updateKGram(book)
-            self.books.append(book)
-            self.max_book_id = max(self.max_book_id, book["id"])
-            self.id2book[book["id"]] = book
-            print("[*]update_books: %s" %(book["title"]))
+            book = self.myUtf8Decoder(item)
+            if book["id"] not in self.id2book:  # 新书，加入查询key
+                self.updateKGram(book)  
+            self.id2book[book["id"]] = book     # 更新图书信息
+            # print("[*]update_books: %s" %(book["title"]))
         
         self.last_update_time = time.time()
         return
@@ -123,7 +122,7 @@ class BookRetrieval:
             if len(bi)==2 :
                 self.find(id2score,bi)
         for id in id2score:
-            id2b[id] = self.id2book[id]
+            id2b[id] = self.id2book[id] 
 
         books=[]
         # 按照分数从高到低排序
@@ -141,14 +140,10 @@ class BookRetrieval:
             # 超过5本，且score太小
             if len(books)>5 and max_score<=1:
                 break
-            books.append(id2b[max_id]) 
+            if id2b[max_id]["stock"]>0:
+                books.append(id2b[max_id]) 
         return books
-    #
-    def show(self):
-        print("[*] 当前最大的book_id = %s" %(self.max_book_id))
-        for item in self.books:
-            print("  [*] %s %s" %(item["title"],item["author"]))
-        return
+        
 
 ####### 测试 #########
 import os
