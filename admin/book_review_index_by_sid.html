@@ -144,7 +144,7 @@
                             <th>操作</th>
                           </tr>
                         </thead>
-                        <tr v-for="(list,sid,idx) in stu2books">
+                        <tr v-for="(list,sid,idx) in stu2books"> <!-- 待审核列表-->
                            <td>{{idx+1}}</td>
                            <td>{{list[0].name}}</td>
                            <td>{{sid}}<br>手机：{{list[0].phone}}<br>微信:{{list[0].wechar_name}}</td> 
@@ -172,36 +172,7 @@
                                    <font color=red>拒绝</font></td> 
                              </a>
                            </td>
-                        </tr>
-                        <tr>
-                          <td colspan="5">以下为已审核捐书记录，可重置<input type="checkbox" v-model="hide_has_reviewed"
-                              v-on:click="update_hide"></input> 隐藏已审核状态</td>
-                        </tr>
-                        <tr v-for="(item,index) in book_list" v-if="item.status!='0' && !hide_has_reviewed"
-                          style="background-color: darkgray">
-                          <td>{{index+1}}</td>
-                          <td>{{item.name}}</td>
-                          <!-- <td>{{item.sid}}</td> -->
-                          <td>{{item.isbn}}</td>
-                          <td>{{item.title}}</td>
-                          <td>{{item.author}}</td>
-                          <!-- <td>{{item.publisher}}</td>
-                          <td>{{item.pubdate}}</td> -->
-                          <td>{{item.how_to_fetch}}</td>
-                          <td>手机:{{item.phone}}<br>微信:{{item.wechat_name}}</td> 
-                          <td>{{item.donator_word}}</td>
-                          <td>{{item.site_name}}</td>
-                          <td v-if="item.status=='1'">
-                            <p style="color: green">已通过</p> <a href=# v-on:click="reset(item.id)">
-                              <p style="color: gray">重置</p>
-                            </a>
-                          </td>
-                          <td v-if="item.status=='-1'">
-                            <p style="color: red">已拒绝</p> <a href=# v-on:click="reset(item.id)">
-                              <p style="color: gray">重置</p>
-                            </a>
-                          </td>
-                        </tr>
+                        </tr> 
                         <tbody>
                         </tbody>
                       </table>
@@ -213,6 +184,80 @@
 
             </div>
           </div>
+          <div class="container-fluid">
+              <div class="row">
+                <div class="">
+                  <div class="card">
+                    <div class="card-close">
+                      <div class="dropdown">
+                        <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true"
+                          aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
+                        <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#"
+                            class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a><a href="#"
+                            class="dropdown-item edit"> <i class="fa fa-gear"></i>Edit</a></div>
+                      </div>
+                    </div>
+                    <div class="card-header d-flex align-items-center">
+                      <h3 class="h4">已处理的捐书请求
+                          <input type="checkbox" v-model="hide_has_reviewed"
+                          v-on:click="update_hide"></input> 隐藏</td>  
+                      </h3>
+                    </div>
+                    <div class="card-body" v-if= "!hide_has_reviewed"> 
+                      <div class="table-responsive">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>捐书者</th> 
+                              <th>学号和联系方式</th>
+                              <th>捐书列表</th> 
+                            </tr>
+                          </thead>
+                          <tr v-for="(list,sid,idx) in stu2finished"> 
+                             <td>{{idx+1}}</td>
+                             <td>{{list[0].name}}</td>
+                             <td>{{sid}}<br>手机：{{list[0].phone}}<br>微信:{{list[0].wechar_name}}</td> 
+                             <td>
+                               <table>
+                                 <thead>
+                                 <th>#</th>
+                                    <th>书名</th>
+                                    <!-- <th>ISBN</th> -->
+                                    <th>作者</th>
+                                    <th>出版社</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                    </thead>
+                                 <tr v-for="(item,index) in list" v-if="item.status!=0"> 
+                                    <td>[{{index+1}}]</td>
+                                    <td>{{item.title}}</td>
+                                    <!-- <td>{{item.isbn}}</td> -->
+                                    <td>{{item.author}}</td>
+                                    <td>{{item.publisher}}</td>
+                                    <td>
+                                        <b v-if="item.status==1"><b style="color:green">已通过</b></b>
+                                        <b v-if="item.status==-1"><b style="color:red">已拒绝</b></b>
+                                    </td>
+                                    <td >
+                                      <button v-on:click="reset(item.id)">重置</button>
+                                    </td>
+                                </tr>
+                               </table> 
+                             </td> 
+                          </tr>
+                           
+                          <tbody>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br>
+  
+              </div>
+            </div>
         </section>
         <!-- Page Footer-->
         <footer class="main-footer">

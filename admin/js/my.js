@@ -259,92 +259,92 @@ pages_init ={
             alert("unknown error"+url);
         });
     },
-    "book_review.html":function(){ 
-        sidebar();
-        curPageNeedLogin();
-        vue_review= new Vue({
-            el: document.getElementById("book_review"),
-            data: {
-                sites:[],
-                book_list : [],
-                hide_has_reviewed : window.localStorage["hide_has_reviewed"]==undefined?false:window.localStorage["hide_has_reviewed"]=="true"
-            },
-            methods: { 
-                setReviewStatus:(id,status)=>{   
-                    var site_id="";
-                    if (status==1){  //如果是通过则需要选择要入的馆
-                        site_id=$(`#select_${id}`).val();
-                        if (site_id=="0"){alert("请选择要入哪个库!");return;}
-                    }
-                    url=`${getRootURL()}API/admin/reviewDonation.php?book_donate_id=${id}&status=${status}&site_id=${site_id}`;
-                    $.get(url,function(data){
-                        obj=JSON.parse(data);
-                        if (obj.error_code==0){
-                            window.location.reload();
-                        }else
-                        alert(obj.data);
-                    })
-                },
-                accept:(id)=>{ 
-                    setReviewStatus(id,1);
-                },
-                reject:(id)=>{
-                    setReviewStatus(id,-1);
-                },
-                reset:(id)=>{
-                    var b=confirm("重置状态后，将会变成待审核,且从其入库点删掉一本书，是否继续？");
-                    if (!b) return; 
-                    url=`${getRootURL()}API/admin/resetDonationStatus.php?book_donate_id=${id}`;
-                    $.get(url,function(data){
-                        obj=JSON.parse(data);
-                        if (obj.error_code==0){
-                            window.location.reload();
-                        }else
-                        alert(obj.data);
-                    })
-                },
-                update_hide: ()=>{ 
-                    window.localStorage["hide_has_reviewed"]=!vue_review.hide_has_reviewed;
-                }
-            }   
-        });
+    // "book_review.html":function(){ 
+    //     sidebar();
+    //     curPageNeedLogin();
+    //     vue_review= new Vue({
+    //         el: document.getElementById("book_review"),
+    //         data: {
+    //             sites:[],
+    //             book_list : [],
+    //             hide_has_reviewed : window.localStorage["hide_has_reviewed"]==undefined?false:window.localStorage["hide_has_reviewed"]=="true"
+    //         },
+    //         methods: { 
+    //             setReviewStatus:(id,status)=>{   
+    //                 var site_id="";
+    //                 if (status==1){  //如果是通过则需要选择要入的馆
+    //                     site_id=$(`#select_${id}`).val();
+    //                     if (site_id=="0"){alert("请选择要入哪个库!");return;}
+    //                 }
+    //                 url=`${getRootURL()}API/admin/reviewDonation.php?book_donate_id=${id}&status=${status}&site_id=${site_id}`;
+    //                 $.get(url,function(data){
+    //                     obj=JSON.parse(data);
+    //                     if (obj.error_code==0){
+    //                         window.location.reload();
+    //                     }else
+    //                     alert(obj.data);
+    //                 })
+    //             },
+    //             accept:(id)=>{ 
+    //                 setReviewStatus(id,1);
+    //             },
+    //             reject:(id)=>{
+    //                 setReviewStatus(id,-1);
+    //             },
+    //             reset:(id)=>{
+    //                 var b=confirm("重置状态后，将会变成待审核,且从其入库点删掉一本书，是否继续？");
+    //                 if (!b) return; 
+    //                 url=`${getRootURL()}API/admin/resetDonationStatus.php?book_donate_id=${id}`;
+    //                 $.get(url,function(data){
+    //                     obj=JSON.parse(data);
+    //                     if (obj.error_code==0){
+    //                         window.location.reload();
+    //                     }else
+    //                     alert(obj.data);
+    //                 })
+    //             },
+    //             update_hide: ()=>{ 
+    //                 window.localStorage["hide_has_reviewed"]=!vue_review.hide_has_reviewed;
+    //             }
+    //         }   
+    //     });
 
-        // 藏书地点
-        $.ajax({
-            url: `${getRootURL()}/API/site/getAllSites.php`,
-            dataType: "json",  
-            success: function (data) { 
-                vue_review.sites=data.data;
-            }
-        });
+    //     // 藏书地点
+    //     $.ajax({
+    //         url: `${getRootURL()}/API/site/getAllSites.php`,
+    //         dataType: "json",  
+    //         success: function (data) { 
+    //             vue_review.sites=data.data;
+    //         }
+    //     });
 
-        // 捐书列表
-        url=`${getRootURL()}API/admin/getDonationList.php`;
-        $.get(url,function(data){
-            obj= JSON.parse(data);
-            if (obj.error_code==0){
-                // 打补丁：how_to_fetch
-                for (var i=0;i<obj.data.length;i++){
-                    try{
-                        p = JSON.parse(obj.data[i].how_to_fetch);
-                        phone = p.phone
-                        if (p.how==1) 
-                           fetch = `送至分馆`;
-                        else if (p.how==2)
-                           fetch = `上门取书:${p.where}`;
-                        else
-                            fetch = `放到书箱`;
-                    }catch(err){ 
-                        fetch = `未知字符串:${obj.data[i].how_to_fetch}`;
-                        phone =``;
-                    } 
-                    obj.data[i].how_to_fetch = fetch;
-                }
-                vue_review.book_list = obj.data;
+    //     // 捐书列表
+    //     url=`${getRootURL()}API/admin/getDonationList.php`;
+    //     $.get(url,function(data){
+    //         obj= JSON.parse(data);
+    //         if (obj.error_code==0){
+    //             // 打补丁：how_to_fetch
+    //             for (var i=0;i<obj.data.length;i++){
+    //                 try{
+    //                     p = JSON.parse(obj.data[i].how_to_fetch);
+    //                     phone = p.phone
+    //                     if (p.how==1) 
+    //                        fetch = `送至分馆`;
+    //                     else if (p.how==2)
+    //                        fetch = `上门取书:${p.where}`;
+    //                     else
+    //                         fetch = `放到书箱`;
+    //                 }catch(err){ 
+    //                     fetch = `未知字符串:${obj.data[i].how_to_fetch}`;
+    //                     phone =``;
+    //                 } 
+    //                 obj.data[i].how_to_fetch = fetch;
+    //             }
+    //             vue_review.book_list = obj.data;
                 
-            }
-        });
-    },
+    //         }
+    //     });
+    // },
     "book_review_index_by_sid.html":function(){  
         sidebar();
         curPageNeedLogin();
@@ -355,7 +355,8 @@ pages_init ={
                 sites:[],
                 need_process_num:0, //需要处理的个数
                 book_list : [],
-                stu2books :{},    // sid -> item ,只处理等待审核的情况
+                stu2books :{},    // sid -> 待审核列表
+                stu2finished: {},  // sid -> 已审核列表
                 hide_has_reviewed : window.localStorage["hide_has_reviewed"]==undefined?false:window.localStorage["hide_has_reviewed"]=="true"
             },
             methods: { 
@@ -363,18 +364,26 @@ pages_init ={
                     // 初始化stu2books
                     book_list = vue_review.book_list;
                     stu2books = {}
+                    stu2finished ={}
                     for (idx in book_list){
                         item=book_list[idx];
                         sid=item.sid;
-                        if (item.status!=0) continue;
-                        if (!(sid in stu2books)){
-                            stu2books[sid]=[]
+                        if (item.status==0){  // 待审核
+                            if (!(sid in stu2books)){
+                                stu2books[sid]=[]
+                            }
+                            stu2books[sid].push(item); 
+                        }else{
+                            if (!(sid in stu2finished)){ // 已审核
+                                stu2finished[sid]=[];
+                            }
+                            stu2finished[sid].push(item);
                         }
-                        stu2books[sid].push(item);
                     }
+                    vue_review.stu2finished = stu2finished;
                     vue_review.stu2books = stu2books;
                 },
-                setReviewStatus:(id,status,site_id)=>{    
+                setReviewStatus:(id,status,site_id)=>{     // 当拒绝的时候,site_id 无意义
                     vue_review.message=`剩余${vue_review.need_process_num}需要处理，请等待...`;
                     url=`${getRootURL()}API/admin/reviewDonation.php?book_donate_id=${id}&status=${status}&site_id=${site_id}`;
                     $.get(url,function(data){
@@ -382,8 +391,7 @@ pages_init ={
                         if (obj.error_code==0){
                             vue_review.need_process_num--;
                             if (vue_review.need_process_num==0)
-                                window.location.reload();
-                                
+                                window.location.reload(); 
                              vue_review.message=`剩余${vue_review.need_process_num}需要处理，请等待...`;
                         }else
                         alert(obj.data);
@@ -391,11 +399,13 @@ pages_init ={
                 },
                 setCheckedStatus: (sid,status) =>{
                     // 对被选中的所有图书进行操作
+
                     if (status==1){
                         site_id=$(`#select_${sid}`).val();
                         if (site_id=="0"){alert("请选择要入哪个库!");return;}
-                    }  
-                    vue_review.need_process_num = $(`input[name='checkbox_${sid}']`).length;
+                    }else
+                        site_id=null;
+                    vue_review.need_process_num = $(`input[name='checkbox_${sid}']`).length; 
                     $(`input[name='checkbox_${sid}']`).each(function() {
                         if($(this).is(":checked")){
                            donation_id= $(this).val();
