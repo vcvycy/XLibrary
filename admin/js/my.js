@@ -399,13 +399,19 @@ pages_init ={
                 },
                 setCheckedStatus: (sid,status) =>{
                     // 对被选中的所有图书进行操作
-
                     if (status==1){
                         site_id=$(`#select_${sid}`).val();
                         if (site_id=="0"){alert("请选择要入哪个库!");return;}
                     }else
                         site_id=null;
-                    vue_review.need_process_num = $(`input[name='checkbox_${sid}']`).length; 
+                    
+                    vue_review.need_process_num = 0;
+                    $(`input[name='checkbox_${sid}']`).each(function(){ 
+                        if($(this).is(":checked")){ 
+                            vue_review.need_process_num ++; 
+                         }
+                        
+                    });
                     $(`input[name='checkbox_${sid}']`).each(function() {
                         if($(this).is(":checked")){
                            donation_id= $(this).val();
