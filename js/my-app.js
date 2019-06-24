@@ -593,7 +593,7 @@ myApp.onPageInit('books_donation', function (page) {
 			isbn : null, 
 			seen: false,
 			fetchType: 1,            // 1:送至分馆；2: 上门取书 , 3: 放到书箱
-			fetchAddr:"",            // 上门取书此字段才有意义 
+			fetchAddr:window.localStorage["fetchAddr"]==undefined?"":window.localStorage["fetchAddr"],            // 上门取书此字段才有意义 
 			book: { 
 			},
 	        word: ""
@@ -675,6 +675,8 @@ myApp.onPageInit('books_donation', function (page) {
 						alert("请输入取书地点");
 						return ;
 					}
+					
+					window.localStorage["fetchAddr"]=books_donation.fetchAddr;
 					how_to_fetch["where"]=books_donation.fetchAddr; 
 				}
 				$.ajax({
