@@ -149,11 +149,30 @@
                            <td>{{list[0].name}}</td>
                            <td>{{sid}}<br>手机：{{list[0].phone}}<br>微信:{{list[0].wechar_name}}</td> 
                            <td>
-                             <div v-for="item in list" v-if="item.status==0">
-                                <input v-bind:value="item.id" type="checkbox" v-bind:name="`checkbox_${sid}`" >
-                                    <b>{{item.title}}</b> ({{item.publisher}})
-                                </input> 
-                             </div>
+                             <table>
+                               <thead>
+                                  <th>#</th>
+                                  <th>书名</th>
+                                  <th>作者</th>
+                                  <th>出版社</th>
+                                  <th>提交时间</th>
+                                  <th>如何取书</th>
+                                  <th>选中</th>
+                                  
+                               </thead>
+                               <tr v-for="(item,index) in list" v-if="item.status==0">
+                                  <td>[{{index+1}}]</td>
+                                  <td>{{item.title}}</td>
+                                  <td>{{item.author}}</td>
+                                  <td>{{item.publisher}}</td>
+                                  <td>{{item.time}}</td>
+                                  <td>{{item.how_to_fetch}}</td>
+                                  <!-- <td>{{item.donator_word}}</td> -->
+                                  <td>
+                                      <input v-bind:value="item.id" type="checkbox" v-bind:name="`checkbox_${sid}`" >
+                                      </input> </td>
+                               </tr>
+                             </table> 
                            </td>
                            <td>
                              <select v-bind:id="`select_${sid}`">
@@ -226,6 +245,7 @@
                                     <!-- <th>ISBN</th> -->
                                     <th>作者</th>
                                     <th>出版社</th>
+                                    <th>提交时间</th>
                                     <th>状态</th>
                                     <th>操作</th>
                                     </thead>
@@ -235,6 +255,7 @@
                                     <!-- <td>{{item.isbn}}</td> -->
                                     <td>{{item.author}}</td>
                                     <td>{{item.publisher}}</td>
+                                    <td>{{item.time}}</td>
                                     <td>
                                         <b v-if="item.status==1"><b style="color:green">已通过</b></b>
                                         <b v-if="item.status==-1"><b style="color:red">已拒绝</b></b>
