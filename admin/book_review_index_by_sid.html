@@ -137,60 +137,62 @@
                         <thead>
                           <tr>
                             <th>#</th>
-                            <th>捐书者</th> 
-                            <th>学号和联系方式</th>
-                            <th>捐书列表</th>
-                            <th>选择分馆</th>
-                            <th>操作</th>
+                            <th>捐书者信息</th> 
+                            <th>捐书列表</th> 
                           </tr>
                         </thead>
                         <tr v-for="(list,sid,idx) in stu2books"> <!-- 待审核列表-->
                            <td>{{idx+1}}</td>
-                           <td>{{list[0].name}}</td>
-                           <td>{{sid}}<br>手机：{{list[0].phone}}<br>微信:{{list[0].wechar_name}}</td> 
+                           <td>[姓名]<b>{{list[0].name}}</b>
+                             <br>[学号]{{sid}}
+                             <br>[手机]{{list[0].phone}}
+                             <br>[微信]{{list[0].wechar_name}}
+                             <hr>
+                             图书审核:<br>
+                             <select v-bind:id="`select_${sid}`">
+                                <option value="0">
+                                   请选择藏书库
+                                </option>
+                                <option v-for="item in sites" v-bind:value="item.id">
+                                  {{item.name}}
+                                </option>
+                              </select>
+                              <br>
+                                <a href=# v-on:click="setCheckedStatus(sid,1)">
+                                  <p style="background:green;color:white">通过</p>
+                                </a>
+                                  <a href=# v-on:click="setCheckedStatus(sid,-1)">
+                                      <p style="background:red;color:white">拒绝</p>
+                                </a>
+                            </td> 
                            <td>
                              <table>
                                <thead>
                                   <th>#</th>
-                                  <th>书名</th>
-                                  <th>作者</th>
+                                  <th style="width:15%">书名</th>
+                                  <th style="width:15%">作者</th>
                                   <th>出版社</th>
                                   <th>提交时间</th>
                                   <th>如何取书</th>
-                                  <th>选中</th>
+                                  <th>留言</th>
                                   
                                </thead>
                                <tr v-for="(item,index) in list" v-if="item.status==0">
                                   <td>[{{index+1}}]</td>
-                                  <td>{{item.title}}</td>
+                                  <td><input v-bind:value="item.id" type="checkbox" v-bind:name="`checkbox_${sid}`" /> {{item.title}}</td>
                                   <td>{{item.author}}</td>
                                   <td>{{item.publisher}}</td>
                                   <td>{{item.time}}</td>
                                   <td>{{item.how_to_fetch}}</td>
-                                  <!-- <td>{{item.donator_word}}</td> -->
-                                  <td>
-                                      <input v-bind:value="item.id" type="checkbox" v-bind:name="`checkbox_${sid}`" >
-                                      </input> 
+                                  <td>{{item.donator_word}}</td>
+                                  <td> 
                                   </td>
                                </tr>
                              </table> 
                            </td>
                            <td>
-                             <select v-bind:id="`select_${sid}`">
-                               <option value="0">
-                                  请选择藏书库
-                               </option>
-                               <option v-for="item in sites" v-bind:value="item.id">
-                                 {{item.name}}
-                               </option>
-                             </select>
                            </td>
-                           <td><a href=# v-on:click="setCheckedStatus(sid,1)">
-                               <font color=green>通过</font>
-                             </a>
-                               <a href=# v-on:click="setCheckedStatus(sid,-1)">
-                                   <font color=red>拒绝</font></td> 
-                             </a>
+                           <td>
                            </td>
                         </tr> 
                         <tbody>
@@ -229,38 +231,43 @@
                           <thead>
                             <tr>
                               <th>#</th>
-                              <th>捐书者</th> 
-                              <th>学号和联系方式</th>
+                              <th>捐书者信息</th>  
                               <th>捐书列表</th> 
                             </tr>
                           </thead>
                           <tr v-for="(list,sid,idx) in stu2finished"> 
                              <td>{{idx+1}}</td>
-                             <td>{{list[0].name}}</td>
-                             <td>{{sid}}<br>手机：{{list[0].phone}}<br>微信:{{list[0].wechar_name}}</td> 
+                             <td>
+                                [姓名]<b>{{list[0].name}}</b>
+                                <br>[学号]{{sid}}
+                                <br>[手机]{{list[0].phone}}
+                                <br>[微信]{{list[0].wechar_name}}
+                                <hr>
+                             </td> 
                              <td>
                                <table>
                                  <thead>
-                                 <th>#</th>
-                                    <th>书名</th>
+                                    <th style="width:5%">#</th>
+                                    <th style="width:20%">书名</th>
                                     <!-- <th>ISBN</th> -->
-                                    <th>作者</th>
-                                    <th>出版社</th>
-                                    <th>提交时间</th>
-                                    <th>状态</th>
-                                    <th>操作</th>
+                                    <th style="width:15%">作者</th>
+                                    <th style="width:15%">出版社</th>
+                                    <th style="width:15%">提交时间</th> 
+                                    <th style="width:15%"> 取书方式</th>
+                                    <th  style="width:10%">操作</th>
                                     </thead>
                                  <tr v-for="(item,index) in list" v-if="item.status!=0"> 
                                     <td>[{{index+1}}]</td>
-                                    <td>{{item.title}}</td>
+                                    <td>{{item.title}}
+                                        <b v-if="item.status==1"><b style="background:green;color:white">已通过</b></b>
+                                        <b v-if="item.status==-1"><b style="background:red;color:white">已拒绝</b></b>
+
+                                    </td>
                                     <!-- <td>{{item.isbn}}</td> -->
                                     <td>{{item.author}}</td>
                                     <td>{{item.publisher}}</td>
-                                    <td>{{item.time}}</td>
-                                    <td>
-                                        <b v-if="item.status==1"><b style="color:green">已通过</b></b>
-                                        <b v-if="item.status==-1"><b style="color:red">已拒绝</b></b>
-                                    </td>
+                                    <td>{{item.time}}</td> 
+                                    <th>{{item.how_to_fetch}}</th>
                                     <td >
                                       <button v-on:click="reset(item.id)">重置</button>
                                     </td>

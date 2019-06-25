@@ -81,25 +81,25 @@
                             <div class="form_row">
                                     <label>捐书方式:</label>
                                     <div class="form_row_right">
-                                        <label class="label-radio item-content" v-on:click="setFetchType(1)">
+                                        <label class="label-radio item-content">
                                             <!-- Checked by default -->
-                                            <input type="radio" name="my-radio" value="0" checked>
+                                            <input type="radio" name="my-radio" v-model="fetchType" value="1" checked>
                                             <div class="item-inner">
                                                 <div class="item-title">送至分馆</div>
                                             </div>
                                         </label>
 
-                                        <label class="label-radio item-content" v-on:click="setFetchType(3)">
+                                        <label class="label-radio item-content">
                                             <!-- Checked by default -->
-                                            <input type="radio" name="my-radio" value="0">
+                                            <input type="radio" name="my-radio" v-model="fetchType" value="3">
                                             <div class="item-inner">
                                                 <div class="item-title">放到书箱</div>
                                             </div>
                                         </label>
 
-                                        <label class="label-radio item-content" id="getBooks" v-on:click="setFetchType(2)">
+                                        <label class="label-radio item-content">
                                             <!-- Checked by default -->
-                                            <input type="radio" name="my-radio" value="" />
+                                            <input type="radio" name="my-radio"  v-model="fetchType" value="2" />
                                             <div class="item-inner">
                                                 <div class="item-title">上门取书</div>
                                             </div>

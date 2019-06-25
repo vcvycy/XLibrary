@@ -596,7 +596,7 @@ myApp.onPageInit('books_donation', function (page) {
 			fetchAddr:window.localStorage["fetchAddr"]==undefined?"":window.localStorage["fetchAddr"],            // 上门取书此字段才有意义 
 			book: { 
 			},
-	        word: ""
+			word: ""
 		},
 		methods: {
 			change_contact: ()=>{
@@ -605,6 +605,7 @@ myApp.onPageInit('books_donation', function (page) {
 				$(".popup-personal-info").show(); 
 			},
 			setFetchType: (type) => {
+				return;
 	            books_donation.fetchType=type;
 			},
 			selectImage: (e) =>{
