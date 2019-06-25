@@ -149,6 +149,8 @@
                              <br>[微信]{{list[0].wechar_name}}
                              <hr>
                              图书审核:<br>
+                             <input type="checkbox" value="haha" v-on:click="checkALL($event,`checkbox_${sid}`)">全选</input>
+                             <br>
                              <select v-bind:id="`select_${sid}`">
                                 <option value="0">
                                    请选择藏书库

@@ -360,6 +360,10 @@ pages_init ={
                 hide_has_reviewed : window.localStorage["hide_has_reviewed"]==undefined?false:window.localStorage["hide_has_reviewed"]=="true"
             },
             methods: { 
+                checkALL: (e,check_box_name)=>{
+                    checked=$(e.srcElement).is(':checked');
+                    $(`input[name=${check_box_name}]`).prop("checked",checked);
+                },
                 initStu2Books: ()=>{ 
                     // 初始化stu2books
                     book_list = vue_review.book_list;
