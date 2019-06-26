@@ -24,9 +24,8 @@
                     <div class="page_single layout_fullwidth_padding">
                         <ul class="shop_items">
                             <li v-for="book in books">
-                                <div class="shop_thumb" style="width:25%"><a href="#">
-                                        <img v-if="book.picture!=''" v-bind:src="book.picture" alt="" title="" /></a>
-                                    <img v-else v-bind:src=" images/photos/photo1.jpg" alt="" title="" /></a>
+                                <div class="shop_thumb" style="width:25%"><a href="#"> 
+                                    <img v-if="book.picture!=''" v-bind:src="book.picture" onerror="image_not_found(this)"/></a> 
                                     <!-- images/photos/photo1.jpg -->
                                 </div>
                                 <div class="shop_item_details">

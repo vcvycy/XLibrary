@@ -282,8 +282,8 @@
             <div class="loginform">
                 <ul class="shop_items">
                     <li v-for="book in g_data.not_returned_books">
-                        <div style="width:15%" class="shop_thumb"><a href="#"><img v-bind:src="book.picture" alt=""
-                                    title="" /></a></div>
+                        <div style="width:15%" class="shop_thumb"><a href="#">
+                            <img v-bind:src="book.picture"  onerror="image_not_found(this)"/></a></div>
                         <div style="width:80%;text-align: left" class="shop_item_details">
                             <div><b v-text="book.title"></b> <i v-text="`(${book.author})`">&nbsp;</i></div>
                             <div v-text="`${book.publisher} (${book.pubdate})`"></div>
@@ -322,8 +322,8 @@
                 <ul class="shop_items">
 
                     <li v-for="b in g_data.donation_books.waiting">
-                        <div class="shop_thumb" style="width: 20%;"><a href="#"><img v-bind:src="b.picture" alt=""
-                                    title="" /></a></div>
+                        <div class="shop_thumb" style="width: 20%;"><a href="#">
+                            <img v-bind:src="b.picture"  onerror="image_not_found(this)"/></a></div>
                         <div class="shop_item_details" style="width: 75%; text-align: left;">
                             <div><b>${b.title}</b> <i>(${b.author})</i></div>
                             <div>${b.publisher}&nbsp; (${b.pubdate})</div>
@@ -336,8 +336,8 @@
                         </div>
                     </li>
                     <li v-for="b in g_data.donation_books.accepted">
-                        <div class="shop_thumb" style="width: 20%;"><a href="#"><img v-bind:src="b.picture" alt=""
-                                    title="" /></a></div>
+                        <div class="shop_thumb" style="width: 20%;"><a href="#">
+                            <img v-bind:src="b.picture"  onerror="image_not_found(this)"/></a></div>
                         <div class="shop_item_details" style="width: 75%; text-align: left;">
                             <div><b>${b.title}</b> <i>(${b.author})</i></div>
                             <div>${b.publisher}&nbsp; (${b.pubdate})</div>
@@ -350,8 +350,8 @@
                         </div>
                     </li>
                     <li v-for="b in g_data.donation_books.rejected">
-                        <div class="shop_thumb" style="width: 20%;"><a href="#"><img v-bind:src="b.picture" alt=""
-                                    title="" /></a></div>
+                        <div class="shop_thumb" style="width: 20%;"><a href="#">
+                            <img v-bind:src="b.picture" onerror="image_not_found(this)"/></a></div>
                         <div class="shop_item_details" style="width: 75%; text-align: left;">
                             <div><b>${b.title}</b> <i>(${b.author})</i></div>
                             <div>${b.publisher}&nbsp; (${b.pubdate})</div>

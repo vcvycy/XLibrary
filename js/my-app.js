@@ -46,6 +46,10 @@ var error_window={
         myApp.closeModal();
     }
 } 
+function image_not_found(ele){
+	console.log(ele);
+	$(ele).attr("src","images/books_cover/not_found.jpg");
+}
 /* 判断是否登陆，如果登陆，载入登陆信息、存取书信息 */
 function index_init(){   
 	home_vue = new Vue({
