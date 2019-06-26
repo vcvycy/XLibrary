@@ -282,8 +282,11 @@
             <div class="loginform">
                 <ul class="shop_items">
                     <li v-for="book in g_data.not_returned_books">
-                        <div style="width:15%" class="shop_thumb"><a href="#">
-                            <img v-bind:src="book.picture"  onerror="image_not_found(this)"/></a></div>
+                        <div style="width:15%" class="shop_thumb">
+                            <a href="#">
+                                <img v-bind:src="book.picture"  onerror="image_not_found(this)"/>
+                            </a>
+                        </div>
                         <div style="width:80%;text-align: left" class="shop_item_details">
                             <div><b v-text="book.title"></b> <i v-text="`(${book.author})`">&nbsp;</i></div>
                             <div v-text="`${book.publisher} (${book.pubdate})`"></div>
@@ -415,7 +418,7 @@
                 <div class="shop_item">
                     <div class="shop_thumb">
                     <a rel="gallery-3"  title="Photo title" class="swipebox">
-                        <img v-bind:src="g_data.cur_book_info.picture" alt="" title="">
+                        <img v-bind:src="g_data.cur_book_info.picture" onerror="image_not_found(this)">
                     </a> 
                     </div>
                     <div class="shop_item_details">

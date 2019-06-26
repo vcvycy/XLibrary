@@ -46,6 +46,7 @@ var error_window={
         myApp.closeModal();
     }
 } 
+// 图书封面找不到时，触发此事件
 function image_not_found(ele){
 	console.log(ele);
 	$(ele).attr("src","images/books_cover/not_found.jpg");
