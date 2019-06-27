@@ -48,7 +48,6 @@ var error_window={
 } 
 // 图书封面找不到时，触发此事件
 function image_not_found(ele){
-	console.log(ele);
 	$(ele).attr("src","images/books_cover/not_found.jpg");
 }
 /* 判断是否登陆，如果登陆，载入登陆信息、存取书信息 */
@@ -139,7 +138,6 @@ function index_init(){
 		},
 		methods:{
 			update_cur_book:(book)=>{
-				console.log(book);
 				myData.cur_book_info=book; 
 				myData.cur_book_donators=null;
 				myData.cur_book_borrower=null;
@@ -194,7 +192,6 @@ function index_init(){
 		},
 		async: true,
 		success: function (data) { 
-			console.log(data);
 			if(data.error_code==0){ 
 				home_vue.g_data.user_info = data.data;
 				home_vue.g_data.isLogin = true; 
@@ -219,7 +216,6 @@ function index_init(){
 		data: {},
 		async: true,
 		success: function (data) {
-			console.log(data.data);
 			if(data.error_code==0){
 				myData.returned_books =data.data.returned;
 				myData.not_returned_books= data.data.not_returned;
@@ -247,13 +243,10 @@ function index_init(){
 }
 // Export selectors engine
 var $$ = Dom7;
-myApp.onPageBeforeInit('home', function(page){
-	console.log("after");
-	if (sessionStorage.getItem("sid")){
-		$$('#login').addClass("disabled");
-	}
+myApp.onPageBeforeInit('home', function(page){ 
 })
 myApp.onPageInit('home', function(page) {
+	console.log("By ChenJianfeng@XMU,2019.For any questions you can contact me at 352871242@qq.com");
 	index_init();
 }).trigger(); //And trigger it right away 
 
@@ -291,9 +284,8 @@ $$(document).on('pageInit', function (e) {
 
 $("#LoginForm").validate({
 	submitHandler: function(form){
-		console.log("test");
 		var formData = myApp.formToJSON('#LoginForm');
-		console.log(JSON.stringify(formData));
+		pending.show("正在登陆,请等待...(~.~)");
 		$.ajax({
 			url: "./API/account/login.php",
 			dataType: "json",
@@ -301,6 +293,7 @@ $("#LoginForm").validate({
 			type: "post",
 			async: true,
 			success: function (data) { 
+				pending.close();
 				if(data.error_code==0){
 					myApp.closeModal('.popup-login');
 					$("#login").attr("disabled",true);
@@ -352,8 +345,7 @@ myApp.onPageInit('books_list', function (page) {
 						books_each_page: books_each_page,
 					},
 					success(data){
-						if (data.error_code==0){
-							console.log(data.data);
+						if (data.error_code==0){ 
 							books_list_vue.books= data.data.books; 
 							books_list_vue.total_pages=data.data.total_pages; 
 							books_list_vue.total_books=data.data.total_books;
@@ -489,7 +481,6 @@ myApp.onPageInit('borrow_book', function (page) {
 				dom_file=$("<input type=file accept='image/*'></input>");
 				dom_file.change(function(){
 					pending.show("正在识别ISBN码");
-					console.log(dom_file[0].files);
 					let src, url = window.URL || window.webkitURL || window.mozURL, files = dom_file[0].files;
 					if (files.length==0) return;
 					let file = files[0];
