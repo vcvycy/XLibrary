@@ -336,7 +336,9 @@ myApp.onPageInit('books_list', function (page) {
             page_id:1,
 			total_pages:0,
 			total_books:0,
-			search_mode: false
+			search_mode: false,
+			stocks_sum:0,
+			lended_sum:0
         },
         // computed:{},
         methods: { 
