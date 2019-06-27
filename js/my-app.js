@@ -355,6 +355,8 @@ myApp.onPageInit('books_list', function (page) {
 							books_list_vue.books= data.data.books; 
 							books_list_vue.total_pages=data.data.total_pages; 
 							books_list_vue.total_books=data.data.total_books;
+							books_list_vue.stocks_sum=data.data.stocks_sum;
+							books_list_vue.lended_sum=data.data.lended_sum;
 						}else{
 							alert("读取失败");
 						}
